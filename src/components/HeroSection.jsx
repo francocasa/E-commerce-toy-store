@@ -1,7 +1,12 @@
 const HeroSection = () => {
   return (
-    <section className="relative h-96 bg-cover bg-center flex flex-col justify-center items-center text-white" style={{ backgroundImage: 'url(/FondoHero.png)' }}>
-      <div className="text-center">
+    <section
+      className="relative h-96 bg-cover bg-center flex flex-col justify-end items-start text-white"
+      style={{
+        backgroundImage: 'linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)), url(/FondoHero.png)'
+      }}
+    >
+      <div className="text-left ml-5 mb-5">
         <h1 className="text-4xl font-bold">Promociones que te esperan</h1>
         <p className="text-lg mt-4">Productos seleccionados con 33% de descuento</p>
         <a href="/PromotionsPage" className="mt-6 bg-blue-600 py-2 px-6 rounded-md text-white hover:bg-blue-700 transition-all inline-block">Ver Ofertas</a>
@@ -16,7 +21,7 @@ const HeroSection = () => {
       </div>
 
       {/* Indicadores del slider */}
-      <div className="absolute bottom-4 flex space-x-2">
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
         <span className="w-3 h-3 bg-white rounded-full"></span>
         <span className="w-3 h-3 bg-gray-400 rounded-full"></span>
         <span className="w-3 h-3 bg-gray-400 rounded-full"></span>
