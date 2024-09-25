@@ -1,4 +1,4 @@
-import React from 'react';
+import PropTypes from 'prop-types'; // Importar PropTypes
 import { Link } from 'react-router-dom';
 
 function ProductCard({ product }) {
@@ -11,5 +11,15 @@ function ProductCard({ product }) {
     </div>
   );
 }
+
+// Validación de PropTypes
+ProductCard.propTypes = {
+  product: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+  }).isRequired,
+};
 
 export default ProductCard;
