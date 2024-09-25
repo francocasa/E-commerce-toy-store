@@ -1,4 +1,7 @@
-// src/data/hero.js
+import FondoHero1 from '../assets/FondoHero/FondoHero.png';
+import FondoHero2 from '../assets/FondoHero/FondoHero2.png';
+import FondoHero3 from '../assets/FondoHero/FondoHero3.png';
+
 const heroData = [
   {
     id: 1,
@@ -6,7 +9,7 @@ const heroData = [
     description: 'Productos seleccionados con 33% de descuento',
     buttonText: 'Ver Ofertas',
     buttonLink: '/PromotionsPage',
-    backgroundImage: '/FondoHero.png',
+    backgroundImage: FondoHero1,
   },
   {
     id: 2,
@@ -14,7 +17,7 @@ const heroData = [
     description: 'Lo nuevo ha llegado',
     buttonText: 'Ver Productos',
     buttonLink: '/ProductsPage',
-    backgroundImage: '/FondoHero2.png',
+    backgroundImage: FondoHero2,
   },
   {
     id: 3,
@@ -22,7 +25,7 @@ const heroData = [
     description: 'Varios ya compraron',
     buttonText: 'Ver Testimonios',
     buttonLink: '/TestimoniosPage',
-    backgroundImage: '/FondoHero3.png',
+    backgroundImage: FondoHero3,
   },
 ];
 
