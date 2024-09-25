@@ -1,30 +1,26 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import LandingPage from './pages/LandingPage';
+import LoginPage from './pages/LoginPage';
+import ProductsPage from './pages/ProductsPage';
+import DetailsProductPage from './pages/DetailsProductPage';
+import CartPage from './pages/CartPage';
+import PromotionsPage from './pages/PromotionsPage';
+import PromotionDetailPage from './pages/PromotionDetailPage';
+import './index.css';
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <div>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((prev) => prev + 1)} type="button">
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/detailsproduct/:id" element={<DetailsProductPage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/promotions" element={<PromotionsPage />} />
+        <Route path="/promotion/:id" element={<PromotionDetailPage />} />
+      </Routes>
+    </Router>
   );
 }
 
