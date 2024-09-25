@@ -2,12 +2,11 @@ export default function Footer() {
   return (
     <footer className="bg-blue-50 py-12 text-gray-800">
       <div className="w-3/4 mx-auto flex justify-center gap-6">
-        {/* Logo y enlaces */}
         <div className="flex w-1/2">
           <div className="w-1/2">
             <img
-              src="/Logo.png" // Cambia la ruta según tu logo
-              alt="Logo"
+              src="/logo-juguetitos.png"
+              alt="Toys Logo"
               className="w-3/5"
             />
           </div>
@@ -28,9 +27,9 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Formulario de contacto */}
         <div className="w-1/2">
           <p className="font-bold mb-1">Hable con nosotros</p>
+
           <form>
             <label
               htmlFor="nombre"
@@ -42,6 +41,7 @@ export default function Footer() {
                 placeholder="Nombre"
                 className="peer h-8 w-full border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
               />
+
               <span className="px-4 absolute start-0 top-2 -translate-y-1/2 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-2 peer-focus:text-xs peer-focus:pt-4">
                 Nombre
               </span>
@@ -57,6 +57,7 @@ export default function Footer() {
                 placeholder="Escribe tu mensaje"
                 className="peer h-8 w-full border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
               />
+
               <span className="px-4 absolute start-0 top-2 -translate-y-1/2 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/4 peer-placeholder-shown:text-sm peer-focus:top-2 peer-focus:text-xs peer-focus:pt-4">
                 Escribe tu mensaje
               </span>
@@ -70,7 +71,6 @@ export default function Footer() {
           </form>
         </div>
       </div>
-      <p className="text-center mt-8">© Proyecto Grupal 2 - Make It Real 2024</p>
     </footer>
   );
 }
