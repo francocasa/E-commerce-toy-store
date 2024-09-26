@@ -2,6 +2,7 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
+    node: true, // Añadir esta línea para habilitar el entorno de Node.js
   },
   extends: [
     'plugin:react/recommended',
