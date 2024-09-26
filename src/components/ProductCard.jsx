@@ -3,15 +3,26 @@ import { Link } from 'react-router-dom';
 
 function ProductCard({ product }) {
   return (
-    <div className="border p-4 rounded-lg shadow-lg">
-      <img
-        src={product.image}
-        alt={product.title}
-        className="w-full h-40 object-cover mb-4"
-      />
-      <h3 className="text-lg font-bold">{product.title}</h3>
-      <p className="text-gray-600 mb-4">${product.price.toFixed(2)}</p>
-      <Link to={`/detailsproduct/${product.id}`} className="text-blue-500">
+    <div className="border p-4 rounded-lg shadow-lg w-[270px] mx-auto">
+      {' '}
+      {/* Ancho fijo de 270 px */}
+      <div className="flex justify-center mb-4">
+        {' '}
+        {/* Contenedor flex para centrar la imagen */}
+        <img
+          src={product.image}
+          alt={product.title}
+          className="w-auto h-40 object-cover" // Mantiene el ajuste de la imagen
+        />
+      </div>
+      <h3 className="text-lg font-bold text-center">{product.title}</h3>
+      <p className="text-gray-600 mb-4 text-center">
+        ${product.price.toFixed(2)}
+      </p>
+      <Link
+        to={`/detailsproduct/${product.id}`}
+        className="text-blue-500 text-center block"
+      >
         Ver más
       </Link>
     </div>
