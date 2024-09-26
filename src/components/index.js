@@ -8,6 +8,7 @@ import ProductCard from './ProductCard';
 import TestimonialCard from './TestimonialCard';
 import PromotionCard from './PromotionCard';
 import Searchbar from './Searchbar';
+import ProductDetailPreCart from './ProductDetailPreCart';
 
 export {
   Header,
@@ -20,4 +21,5 @@ export {
   TestimonialCard,
   PromotionCard,
   Searchbar,
+  ProductDetailPreCart,
 };
