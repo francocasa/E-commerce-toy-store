@@ -4,11 +4,7 @@ export default function Footer() {
       <div className="w-3/4 mx-auto flex justify-center gap-6">
         <div className="flex w-1/2">
           <div className="w-1/2">
-            <img
-              src="/logo-juguetitos.png"
-              alt="Toys Logo"
-              className="w-3/5"
-            />
+            <img src="/logo-juguetitos.png" alt="Toys Logo" className="w-3/5" />
           </div>
 
           <ul className="list-none space-y-4">
