@@ -21,7 +21,7 @@ const ProductsSection = () => {
     <section className="py-10">
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-2xl font-semibold">Juguetes</h2>
-        <a href="/ProductsPage" className="text-blue-600 hover:underline">
+        <a href="/products" className="text-blue-600 hover:underline">
           Ver todo &rarr;
         </a>
       </div>

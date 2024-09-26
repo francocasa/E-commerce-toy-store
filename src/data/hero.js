@@ -8,7 +8,7 @@ const heroData = [
     title: 'Promociones que te esperan',
     description: 'Productos seleccionados con 33% de descuento',
     buttonText: 'Ver Ofertas',
-    buttonLink: '/PromotionsPage',
+    buttonLink: '/promotions',
     backgroundImage: FondoHero1,
   },
   {
@@ -16,7 +16,7 @@ const heroData = [
     title: 'Mira nuestros nuevos productos',
     description: 'Lo nuevo ha llegado',
     buttonText: 'Ver Productos',
-    buttonLink: '/ProductsPage',
+    buttonLink: '/products',
     backgroundImage: FondoHero2,
   },
   {
