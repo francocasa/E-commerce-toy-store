@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { products } from '../data/Products'; // Asegúrate de que la ruta sea correcta
+import { Link } from 'react-router-dom'; // Asegúrate de importar Link
 
 const ProductsSection = () => {
   const scrollRef = useRef(null); // Referencia al contenedor
@@ -35,19 +36,29 @@ const ProductsSection = () => {
               key={product.id}
               className="min-w-[200px] bg-white shadow-md p-4 rounded-md"
             >
-              <img
-                src={product.image}
-                alt={product.title}
-                className="w-full h-40 object-cover rounded-md"
-              />
-              <h3 className="text-lg mt-2 font-medium">{product.title}</h3>
-              <p className="text-gray-500">${product.price.toFixed(2)}</p>
-              <a
-                href="/product-detail"
-                className="text-blue-600 hover:underline"
+              <div className="h-[160px] flex items-center justify-center overflow-hidden">
+                {' '}
+                {/* Contenedor para la imagen */}
+                <img
+                  src={product.image}
+                  alt={product.title}
+                  className="h-auto w-auto object-cover rounded-md"
+                  style={{ maxHeight: '150px' }} // Establece la altura máxima a 150px
+                />
+              </div>
+
+              <h3 className="text-lg mt-2 font-medium text-center">
+                {product.title}
+              </h3>
+              <p className="text-gray-500 text-center">
+                ${product.price.toFixed(2)}
+              </p>
+              <Link
+                to={`/detailsproduct/${product.id}`} // Cambiado a Link para redirigir al detalle del producto
+                className="text-blue-600 hover:underline text-center block"
               >
                 Ver producto
-              </a>
+              </Link>
             </div>
           ))}
         </div>

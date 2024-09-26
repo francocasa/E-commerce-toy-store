@@ -10,6 +10,7 @@ import PromotionCard from './PromotionCard';
 import Searchbar from './Searchbar';
 import CartItem from './CartItem';
 import CartSummary from './CartSummary';
+import ProductDetailPreCart from './ProductDetailPreCart';
 
 export {
   Header,
@@ -24,4 +25,5 @@ export {
   Searchbar,
   CartItem,
   CartSummary,
+  ProductDetailPreCart,
 };
