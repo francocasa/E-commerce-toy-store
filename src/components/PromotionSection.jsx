@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { promotions } from '../data/Promotions'; // Asegúrate de que la ruta sea correcta
+import { dbProducts } from '../data/DbProducts'; // Asegúrate de que la ruta sea correcta
 
 const PromotionSection = () => {
   const scrollRef = useRef(null); // Referencia al contenedor
@@ -16,6 +16,11 @@ const PromotionSection = () => {
     }
   };
 
+  // Filtrar productos con promociones
+  const filteredPromotions = dbProducts.filter(
+    (product) => product.promocion === 'true',
+  );
+
   return (
     <section className="py-10">
       <div className="flex justify-between items-center mb-5">
@@ -30,18 +35,20 @@ const PromotionSection = () => {
           className="flex space-x-6 overflow-x-scroll no-scrollbar"
         >
           {/* Mapear las promociones */}
-          {promotions.map((promo) => (
+          {filteredPromotions.map((promo) => (
             <div
               key={promo.id}
               className="min-w-[200px] bg-white shadow-md p-4 rounded-md"
             >
               <img
                 src={promo.image}
-                alt={promo.category}
+                alt={promo.title}
                 className="w-full h-40 object-cover rounded-md"
               />
-              <h3 className="text-lg mt-2 font-medium">{promo.category}</h3>
-              <p className="text-gray-500">{promo.description}</p>
+              <h3 className="text-lg mt-2 font-medium">
+                {promo.categoryPromo}
+              </h3>
+              <p className="text-gray-500">{promo.descriptionPromo}</p>
               <a href="/promo-detail" className="text-blue-600 hover:underline">
                 Ver promoción
               </a>

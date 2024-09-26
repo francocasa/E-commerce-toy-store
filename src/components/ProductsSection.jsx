@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { products } from '../data/Products'; // Asegúrate de que la ruta sea correcta
+import { dbProducts } from '../data/DbProducts'; // Asegúrate de que la ruta sea correcta
 import { Link } from 'react-router-dom'; // Asegúrate de importar Link
 
 const ProductsSection = () => {
@@ -31,7 +31,7 @@ const ProductsSection = () => {
           className="flex space-x-6 overflow-x-scroll no-scrollbar"
         >
           {/* Mapear los productos */}
-          {products.map((product) => (
+          {dbProducts.map((product) => (
             <div
               key={product.id}
               className="min-w-[200px] bg-white shadow-md p-4 rounded-md"
