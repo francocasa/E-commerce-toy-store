@@ -9,6 +9,7 @@ import TestimonialCard from './TestimonialCard';
 import PromotionCard from './PromotionCard';
 import Searchbar from './Searchbar';
 import CartItem from './CartItem';
+import CartSummary from './CartSummary';
 
 export {
   Header,
@@ -22,4 +23,5 @@ export {
   PromotionCard,
   Searchbar,
   CartItem,
+  CartSummary,
 };
