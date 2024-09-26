@@ -1,8 +1,17 @@
 function CartPage() {
   return (
     <main className="container mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-4">Carrito de Compras</h1>
-      <p>Aquí verás los productos que has agregado al carrito.</p>
+      <div className="flex">
+        <section className="border rounded-lg shadow w-3/4">
+          <h1>Carrito</h1>
+          <article className="">
+            <p>Product Item Component</p>
+          </article>
+        </section>
+        <aside className="border rounded-lg shadow w-1/4">
+          <p>Resumen de compra component</p>
+        </aside>
+      </div>
     </main>
   );
 }
