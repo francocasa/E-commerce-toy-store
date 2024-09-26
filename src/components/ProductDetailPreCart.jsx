@@ -5,7 +5,24 @@ import Swal from 'sweetalert2';
 
 const ProductDetailPreCart = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
-  const total = product.price * quantity;
+
+  const calculateTotal = () => {
+    let price = product.price;
+
+    // Aplicar descuento del 30% si categoryPromo es 'Navidad'
+    if (product.categoryPromo === 'Navidad') {
+      price *= 0.7; // 30% de descuento
+    }
+
+    // Aplicar descuento del 33.33% si categoryPromo es '3x2' y la cantidad es múltiplo de 3
+    if (product.categoryPromo === '3x2' && quantity % 3 === 0) {
+      price *= 0.66667; // 33.33% de descuento
+    }
+
+    return price * quantity;
+  };
+
+  const total = calculateTotal();
 
   const addToCart = () => {
     const existingCart = JSON.parse(localStorage.getItem('Cart')) || [];
@@ -30,11 +47,26 @@ const ProductDetailPreCart = ({ product }) => {
     }
   };
 
+  // Mensaje de promoción
+  const promotionMessage = () => {
+    if (product.categoryPromo === 'Navidad') {
+      return 'Promoción 30% de descuento por Navidad';
+    } else if (product.categoryPromo === '3x2') {
+      return 'Para compras múltiplos de 3, hay descuento de 33.33%';
+    }
+    return null;
+  };
+
   return (
     <div className="bg-gray-100 p-6 rounded-md shadow-md">
       <h2 className="text-lg font-semibold text-center mb-4">
         Detalles del Carrito
       </h2>
+      {promotionMessage() && (
+        <h3 className="text-sm text-center text-green-600 mb-2">
+          {promotionMessage()}
+        </h3>
+      )}
       <h3 className="text-lg font-semibold text-center mb-4">
         Total: ${total.toFixed(2)}
       </h3>
@@ -76,6 +108,7 @@ ProductDetailPreCart.propTypes = {
     descripcion: PropTypes.string,
     marca: PropTypes.string,
     material: PropTypes.string,
+    categoryPromo: PropTypes.string, // Agregar validación para categoryPromo
   }).isRequired,
 };
 

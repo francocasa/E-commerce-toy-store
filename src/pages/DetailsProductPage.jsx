@@ -1,10 +1,10 @@
 import { useParams } from 'react-router-dom';
-import { products } from '../data/Products';
+import { dbProducts } from '../data/DbProducts'; // Asegúrate de que esto sea correcto
 import { ProductDetailPreCart } from '../components';
 
 function DetailsProductPage() {
   const { id } = useParams();
-  const product = products.find((p) => p.id === id);
+  const product = dbProducts.find((p) => p.id === id); // Asegúrate de usar dbProducts
 
   if (!product) return <p>Producto no encontrado</p>;
 
@@ -25,14 +25,25 @@ function DetailsProductPage() {
           <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
           <p className="text-xl mb-2">${product.price.toFixed(2)}</p>
           <p className="text-md mb-2">
-            <strong>Descripción:</strong> {product.descripcion}
-          </p>
-          <p className="text-md mb-2">
             <strong>Marca:</strong> {product.marca}
           </p>
           <p className="text-md mb-2">
             <strong>Material:</strong> {product.material}
           </p>
+          <p className="text-md mb-2">
+            <strong>Categoría:</strong> {product.category}
+          </p>
+
+          {/* Sección de promociones si aplica */}
+          {product.promocion === 'true' && (
+            <div className="mt-4 border-t pt-4">
+              <h1 className="text-xxl font-bold mb-2">PROMOCION</h1>
+              <h2 className="text-xl font-bold mb-2">
+                {product.categoryPromo}
+              </h2>
+              <p className="text-md mb-2">{product.descriptionPromo}</p>
+            </div>
+          )}
         </div>
 
         {/* Columna 3: Componente de pre-carrito */}

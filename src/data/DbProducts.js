@@ -108,7 +108,7 @@ export const dbProducts = [
   {
     id: '8',
     title: 'Producto H',
-    price: 0,
+    price: 20,
     image: promo2,
     descripcion: 'Juguete para su niño',
     marca: 'Marca H',
@@ -121,7 +121,7 @@ export const dbProducts = [
   {
     id: '9',
     title: 'Producto I',
-    price: 0,
+    price: 20,
     image: promo3,
     descripcion: 'Juguete para su niño',
     marca: 'Marca I',
@@ -134,7 +134,7 @@ export const dbProducts = [
   {
     id: '10',
     title: 'Producto J',
-    price: 0,
+    price: 20,
     image: promo4,
     descripcion: 'Juguete para su niño',
     marca: 'Marca J',
@@ -147,7 +147,7 @@ export const dbProducts = [
   {
     id: '11',
     title: 'Producto K',
-    price: 0,
+    price: 20,
     image: promo5,
     descripcion: 'Juguete para su niño',
     marca: 'Marca K',
@@ -160,7 +160,7 @@ export const dbProducts = [
   {
     id: '12',
     title: 'Producto L',
-    price: 0,
+    price: 20,
     image: promo6,
     descripcion: 'Juguete para su niño',
     marca: 'Marca L',

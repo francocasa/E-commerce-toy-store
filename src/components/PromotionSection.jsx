@@ -1,8 +1,10 @@
 import { useRef } from 'react';
 import { dbProducts } from '../data/DbProducts'; // Asegúrate de que la ruta sea correcta
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 
 const PromotionSection = () => {
   const scrollRef = useRef(null); // Referencia al contenedor
+  const navigate = useNavigate(); // Crea la instancia de navegación
 
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -21,11 +23,15 @@ const PromotionSection = () => {
     (product) => product.promocion === 'true',
   );
 
+  const handleViewPromotion = (id) => {
+    navigate(`/detailsproduct/${id}`); // Redirige a la ruta deseada
+  };
+
   return (
     <section className="py-10">
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-2xl font-semibold">Promociones</h2>
-        <a href="/PromotionsPage" className="text-blue-600 hover:underline">
+        <a href="/promotions" className="text-blue-600 hover:underline">
           Ver todo &rarr;
         </a>
       </div>
@@ -49,9 +55,12 @@ const PromotionSection = () => {
                 {promo.categoryPromo}
               </h3>
               <p className="text-gray-500">{promo.descriptionPromo}</p>
-              <a href="/promo-detail" className="text-blue-600 hover:underline">
+              <button
+                onClick={() => handleViewPromotion(promo.id)} // Cambia a un botón
+                className="text-blue-600 hover:underline"
+              >
                 Ver promoción
-              </a>
+              </button>
             </div>
           ))}
         </div>
