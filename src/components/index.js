@@ -6,11 +6,12 @@ import TestimonialSection from './TestimonialSection';
 import PromotionSection from './PromotionSection';
 import ProductCard from './ProductCard';
 import TestimonialCard from './TestimonialCard';
-import PromotionCard from './PromotionCard';
+//import PromotionCard from './PromotionCard';
 import Searchbar from './Searchbar';
 import CartItem from './CartItem';
 import CartSummary from './CartSummary';
 import ProductDetailPreCart from './ProductDetailPreCart';
+import CategoryFilter from './CategoryFilter';
 
 export {
   Header,
@@ -21,9 +22,10 @@ export {
   PromotionSection,
   ProductCard,
   TestimonialCard,
-  PromotionCard,
+  // PromotionCard, Eliminar
   Searchbar,
   CartItem,
   CartSummary,
   ProductDetailPreCart,
+  CategoryFilter,
 };

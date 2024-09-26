@@ -20,7 +20,7 @@ const TestimonialSection = () => {
     <section className="py-10">
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-2xl font-semibold">Testimonios</h2>
-        <a href="#" className="text-blue-600 hover:underline">
+        <a href="/testimonios" className="text-blue-600 hover:underline">
           Ver todo &rarr;
         </a>
       </div>
@@ -41,9 +41,9 @@ const TestimonialSection = () => {
                 className="w-24 h-24 object-cover rounded-full mx-auto"
               />
               <p className="mt-4">
-                &quot;Me gustó mucho el producto, cumple lo prometido&quot;
-              </p>{' '}
-              {/* Comillas escapadas */}
+                &quot;{testimonial.mensaje}&quot;{' '}
+                {/* Utiliza el mensaje del testimonio */}
+              </p>
               <h4 className="text-lg mt-2 font-medium">
                 {testimonial.nombrePersona}
               </h4>

@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { products } from '../data/Products'; // Asegúrate de que la ruta sea correcta
+import { dbProducts } from '../data/DbProducts'; // Asegúrate de que la ruta sea correcta
 import { Link } from 'react-router-dom'; // Asegúrate de importar Link
 
 const ProductsSection = () => {
@@ -21,7 +21,7 @@ const ProductsSection = () => {
     <section className="py-10">
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-2xl font-semibold">Juguetes</h2>
-        <a href="/ProductsPage" className="text-blue-600 hover:underline">
+        <a href="/products" className="text-blue-600 hover:underline">
           Ver todo &rarr;
         </a>
       </div>
@@ -31,7 +31,7 @@ const ProductsSection = () => {
           className="flex space-x-6 overflow-x-scroll no-scrollbar"
         >
           {/* Mapear los productos */}
-          {products.map((product) => (
+          {dbProducts.map((product) => (
             <div
               key={product.id}
               className="min-w-[200px] bg-white shadow-md p-4 rounded-md"
