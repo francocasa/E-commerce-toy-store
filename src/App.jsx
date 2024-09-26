@@ -6,11 +6,14 @@ import DetailsProductPage from './pages/DetailsProductPage';
 import CartPage from './pages/CartPage';
 import PromotionsPage from './pages/PromotionsPage';
 import PromotionDetailPage from './pages/PromotionDetailPage';
+import Header from './components/Header';
+import Footer from './components/Footer';
 import './index.css';
 
 function App() {
   return (
     <Router>
+      <Header />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -20,6 +23,7 @@ function App() {
         <Route path="/promotions" element={<PromotionsPage />} />
         <Route path="/promotion/:id" element={<PromotionDetailPage />} />
       </Routes>
+      <Footer />
     </Router>
   );
 }
