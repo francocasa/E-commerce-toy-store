@@ -1,7 +1,9 @@
-import HeroSection from '../components/HeroSection';
-import ProductsSection from '../components/ProductsSection';
-import TestimonialSection from '../components/TestimonialSection';
-import PromotionSection from '../components/PromotionSection';
+import {
+  HeroSection,
+  ProductsSection,
+  TestimonialSection,
+  PromotionSection,
+} from '../components';
 
 const LandingPage = () => {
   return (
