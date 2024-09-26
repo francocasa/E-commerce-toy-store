@@ -11,11 +11,19 @@ const Header = () => {
       <Searchbar />
 
       <div className="flex items-center space-x-4">
-        <Link to="/LoginPage">
-          <img src="/icon.svg" alt="Usuario" className="w-8 h-8 cursor-pointer" />
+        <Link to="/login">
+          <img
+            src="/icon.svg"
+            alt="Usuario"
+            className="w-8 h-8 cursor-pointer"
+          />
         </Link>
-        <Link to="/CartPage">
-          <img src="/cart.png" alt="Carrito" className="w-8 h-8 cursor-pointer" />
+        <Link to="/cart">
+          <img
+            src="/cart.png"
+            alt="Carrito"
+            className="w-8 h-8 cursor-pointer"
+          />
         </Link>
       </div>
     </header>

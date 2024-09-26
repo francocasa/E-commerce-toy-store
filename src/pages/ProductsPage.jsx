@@ -3,14 +3,14 @@ import ProductCard from '../components/ProductCard';
 
 function ProductsPage() {
   return (
-    <section>
+    <main>
       <h2 className="text-2xl font-bold mb-4">Productos</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {products.map(product => (
+        {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
-    </section>
+    </main>
   );
 }
 
