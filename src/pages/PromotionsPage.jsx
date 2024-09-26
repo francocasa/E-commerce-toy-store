@@ -1,5 +1,5 @@
 import { promotions } from '../data/Promotions';
-import PromotionCard from '../components/PromotionCard';
+import { PromotionCard } from '../components';
 
 function PromotionsPage() {
   return (
