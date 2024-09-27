@@ -3,7 +3,8 @@ import juguete2 from '../assets/Products/juguete2.png';
 import juguete3 from '../assets/Products/juguete3.png';
 import juguete4 from '../assets/Products/juguete4.png';
 import juguete5 from '../assets/Products/juguete5.png';
-import juguete6 from '../assets/Products/juguete61.png';
+import juguete6 from '../assets/Products/juguete6.png';
+import juguete7 from '../assets/Products/juguete7.png';
 
 export const products = [
   {
@@ -59,5 +60,14 @@ export const products = [
     descripcion: 'Juguete para jugar al aire libre',
     marca: 'Marca F',
     material: 'madera',
+  },
+  {
+    id: '7',
+    title: 'Producto G',
+    price: 20.0,
+    image: juguete7,
+    descripcion: 'Juguete de deporte',
+    marca: 'Marca G',
+    material: 'plastico',
   },
 ];
