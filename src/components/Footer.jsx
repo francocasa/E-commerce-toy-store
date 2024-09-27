@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 export default function Footer() {
   return (
     <footer className="bg-blue-50 py-12 text-gray-800">
@@ -9,7 +10,9 @@ export default function Footer() {
 
           <ul className="list-none space-y-4">
             <li>
-              <a href="#">Quiénes somos</a>
+              <Link to={`/aboutus`}>
+                <a href="#">Quiénes somos</a>
+              </Link>
             </li>
             <li>
               <a href="#">Política de privacidad</a>
