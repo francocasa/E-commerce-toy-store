@@ -3,7 +3,7 @@ import juguete2 from '../assets/Products/juguete2.png';
 import juguete3 from '../assets/Products/juguete3.png';
 import juguete4 from '../assets/Products/juguete4.png';
 import juguete5 from '../assets/Products/juguete5.png';
-import juguete6 from '../assets/Products/juguete6.png';
+import juguete6 from '../assets/Products/juguete61.png';
 
 export const products = [
   {
