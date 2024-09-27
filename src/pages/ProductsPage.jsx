@@ -2,10 +2,19 @@ import { useState } from 'react';
 import { dbProducts } from '../data/DbProducts'; // Asegúrate de que la ruta sea correcta
 import { ProductCard } from '../components';
 import { CategoryFilter } from '../components'; // Asegúrate de importar el componente
+import { useParams } from 'react-router-dom';
 
 function ProductsPage() {
+  const { cat } = useParams(); //categoria por utilizar
+  let categoria;
+
   const categories = ['Educativo', 'Acción'];
-  const [selectedCategory, setSelectedCategory] = useState('');
+  if (cat == null) {
+    categoria = '';
+  } else {
+    categoria = cat;
+  }
+  const [selectedCategory, setSelectedCategory] = useState(categoria);
 
   const filteredProducts = dbProducts.filter((product) => {
     return (
