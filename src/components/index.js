@@ -5,7 +5,6 @@ import ProductsSection from './ProductsSection';
 import TestimonialSection from './TestimonialSection';
 import PromotionSection from './PromotionSection';
 import ProductCard from './ProductCard';
-import CategoryCard from './CategoryCard';
 import TestimonialCard from './TestimonialCard';
 //import PromotionCard from './PromotionCard';
 import Searchbar from './Searchbar';
@@ -22,7 +21,6 @@ export {
   TestimonialSection,
   PromotionSection,
   ProductCard,
-  CategoryCard as CategorieCard,
   TestimonialCard,
   // PromotionCard, Eliminar
   Searchbar,
