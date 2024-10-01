@@ -14,17 +14,21 @@ const HeroSection = () => {
 
   return (
     <section
-      className="relative h-96 bg-cover bg-center flex flex-col justify-end items-start text-white"
+      className="relative h-96 bg-cover bg-center flex flex-col justify-end items-start text-white p-4 sm:p-6 lg:p-8"
       style={{
         backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)), url(${heroData[currentSlide].backgroundImage})`,
       }}
     >
-      <div className="text-left ml-5 mb-5">
-        <h1 className="text-4xl font-bold">{heroData[currentSlide].title}</h1>
-        <p className="text-lg mt-4">{heroData[currentSlide].description}</p>
+      <div className="text-left ml-0 sm:ml-5 mb-5">
+        <h1 className="text-2xl sm:text-4xl font-bold">
+          {heroData[currentSlide].title}
+        </h1>
+        <p className="text-sm sm:text-lg mt-4">
+          {heroData[currentSlide].description}
+        </p>
         <a
           href={heroData[currentSlide].buttonLink}
-          className="mt-6 bg-blue-600 py-2 px-6 rounded-md text-white hover:bg-blue-700 transition-all inline-block"
+          className="mt-6 bg-blue-600 py-2 px-4 sm:px-6 rounded-md text-white hover:bg-blue-700 transition-all inline-block"
         >
           {heroData[currentSlide].buttonText}
         </a>

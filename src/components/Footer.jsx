@@ -4,8 +4,10 @@ import { FaWhatsapp } from 'react-icons/fa';
 export default function Footer() {
   return (
     <footer className="bg-blue-50 py-12 text-gray-800 relative">
-      <div className="w-3/4 mx-auto flex justify-center gap-6">
-        <div className="flex w-1/2">
+      <div className="w-full sm:w-3/4 mx-auto flex flex-col sm:flex-row justify-between gap-6 p-4">
+        {' '}
+        {/* Agregado p-4 para márgenes */}
+        <div className="flex w-full sm:w-1/2">
           <div className="w-1/2">
             <img src="/logo-juguetitos.png" alt="Toys Logo" className="w-3/5" />
           </div>
@@ -27,8 +29,7 @@ export default function Footer() {
             </li>
           </ul>
         </div>
-
-        <div className="w-1/2">
+        <div className="w-full sm:w-1/2">
           <p className="font-bold mb-1">Hable con nosotros</p>
           <form>
             <input
