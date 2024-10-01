@@ -1,13 +1,14 @@
 import { Link } from 'react-router-dom';
+import { FaWhatsapp } from 'react-icons/fa';
+
 export default function Footer() {
   return (
-    <footer className="bg-blue-50 py-12 text-gray-800">
+    <footer className="bg-blue-50 py-12 text-gray-800 relative">
       <div className="w-3/4 mx-auto flex justify-center gap-6">
         <div className="flex w-1/2">
           <div className="w-1/2">
             <img src="/logo-juguetitos.png" alt="Toys Logo" className="w-3/5" />
           </div>
-
           <ul className="list-none space-y-4">
             <li>
               <Link to={`/aboutus`}>
@@ -15,53 +16,31 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              <a href="#">Política de privacidad</a>
+              <Link to={`/politica`}>
+                <a href="#">Política de privacidad</a>
+              </Link>
             </li>
             <li>
-              <a href="#">Nuestras tiendas</a>
-            </li>
-            <li>
-              <a href="#">Anuncie aquí</a>
+              <Link to={`/faq`}>
+                <a href="#">Preguntas y respuestas</a>
+              </Link>
             </li>
           </ul>
         </div>
 
         <div className="w-1/2">
           <p className="font-bold mb-1">Hable con nosotros</p>
-
           <form>
-            <label
-              htmlFor="nombre"
-              className="mb-3 pt-4 px-4 relative block overflow-hidden border-b border-gray-300 bg-white shadow-sm focus-within:border-blue-600"
-            >
-              <input
-                type="text"
-                id="nombre"
-                placeholder="Nombre"
-                className="peer h-8 w-full border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
-              />
-
-              <span className="px-4 absolute start-0 top-2 -translate-y-1/2 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-2 peer-focus:text-xs peer-focus:pt-4">
-                Nombre
-              </span>
-            </label>
-
-            <label
-              htmlFor="mensaje"
-              className="pt-4 px-4 h-24 relative block overflow-hidden border-b border-gray-300 bg-white shadow-sm focus-within:border-blue-600"
-            >
-              <input
-                type="text"
-                id="mensaje"
-                placeholder="Escribe tu mensaje"
-                className="peer h-8 w-full border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
-              />
-
-              <span className="px-4 absolute start-0 top-2 -translate-y-1/2 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/4 peer-placeholder-shown:text-sm peer-focus:top-2 peer-focus:text-xs peer-focus:pt-4">
-                Escribe tu mensaje
-              </span>
-            </label>
-
+            <input
+              type="text"
+              placeholder="Nombre"
+              className="border p-2 w-full mb-4"
+            />
+            <input
+              type="text"
+              placeholder="Escribe tu mensaje"
+              className="border p-2 w-full mb-4"
+            />
             <input
               type="submit"
               value="Enviar mensaje"
@@ -70,6 +49,17 @@ export default function Footer() {
           </form>
         </div>
       </div>
+
+      {/* Icono de WhatsApp flotante */}
+      <a
+        href="https://wa.me/51940467555"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-5 right-5 bg-green-500 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-shadow"
+        style={{ zIndex: 1000 }}
+      >
+        <FaWhatsapp size={42} />
+      </a>
     </footer>
   );
 }

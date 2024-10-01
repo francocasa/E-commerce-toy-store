@@ -1,4 +1,6 @@
-export default function CartSummary() {
+import PropTypes from 'prop-types';
+
+export default function CartSummary({ subtotal, discounts }) {
   return (
     <aside className="border rounded-lg shadow w-1/4 flex flex-col p-5 font-medium gap-6 h-fit">
       <header>
@@ -9,15 +11,15 @@ export default function CartSummary() {
         <div className="space-y-3">
           <div className="flex justify-between">
             <p>Subtotal</p>
-            <p className="font-black">$100.00</p>
+            <p className="font-black">${subtotal.toFixed(2)}</p>
           </div>
           <div className="flex justify-between">
             <p>Descuentos</p>
-            <p className="font-black">$0.00</p>
+            <p className="font-black">${discounts.toFixed(2)}</p>
           </div>
           <div className="flex justify-between">
             <p>Total</p>
-            <p className="font-black">$100.00</p>
+            <p className="font-black">${(subtotal - discounts).toFixed(2)}</p>
           </div>
         </div>
 
@@ -37,3 +39,10 @@ export default function CartSummary() {
     </aside>
   );
 }
+
+// Validación de tipos de las props
+CartSummary.propTypes = {
+  subtotal: PropTypes.number.isRequired,
+  discounts: PropTypes.number.isRequired,
+  total: PropTypes.number.isRequired,
+};
