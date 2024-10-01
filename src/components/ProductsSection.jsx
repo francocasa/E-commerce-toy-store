@@ -28,13 +28,13 @@ const ProductsSection = () => {
       <div className="relative">
         <div
           ref={scrollRef}
-          className="flex space-x-6 overflow-x-scroll no-scrollbar"
+          className="flex space-x-4 overflow-x-scroll no-scrollbar"
         >
           {/* Mapear los productos */}
           {dbProducts.map((product) => (
             <div
               key={product.id}
-              className="min-w-[200px] bg-white shadow-md p-4 rounded-md"
+              className="min-w-[200px] sm:min-w-[250px] md:min-w-[300px] bg-white shadow-md p-4 rounded-md"
             >
               <div className="h-[160px] flex items-center justify-center overflow-hidden">
                 {' '}

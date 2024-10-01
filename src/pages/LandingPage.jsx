@@ -7,8 +7,7 @@ import {
 
 const LandingPage = () => {
   return (
-    <main className="container mx-auto p-8">
-      {/* Hero Section */}
+    <main className="container mx-auto p-4 md:p-8 lg:p-12">
       <HeroSection />
       <ProductsSection />
       <PromotionSection />

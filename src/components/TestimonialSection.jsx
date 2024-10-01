@@ -33,7 +33,7 @@ const TestimonialSection = () => {
           {testimonials.map((testimonial) => (
             <div
               key={testimonial.id}
-              className="min-w-[150px] bg-white shadow-md p-4 rounded-md text-center"
+              className="min-w-[150px] sm:min-w-[200px] md:min-w-[250px] bg-white shadow-md p-4 rounded-md text-center"
             >
               <img
                 src={testimonial.image}
