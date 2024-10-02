@@ -1,7 +1,8 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Searchbar from './Searchbar';
-import { useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { Cart3, Person } from 'react-bootstrap-icons';
 
 const Header = () => {
   const location = useLocation();
@@ -14,215 +15,149 @@ const Header = () => {
     navigate('/');
   };
 
+  const navRef = useRef(null);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para el menú de hamburguesa
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen); // Alternar estado del menú
   };
 
+  useEffect(() => {
+    // Cerrar menú al cambiar de página
+    setIsMenuOpen(false);
+  }, [location]);
+
+  // Ocultar la nav si se hace click fuera de ella o en el botón de menú
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        navRef.current &&
+        !navRef.current.contains(event.target) &&
+        event.target.name !== 'menu-button'
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside, true);
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true);
+    };
+  }, []);
+
   return (
-    <header className="flex flex-col items-center p-5 bg-white shadow-md mx-4">
-      {/* Logo en pantallas pequeñas */}
-      <div className="w-80 mb-2 sm:hidden">
-        <Link to="/">
-          <img src="/Logo.png" alt="Juguetitos" className="w-36" />
-        </Link>
-      </div>
-
-      {/* Icono de hamburguesa en el centro (solo en pantallas pequeñas) */}
-      <button onClick={toggleMenu} className="block sm:hidden mb-2">
-        <span className="block">☰</span>{' '}
-        {/* Cambia a un ícono de menú de tu elección */}
-      </button>
-
-      {/* Menú desplegable */}
-      {isMenuOpen && (
-        <nav className="w-full mb-2">
-          <ul className="flex flex-col items-center space-y-2">
-            {!isAdminPage ? (
-              <>
-                <li>
-                  <Link to="/" className="text-gray-800 hover:text-gray-600">
-                    Inicio
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/products"
-                    className="text-gray-800 hover:text-gray-600"
-                  >
-                    Productos
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/promotions"
-                    className="text-gray-800 hover:text-gray-600"
-                  >
-                    Promociones
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/categories"
-                    className="text-gray-800 hover:text-gray-600"
-                  >
-                    Categorías
-                  </Link>
-                </li>
-              </>
-            ) : (
-              <>
-                <li>
-                  <Link
-                    to="/admin/dashboard/products"
-                    className="text-gray-800 hover:text-gray-600"
-                  >
-                    Modificar Productos
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/admin/dashboard/reportes"
-                    className="text-gray-800 hover:text-gray-600"
-                  >
-                    Reporte Ventas
-                  </Link>
-                </li>
-                <li>
-                  <button
-                    onClick={handleLogout}
-                    className="text-gray-800 hover:text-gray-600"
-                  >
-                    Cerrar sesión
-                  </button>
-                </li>
-              </>
-            )}
-          </ul>
-        </nav>
-      )}
-
-      {/* Searchbar y sección de íconos centrados (pantallas pequeñas) */}
-      <div className="flex flex-col items-center w-full mt-2 sm:hidden">
-        <Searchbar />
-        <div className="flex space-x-4 mt-2">
-          <Link to={isLoggedIn ? '/perfil' : '/login'}>
-            <img
-              src="/icon.svg"
-              alt="Usuario"
-              className="w-8 h-8 cursor-pointer"
-            />
-          </Link>
-          <Link to="/cart">
-            <img
-              src="/cart.png"
-              alt="Carrito"
-              className="w-8 h-8 cursor-pointer"
-            />
-          </Link>
-        </div>
-      </div>
-
-      {/* Estructura para pantallas grandes */}
-      <div className="hidden sm:flex justify-between items-center w-full">
-        {/* Logo en pantallas grandes */}
-        <div className="w-80">
+    <nav className="bg-white fixed w-full z-20 top-0 start-0 border-b border-gray-200 shadow-md">
+      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-3 md:p-3 lg:p-4">
+        <div className="-mb-1 lg:w-72">
           <Link to="/">
             <img src="/Logo.png" alt="Juguetitos" className="w-36" />
           </Link>
         </div>
 
-        {/* Barra de navegación centrada */}
-        <nav className="flex-grow">
-          <ul className="flex justify-center space-x-4">
-            {!isAdminPage ? (
-              <>
-                <li>
-                  <Link to="/" className="text-gray-800 hover:text-gray-600">
-                    Inicio
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/products"
-                    className="text-gray-800 hover:text-gray-600"
-                  >
-                    Productos
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/promotions"
-                    className="text-gray-800 hover:text-gray-600"
-                  >
-                    Promociones
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/categories"
-                    className="text-gray-800 hover:text-gray-600"
-                  >
-                    Categorías
-                  </Link>
-                </li>
-              </>
-            ) : (
-              <>
-                <li>
-                  <Link
-                    to="/admin/dashboard/products"
-                    className="text-gray-800 hover:text-gray-600"
-                  >
-                    Modificar Productos
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/admin/dashboard/reportes"
-                    className="text-gray-800 hover:text-gray-600"
-                  >
-                    Reporte Ventas
-                  </Link>
-                </li>
-                <li>
-                  <button
-                    onClick={handleLogout}
-                    className="text-gray-800 hover:text-gray-600"
-                  >
-                    Cerrar sesión
-                  </button>
-                </li>
-              </>
-            )}
-          </ul>
-        </nav>
-
-        {/* Sección de búsqueda e íconos a la derecha */}
-        <div className="flex items-center space-x-4 w-80">
-          {!isAdminPage && <Searchbar />}
+        <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+          {/* Botón para el menú hamburguesa */}
+          <button
+            data-collapse-toggle="navbar-sticky"
+            type="button"
+            onClick={toggleMenu}
+            className="inline-flex items-center p-2 w-10 h-10 justify-center text-xl text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+            aria-controls="navbar-sticky"
+            aria-expanded="false"
+            name="menu-button"
+          >
+            ☰
+          </button>
+        </div>
+        <div
+          className={`items-center ${!isMenuOpen && `hidden`} justify-between flex-grow md:flex md:order-1`}
+          id="navbar-sticky"
+          ref={navRef}
+        >
+          {!isAdminPage ? (
+            <ul className="flex flex-col p-2 md:p-0 mt-2 mb-3 font-medium text-sm border border-gray-100 rounded-lg bg-gray-50 md:space-x-0 mx-auto rtl:space-x-reverse md:flex-row md:my-0 md:border-0 md:bg-white lg:text-base">
+              <li>
+                <Link
+                  to="/"
+                  className="block py-2 px-3 text-gray-900 rounded hover:bg-blue-100 transition-colors"
+                >
+                  Inicio
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/products"
+                  className="block py-2 px-3 text-gray-900 rounded hover:bg-blue-100 transition-colors"
+                >
+                  Productos
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/promotions"
+                  className="block py-2 px-3 text-gray-900 rounded hover:bg-blue-100 transition-colors"
+                >
+                  Promociones
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/categories"
+                  className="block py-2 px-3 text-gray-900 rounded hover:bg-blue-100 transition-colors"
+                >
+                  Categorías
+                </Link>
+              </li>
+            </ul>
+          ) : (
+            <ul className="flex flex-col p-2 md:p-0 mt-2 mb-3 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white">
+              <li>
+                <Link
+                  to="/admin/dashboard/products"
+                  className="block py-2 px-3 text-gray-900 rounded hover:bg-blue-100 transition-colors"
+                >
+                  Modificar Productos
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/admin/dashboard/reportes"
+                  className="block py-2 px-3 text-gray-900 rounded hover:bg-blue-100 transition-colors"
+                >
+                  Reporte Ventas
+                </Link>
+              </li>
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className="block py-2 px-3 text-gray-900 rounded hover:bg-blue-100 transition-colors"
+                >
+                  Cerrar sesión
+                </button>
+              </li>
+            </ul>
+          )}
           {!isAdminPage && (
-            <>
+            <div className="flex justify-between items-center md:w-60 lg:w-72 gap-2 w-full">
+              <div className="flex-grow">
+                <Searchbar />
+              </div>
               <Link to={isLoggedIn ? '/perfil' : '/login'}>
-                <img
-                  src="/icon.svg"
-                  alt="Usuario"
-                  className="w-8 h-8 cursor-pointer"
+                <Person
+                  color="black"
+                  className="cursor-pointer text-2xl lg:text-[30px]"
                 />
               </Link>
               <Link to="/cart">
-                <img
-                  src="/cart.png"
-                  alt="Carrito"
-                  className="w-8 h-8 cursor-pointer"
+                <Cart3
+                  color="black"
+                  className="cursor-pointer text-xl lg:text-[26px]"
                 />
               </Link>
-            </>
+            </div>
           )}
         </div>
       </div>
-    </header>
+    </nav>
   );
 };
 
