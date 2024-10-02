@@ -64,9 +64,9 @@ function CartPage() {
   };
 
   return (
-    <main className="container mx-auto p-8">
-      <div className="flex gap-3 mt-7">
-        <section className="border rounded-lg shadow w-3/4 p-6">
+    <main className="container mx-auto p-4 sm:p-6 md:p-8 lg:p-10">
+      <div className="flex flex-col md:flex-row gap-4 mt-7">
+        <section className="border rounded-lg shadow w-full md:w-3/4 p-4 sm:p-6">
           <h1 className="font-medium mb-4 text-xl">Carrito</h1>
           <div>
             {cartItems.length === 0 ? (
@@ -75,7 +75,7 @@ function CartPage() {
               cartItems.map((item) => (
                 <CartItem
                   key={item.id}
-                  item={{ ...item, total: calculateTotal(item) }} // Agrega total a los props
+                  item={{ ...item, total: calculateTotal(item) }}
                   onUpdateQuantity={updateQuantity}
                   onRemove={removeItem}
                 />

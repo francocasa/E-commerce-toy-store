@@ -1,16 +1,18 @@
-import { dbCategories } from '../data/DbCategories'; // Asegúrate de que la ruta sea correcta
+import { dbCategories } from '../data/DbCategories';
 import { CategorieCard as CategoryCard } from '../components';
 
 function CategoriesPage() {
   return (
     <main className="my-8">
-      <h2 className="text-2xl font-bold mb-4 ml-4">Categorias</h2>
-      {console.log(dbCategories)}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {dbCategories.map((category) => (
-          <CategoryCard key={category.id} category={category} />
-        ))}
-      </div>
+      <section className="mx-9">
+        <h2 className="text-2xl font-bold mb-4 ml-4">Categorías</h2>
+        {console.log(dbCategories)}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {dbCategories.map((category) => (
+            <CategoryCard key={category.id} category={category} />
+          ))}
+        </div>
+      </section>
     </main>
   );
 }

@@ -49,36 +49,39 @@ function LoginPage() {
     <main className="container mx-auto p-8">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded shadow-md w-full max-w-sm mx-auto m-12"
+        className="bg-white p-6 rounded shadow-md w-full max-w-sm mx-auto"
       >
-        <h1 className="text-2xl font-bold mb-4">Iniciar Sesión</h1>
+        <h1 className="text-2xl font-bold mb-4 text-center">Iniciar Sesión</h1>
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border p-2 w-full mb-4"
+          className="border p-2 w-full mb-4 rounded"
         />
         <input
           type="password"
           placeholder="Contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border p-2 w-full mb-4"
+          className="border p-2 w-full mb-4 rounded"
         />
         <button
           type="submit"
-          className="bg-blue-500 text-white p-2 rounded w-full"
+          className="bg-blue-500 text-white p-2 rounded w-full hover:bg-blue-600 transition"
         >
           Entrar
         </button>
         <p className="text-center mt-4">
           No tienes una cuenta?{' '}
-          <Link to="/signup" className="text-blue-500">
+          <Link to="/signup" className="text-blue-500 hover:underline">
             Regístrate
           </Link>
         </p>
-        <Link to="/loginAdm" className="text-blue-500 text-center block mt-4">
+        <Link
+          to="/loginAdm"
+          className="text-blue-500 text-center block mt-4 hover:underline"
+        >
           Inicio de sesión ADMINISTRADOR
         </Link>
       </form>

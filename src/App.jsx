@@ -16,7 +16,6 @@ import DashboardReportes from './pages/DashboardReportes';
 import PromotionsPage from './pages/PromotionsPage';
 import ProfilePage from './pages/ProfilePage';
 import TestimoniosPage from './pages/TestimoniosPage';
-import PromotionDetailPage from './pages/PromotionDetailPage';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import './index.css';
@@ -49,7 +48,6 @@ function App() {
         <Route path="/detailsproduct/:id" element={<DetailsProductPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/promotions" element={<PromotionsPage />} />
-        <Route path="/promotion/:id" element={<PromotionDetailPage />} />
         <Route path="/testimonios" element={<TestimoniosPage />} />
       </Routes>
       <Footer />

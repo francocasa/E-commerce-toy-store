@@ -102,21 +102,24 @@ function SignupPage() {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border p-2 w-full mb-4"
+          className="border p-2 w-full mb-4 rounded"
+          required
         />
         <input
           type="password"
           placeholder="Contraseña"
           value={password}
           onChange={handlePasswordChange}
-          className="border p-2 w-full mb-4"
+          className="border p-2 w-full mb-4 rounded"
+          required
         />
         <input
           type="password"
           placeholder="Repite la Contraseña"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          className="border p-2 w-full mb-4"
+          className="border p-2 w-full mb-4 rounded"
+          required
         />
 
         <div className="w-full bg-gray-200 h-2 rounded mb-4">
@@ -128,7 +131,7 @@ function SignupPage() {
 
         <button
           type="submit"
-          className="bg-blue-500 text-white p-2 rounded w-full"
+          className="bg-blue-500 text-white p-2 rounded w-full hover:bg-blue-600 transition"
           disabled={passwordStrength < 4 || password !== confirmPassword}
         >
           Registrarse

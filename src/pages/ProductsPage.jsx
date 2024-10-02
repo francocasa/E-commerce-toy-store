@@ -1,44 +1,43 @@
 import { useState } from 'react';
-import { dbProducts } from '../data/DbProducts'; // Asegúrate de que la ruta sea correcta
+import { dbProducts } from '../data/DbProducts';
 import { ProductCard } from '../components';
-import { CategoryFilter } from '../components'; // Asegúrate de importar el componente
+import { CategoryFilter } from '../components';
 import { useParams } from 'react-router-dom';
 
 function ProductsPage() {
-  const { cat } = useParams(); //categoria por utilizar
+  const { cat } = useParams();
   let categoria;
 
   const categories = ['Educativo', 'Acción'];
-  if (cat == null) {
-    categoria = '';
-  } else {
-    categoria = cat;
-  }
+  categoria = cat || '';
+
   const [selectedCategory, setSelectedCategory] = useState(categoria);
 
   const filteredProducts = dbProducts.filter((product) => {
     return (
-      selectedCategory === '' || product.category.includes(selectedCategory) // Cambiado para verificar si la categoría está en el array
+      selectedCategory === '' || product.category.includes(selectedCategory)
     );
   });
 
   return (
     <main className="my-8">
-      <h2 className="text-2xl font-bold mb-4 ml-4">Productos</h2>
+      <section className="mx-9">
+        <h2 className="text-2xl font-bold mb-4">Productos</h2>
 
-      <div className="ml-4">
-        <CategoryFilter
-          categories={categories}
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-        />
-      </div>
+        <div className="mb-8">
+          <CategoryFilter
+            categories={categories}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+          />
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {filteredProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {filteredProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </section>
     </main>
   );
 }
