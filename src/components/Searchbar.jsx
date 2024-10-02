@@ -18,17 +18,17 @@ const Searchbar = () => {
   }, [searchTerm]);
 
   return (
-    <div className="relative flex items-center bg-gray-100 px-4 py-2 rounded-md">
+    <div className="relative flex items-center bg-gray-100 py-1 px-2 lg:px-4 lg:py-2 rounded-md">
       <input
         type="text"
-        placeholder="¿Qué deseas buscar?"
+        placeholder="Buscar juguetes..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="bg-transparent w-full outline-none text-gray-700"
+        className="bg-transparent w-full outline-none text-gray-700 text-sm lg:text-base"
       />
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="h-6 w-6 text-gray-500"
+        className="h-4 w-4 lg:h-6 lg:w-6 text-gray-500"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
