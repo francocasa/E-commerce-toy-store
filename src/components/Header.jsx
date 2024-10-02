@@ -47,7 +47,7 @@ const Header = () => {
 
   return (
     <nav className="bg-white fixed w-full z-20 top-0 start-0 border-b border-gray-200 shadow-md">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-3 md:p-3 lg:p-4">
+      <div className="container flex flex-wrap items-center justify-between mx-auto p-3 md:p-3 lg:p-4">
         <div className="-mb-1 lg:w-72">
           <Link to="/">
             <img src="/Logo.png" alt="Juguetitos" className="w-36" />
