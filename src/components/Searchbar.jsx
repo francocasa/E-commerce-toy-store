@@ -18,7 +18,7 @@ const Searchbar = () => {
   }, [searchTerm]);
 
   return (
-    <div className="relative flex items-center bg-gray-100 px-4 py-2 rounded-md w-52">
+    <div className="relative flex items-center bg-gray-100 px-4 py-2 rounded-md">
       <input
         type="text"
         placeholder="¿Qué deseas buscar?"
