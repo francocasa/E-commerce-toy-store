@@ -2,12 +2,12 @@ import PropTypes from 'prop-types';
 
 export default function CartSummary({ subtotal, discounts }) {
   return (
-    <aside className="border rounded-lg shadow w-1/4 flex flex-col p-5 font-medium gap-6 h-fit">
+    <aside className="border rounded-lg shadow w-full md:w-1/4 flex flex-col p-5 font-medium gap-6 h-fit">
       <header>
-        <h1 className="text-lg">Resumen de compra</h1>
+        <h1 className="text-lg text-center md:text-left">Resumen de compra</h1>
       </header>
 
-      <section className="flex-grow px-2 space-y-10">
+      <section className="flex-grow px-2 space-y-6">
         <div className="space-y-3">
           <div className="flex justify-between">
             <p>Subtotal</p>
@@ -44,5 +44,4 @@ export default function CartSummary({ subtotal, discounts }) {
 CartSummary.propTypes = {
   subtotal: PropTypes.number.isRequired,
   discounts: PropTypes.number.isRequired,
-  total: PropTypes.number.isRequired,
 };

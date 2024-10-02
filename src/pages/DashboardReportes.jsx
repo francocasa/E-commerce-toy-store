@@ -22,12 +22,14 @@ function DashboardReportes() {
   if (!admin) return null; // Muestra nada mientras se carga
 
   return (
-    <div className="container mx-auto p-8">
+    <div className="container mx-auto p-4 md:p-8">
       <h1 className="text-2xl font-bold">Bienvenido, {admin.name}</h1>
-      <p className="mt-4 text-[90px]">Página en construcción</p>
+      <p className="mt-4 text-5xl md:text-6xl lg:text-7xl text-center">
+        Página en construcción
+      </p>
       <button
         onClick={handleLogout}
-        className="bg-red-500 text-white py-2 px-4 rounded mt-4"
+        className="bg-red-500 text-white py-2 px-4 rounded mt-4 hover:bg-red-600 transition duration-200"
       >
         Cerrar Sesión
       </button>

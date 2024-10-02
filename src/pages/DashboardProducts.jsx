@@ -100,21 +100,29 @@ function DashboardProducts() {
       return;
     }
 
+    const newProductWithId = {
+      ...newProduct,
+      id: newProduct.id
+        ? newProduct.id
+        : String(
+            Number(products.length ? products[products.length - 1].id : 0) + 1,
+          ),
+      price: parseFloat(newProduct.price), // Convertir a número
+    };
+
     let updatedProducts;
     if (newProduct.id) {
       // Modificación de producto existente
       updatedProducts = products.map((product) =>
-        product.id === newProduct.id ? newProduct : product,
+        product.id === newProduct.id ? newProductWithId : product,
       );
-      localStorage.setItem('ProductoModificado', JSON.stringify(newProduct));
     } else {
       // Creación de nuevo producto
-      newProduct.id = String(products.length + 1);
-      updatedProducts = [...products, newProduct];
-      localStorage.setItem('ProductoCreado', JSON.stringify(updatedProducts));
+      updatedProducts = [...products, newProductWithId];
     }
 
     setProducts(updatedProducts);
+    localStorage.setItem('ProductoCreado', JSON.stringify(updatedProducts));
     handleCancelEdit();
     Swal.fire('Éxito', 'Producto agregado o editado correctamente.', 'success');
   };
@@ -153,16 +161,19 @@ function DashboardProducts() {
             onChange={(e) =>
               setNewProduct({ ...newProduct, title: e.target.value })
             }
-            className="border p-2"
+            className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="number"
             placeholder="Precio"
             value={newProduct.price}
             onChange={(e) =>
-              setNewProduct({ ...newProduct, price: e.target.value })
+              setNewProduct({
+                ...newProduct,
+                price: parseFloat(e.target.value),
+              })
             }
-            className="border p-2"
+            className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="text"
@@ -171,7 +182,7 @@ function DashboardProducts() {
             onChange={(e) =>
               setNewProduct({ ...newProduct, image: e.target.value })
             }
-            className="border p-2"
+            className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="text"
@@ -180,7 +191,7 @@ function DashboardProducts() {
             onChange={(e) =>
               setNewProduct({ ...newProduct, descripcion: e.target.value })
             }
-            className="border p-2"
+            className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="text"
@@ -189,7 +200,7 @@ function DashboardProducts() {
             onChange={(e) =>
               setNewProduct({ ...newProduct, marca: e.target.value })
             }
-            className="border p-2"
+            className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="text"
@@ -198,14 +209,14 @@ function DashboardProducts() {
             onChange={(e) =>
               setNewProduct({ ...newProduct, material: e.target.value })
             }
-            className="border p-2"
+            className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <select
             value={newProduct.category}
             onChange={(e) =>
               setNewProduct({ ...newProduct, category: [e.target.value] })
             }
-            className="border p-2"
+            className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Seleccione categoría</option>
             {categories.map((cat) => (
@@ -224,13 +235,18 @@ function DashboardProducts() {
                   promocion: newProduct.promocion === 'true' ? 'false' : 'true',
                 })
               }
+              className="mr-2"
             />
-            <span className="ml-2">Promoción</span>
+            <span>Promoción</span>
           </label>
           <select
             value={newProduct.descriptionPromo}
             onChange={(e) => handleDescriptionPromoChange(e.target.value)}
-            className={`border p-2 ${newProduct.promocion === 'false' ? 'bg-gray-200 cursor-not-allowed' : ''}`}
+            className={`border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              newProduct.promocion === 'false'
+                ? 'bg-gray-200 cursor-not-allowed'
+                : ''
+            }`}
             disabled={newProduct.promocion === 'false'}
           >
             <option value="">Seleccione descripción de promoción</option>
@@ -242,21 +258,21 @@ function DashboardProducts() {
           <input
             type="text"
             value={newProduct.categoryPromo}
-            className={`border p-2 bg-gray-200 cursor-not-allowed`}
+            className="border p-2 bg-gray-200 cursor-not-allowed rounded"
             readOnly
           />
         </div>
         <div className="mt-4">
           <button
             onClick={handleAddOrEditProduct}
-            className="bg-blue-500 text-white py-2 px-4 rounded"
+            className="bg-blue-500 text-white py-2 px-4 rounded shadow hover:bg-blue-600 transition duration-200"
           >
             {newProduct.id ? 'Actualizar Producto' : 'Agregar Producto'}
           </button>
           {newProduct.id && (
             <button
               onClick={handleCancelEdit}
-              className="ml-2 bg-gray-500 text-white py-2 px-4 rounded"
+              className="ml-2 bg-gray-500 text-white py-2 px-4 rounded shadow hover:bg-gray-600 transition duration-200"
             >
               Cancelar Edición
             </button>
@@ -277,13 +293,13 @@ function DashboardProducts() {
           <div key={product.id} className="relative w-[270px] mx-auto mt-20">
             <button
               onClick={() => handleDelete(product.id)}
-              className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-red-500 bg-white border rounded"
+              className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-red-500 bg-white border rounded shadow"
             >
               Eliminar
             </button>
             <button
               onClick={() => handleEdit(product)}
-              className="absolute -top-16 left-1/2 transform -translate-x-1/2 text-blue-500 bg-white border rounded"
+              className="absolute -top-16 left-1/2 transform -translate-x-1/2 text-blue-500 bg-white border rounded shadow"
             >
               Editar
             </button>
