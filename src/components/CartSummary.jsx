@@ -24,7 +24,7 @@ export default function CartSummary({ subtotal, discounts }) {
         </div>
 
         <div className="space-y-3">
-          <a className="block text-center py-2 text-white border-2 border-blue-500 bg-blue-500 rounded-md font-bold hover:bg-blue-400 hover:border-blue-400 cursor-pointer transition-all">
+          <a className="block text-center py-2 text-white border-2 border-blue-500 bg-blue-500 rounded-md font-bold hover:bg-blue-400 hover:border-blue-400 cursor-pointer transition-colors">
             Pagar
           </a>
           <a className="block text-center w-full py-2 text-slate-500 border-2 border-slate-400 rounded-md font-bold cursor-pointer hover:bg-slate-400 hover:text-white transition-all">
