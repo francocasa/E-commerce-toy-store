@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'; // Importar PropTypes
 import { Link } from 'react-router-dom';
+import { ArrowUpRightSquare } from 'react-bootstrap-icons';
 
 function ProductCard({ product }) {
   let price = product.price;
@@ -29,9 +30,9 @@ function ProductCard({ product }) {
           className="w-auto h-40 object-cover" // Mantiene el ajuste de la imagen
         />
       </div>
-      <h3 className="text-lg font-bold text-center">{product.title}</h3>
+      <h3 className="text-lg font-bold text-center mb-1">{product.title}</h3>
       {promo !== '' ? (
-        <p className="text-gray-600 mb-4 text-center">
+        <p className="text-gray-600 mb-3 text-center">
           <div className="flex justify-center">
             <span className="bg-red-600 text-xs text-gray-400 rounded-md p-0.5 mr-2">
               {product.categoryPromo}
@@ -47,15 +48,16 @@ function ProductCard({ product }) {
           {promo}
         </p>
       ) : (
-        <p className="text-gray-600 mb-4 text-center">
+        <p className="text-gray-600 mb-3 text-center font-bold text-lg">
           ${product.price.toFixed(2)}
         </p>
       )}
       <Link
         to={`/detailsproduct/${product.id}`}
-        className="text-blue-500 text-center block"
+        className="flex items-center gap-2 text-white font-medium py-2 px-3 bg-blue-500 rounded-md w-fit mx-auto cursor-pointer hover:bg-blue-400 transition"
       >
-        Ver más
+        <span>Ver más</span>
+        <ArrowUpRightSquare />
       </Link>
     </div>
   );
