@@ -85,6 +85,21 @@ export const createUser = async (user) => {
   }
 };
 
+// Esta libreria no soporta json anidados
+// Obtener el perfil del usuario
+export const getHistory = async (id) => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/users_cliente/${id}?_embed=history`,
+    );
+    if (!response.ok) throw new Error('History not found');
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    return null;
+  }
+};
+
 // Función para generar un ID único (puedes modificar esto según tus necesidades)
 const generateUniqueId = () => {
   return Math.random().toString(36).substr(2, 9); // Genera un ID aleatorio

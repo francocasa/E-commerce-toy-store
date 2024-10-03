@@ -231,7 +231,43 @@
       "photo": "https://example.com/perfil1.jpg",
       "address": "Calle Falsa 123",
       "phone": "123456789",
-      "password": "1234"
+      "password": "1234",
+      "history": [
+        {
+          "id": "1",
+          "date": "2024-10-02",
+          "purchase": [
+            {
+              "id": "1",
+              "amount": "2",
+              "price": "120"
+            },
+            {
+              "id": "10",
+              "amount": "10",
+              "price": "200"
+            }
+          ],
+          "total": 320
+        },
+        {
+          "id": "2",
+          "date": "2024-10-04",
+          "purchase": [
+            {
+              "id": "1",
+              "amount": "3",
+              "price": "130"
+            },
+            {
+              "id": "10",
+              "amount": "5",
+              "price": "100"
+            }
+          ],
+          "total": 230
+        }
+      ]
     },
     {
       "id": "2",
@@ -240,12 +276,14 @@
       "photo": "https://example.com/perfil2.jpg",
       "address": "Avenida Siempre Viva 742aaaa",
       "phone": "987654321",
-      "password": "1234"
+      "password": "1234",
+      "history": []
     },
     {
       "email": "blabla@gmail.com",
       "password": "Miguel24773!",
-      "id": "5QoE7Nk"
+      "id": "5QoE7Nk",
+      "history": []
     },
     {
       "id": "saeckjt5b",
@@ -254,12 +292,14 @@
       "name": "Genial",
       "photo": "asaf",
       "address": "12313",
-      "phone": "asfasfa"
+      "phone": "asfasfa",
+      "history": []
     },
     {
       "id": "vznqdjtds",
       "email": "ada@gmail.com",
-      "password": "Miguel24773!"
+      "password": "Miguel24773!",
+      "history": []
     }
   ],
   "hero": [
