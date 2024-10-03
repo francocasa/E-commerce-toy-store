@@ -43,14 +43,10 @@ export default function CartItem({ item, onUpdateQuantity, onRemove }) {
             />
           </div>
         </div>
-        <div className="hidden flex flex-col justify-start items-center px-4 mt-4 md:mt-0">
-          <p className="text-sm text-slate-700">Subtotal</p>
-          <p className="font-bold">${(price * quantity).toFixed(2)}</p>
-        </div>
       </div>
       <div className="absolute right-2 top-4 md:top-5">
         <TrashFill
-          className="block text-gray-700 text-xl cursor-pointer hover:text-red-700 hover:scale-125 transition-transform transition-colors sm:text-2xl"
+          className="block text-gray-700 text-xl cursor-pointer hover:text-red-700 hover:scale-125 transition-all sm:text-2xl"
           onClick={() => onRemove(id)}
         />
       </div>
