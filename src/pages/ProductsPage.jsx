@@ -41,7 +41,7 @@ function ProductsPage() {
   if (error) return <p className="text-center text-red-500">{error}</p>; // Manejo de error
 
   return (
-    <main className="my-8">
+    <main className="container mx-auto my-8">
       <section className="mx-9">
         <h2 className="text-2xl font-bold mb-4">Productos</h2>
 
@@ -53,9 +53,11 @@ function ProductsPage() {
           />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="flex flex-wrap gap-3 justify-center">
           {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <div className="w-4/5 max-w-80" key={product.id}>
+              <ProductCard product={product} />
+            </div>
           ))}
         </div>
       </section>
