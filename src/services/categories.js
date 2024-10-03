@@ -2,7 +2,7 @@ const BASE_URL = import.meta.env.VITE_API_URL; // Obtener la URL base desde el .
 
 export const consultaDatos = async () => {
   const URL = `${BASE_URL}/categories`; // Construir la URL para las categorías
-
+  console.log(URL);
   try {
     const response = await fetch(URL); // Usar la URL construida
     if (!response.ok) {
