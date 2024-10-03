@@ -2,13 +2,15 @@ import PropTypes from 'prop-types';
 
 export default function CartSummary({ subtotal, discounts }) {
   return (
-    <aside className="border rounded-lg shadow w-full md:w-1/4 flex flex-col p-5 font-medium gap-6 h-fit">
+    <aside className="border rounded-lg shadow w-full flex flex-col p-4 font-medium gap-4 h-fit sm:gap-6 lg:w-1/3">
       <header>
-        <h1 className="text-lg text-center md:text-left">Resumen de compra</h1>
+        <h1 className="px-2 text-lg text-center lg:text-left">
+          Resumen de compra
+        </h1>
       </header>
 
-      <section className="flex-grow px-2 space-y-6">
-        <div className="space-y-3">
+      <section className="flex-grow px-2 space-y-4 sm:flex sm:gap-6 sm:space-y-0 lg:flex-col lg:min-w-64">
+        <div className="space-y-1 sm:flex-grow">
           <div className="flex justify-between">
             <p>Subtotal</p>
             <p className="font-black">${subtotal.toFixed(2)}</p>
@@ -23,17 +25,17 @@ export default function CartSummary({ subtotal, discounts }) {
           </div>
         </div>
 
-        <div className="space-y-3">
-          <a className="block text-center py-2 text-white border-2 border-blue-500 bg-blue-500 rounded-md font-bold hover:bg-blue-400 hover:border-blue-400 cursor-pointer transition-colors">
-            Pagar
-          </a>
-          <a className="block text-center w-full py-2 text-slate-500 border-2 border-slate-400 rounded-md font-bold cursor-pointer hover:bg-slate-400 hover:text-white transition-all">
+        <div className="flex gap-2 sm:w-1/3 sm:flex-col lg:w-full">
+          <a className="block flex-grow text-center py-1 text-base text-slate-500 border-2 border-slate-400 rounded-md font-bold cursor-pointer hover:bg-slate-400 hover:text-white transition-colors lg:py-2">
             Seguir Comprando
+          </a>
+          <a className="block flex-grow text-center py-1 text-white text-base  border-2 border-blue-500 bg-blue-500 rounded-md font-bold hover:bg-blue-400 hover:border-blue-400 cursor-pointer transition-colors lg:py-2">
+            Pagar
           </a>
         </div>
       </section>
 
-      <footer className="text-center mt-4">
+      <footer className="text-center mt-1">
         <a href="#">Política de Devoluciones</a>
       </footer>
     </aside>
