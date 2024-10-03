@@ -64,9 +64,9 @@ function CartPage() {
   };
 
   return (
-    <main className="container mx-auto p-4 sm:p-6 md:p-8 lg:p-10">
-      <div className="flex flex-col md:flex-row gap-4">
-        <section className="border rounded-lg shadow w-full p-4 pb-2 md:w-3/4">
+    <main className="container max-w-6xl mx-auto p-4 sm:p-6 md:p-8 lg:p-10">
+      <div className="flex flex-col lg:flex-row gap-4">
+        <section className="border rounded-lg shadow w-full p-4 pb-2 h-fit lg:p-5">
           <h1 className="font-medium mb-1 text-xl">Carrito</h1>
           <div className="divide-y-2">
             {cartItems.length === 0 ? (

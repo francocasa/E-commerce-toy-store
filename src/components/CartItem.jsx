@@ -31,15 +31,14 @@ export default function CartItem({ item, onUpdateQuantity, onRemove }) {
           </div>
           <div className="flex justify-start items-center gap-2 mt-2">
             <DashSquareFill
-              className="text-xl text-blue-500 cursor-pointer hover:text-blue-400"
+              className={`text-xl select-none ${quantity <= 1 ? 'text-gray-300 hover:text-gray-300 cursor-default' : 'text-blue-500 cursor-pointer hover:text-blue-400'}`}
               onClick={() => onUpdateQuantity(id, quantity - 1)}
-              disabled={quantity <= 1}
             />
 
             <p className="text-sm md:text-base">{quantity}</p>
 
             <PlusSquareFill
-              className="text-xl text-blue-500 cursor-pointer hover:text-blue-400"
+              className="text-xl text-blue-500 cursor-pointer hover:text-blue-400 select-none"
               onClick={() => onUpdateQuantity(id, quantity + 1)}
             />
           </div>
@@ -51,7 +50,7 @@ export default function CartItem({ item, onUpdateQuantity, onRemove }) {
       </div>
       <div className="absolute right-2 top-4 md:top-5">
         <TrashFill
-          className="block text-gray-700 text-xl cursor-pointer hover:text-red-700 hover:scale-125 transition-all md:text-2xl"
+          className="block text-gray-700 text-xl cursor-pointer hover:text-red-700 hover:scale-125 transition-transform transition-colors sm:text-2xl"
           onClick={() => onRemove(id)}
         />
       </div>

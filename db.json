@@ -8,9 +8,7 @@
       "descripcion": "Juguete para varones",
       "marca": "Marca A",
       "material": "madera",
-      "category": [
-        "Educativo"
-      ],
+      "category": ["Educativo"],
       "promocion": false,
       "descriptionPromo": "",
       "categoryPromo": ""
@@ -23,9 +21,7 @@
       "descripcion": "Juguete educativo",
       "marca": "Marca B",
       "material": "madera",
-      "category": [
-        "Educativo"
-      ],
+      "category": ["Educativo"],
       "promocion": false,
       "descriptionPromo": "",
       "categoryPromo": ""
@@ -38,9 +34,7 @@
       "descripcion": "Juguete para construir",
       "marca": "Marca C",
       "material": "madera",
-      "category": [
-        "Educativo"
-      ],
+      "category": ["Educativo"],
       "promocion": false,
       "descriptionPromo": "",
       "categoryPromo": ""
@@ -53,9 +47,7 @@
       "descripcion": "Juguete interactivo",
       "marca": "Marca D",
       "material": "madera",
-      "category": [
-        "Educativo"
-      ],
+      "category": ["Educativo"],
       "promocion": false,
       "descriptionPromo": "",
       "categoryPromo": ""
@@ -68,9 +60,7 @@
       "descripcion": "Juguete clásico",
       "marca": "Marca E",
       "material": "madera",
-      "category": [
-        "Educativo"
-      ],
+      "category": ["Educativo"],
       "promocion": false,
       "descriptionPromo": "",
       "categoryPromo": ""
@@ -83,9 +73,7 @@
       "descripcion": "Juguete para jugar al aire libre",
       "marca": "Marca F",
       "material": "madera",
-      "category": [
-        "Educativo"
-      ],
+      "category": ["Educativo"],
       "promocion": false,
       "descriptionPromo": "",
       "categoryPromo": ""
@@ -98,9 +86,7 @@
       "descripcion": "Juguete para su niño",
       "marca": "Marca F",
       "material": "madera",
-      "category": [
-        "Educativo"
-      ],
+      "category": ["Educativo"],
       "promocion": true,
       "descriptionPromo": "Compra 3 y paga 2",
       "categoryPromo": "3x2"
@@ -113,9 +99,7 @@
       "descripcion": "Juguete para su niño",
       "marca": "Marca H",
       "material": "madera",
-      "category": [
-        "Acción"
-      ],
+      "category": ["Acción"],
       "promocion": true,
       "descriptionPromo": "30% de descuento en juguetes seleccionados",
       "categoryPromo": "Navidad"
@@ -128,9 +112,7 @@
       "descripcion": "Juguete para su niño",
       "marca": "Marca I",
       "material": "madera",
-      "category": [
-        "Acción"
-      ],
+      "category": ["Acción"],
       "promocion": true,
       "descriptionPromo": "Compra 3 y paga 2",
       "categoryPromo": "3x2"
@@ -143,9 +125,7 @@
       "descripcion": "Juguete para su niño",
       "marca": "Marca J",
       "material": "madera",
-      "category": [
-        "Acción"
-      ],
+      "category": ["Acción"],
       "promocion": true,
       "descriptionPromo": "30% de descuento en productos navideños",
       "categoryPromo": "Navidad"
@@ -158,9 +138,7 @@
       "descripcion": "Juguete para su niño",
       "marca": "Marca K",
       "material": "madera",
-      "category": [
-        "Acción"
-      ],
+      "category": ["Acción"],
       "promocion": true,
       "descriptionPromo": "Compra 3 y paga 2",
       "categoryPromo": "3x2"
@@ -173,10 +151,7 @@
       "descripcion": "Juguete para su niño",
       "marca": "Marca L",
       "material": "madera",
-      "category": [
-        "Acción",
-        "Educativo"
-      ],
+      "category": ["Acción", "Educativo"],
       "promocion": true,
       "descriptionPromo": "30% de descuento en toda la tienda",
       "categoryPromo": "Navidad"
@@ -189,9 +164,7 @@
       "descripcion": "asdada",
       "marca": "marca",
       "material": "material",
-      "category": [
-        "Educativo"
-      ],
+      "category": ["Educativo"],
       "promocion": "false",
       "descriptionPromo": "",
       "categoryPromo": ""
