@@ -18,11 +18,9 @@ function ProductCard({ product }) {
   }
 
   return (
-    <div className="border p-4 rounded-lg shadow-lg w-[270px] mx-auto">
-      {' '}
+    <div className="border px-4 py-6 rounded-lg shadow-lg w-full mx-auto">
       {/* Ancho fijo de 270 px */}
       <div className="flex justify-center mb-4">
-        {' '}
         {/* Contenedor flex para centrar la imagen */}
         <img
           src={product.image}
@@ -32,21 +30,19 @@ function ProductCard({ product }) {
       </div>
       <h3 className="text-lg font-bold text-center mb-1">{product.title}</h3>
       {promo !== '' ? (
-        <p className="text-gray-600 mb-3 text-center">
-          <div className="flex justify-center">
-            <span className="bg-red-600 text-xs text-gray-400 rounded-md p-0.5 mr-2">
-              {product.categoryPromo}
+        <div className="text-gray-600 mb-3 text-center flex justify-center gap-3 items-center h-7">
+          <span className="bg-red-600 text-xs text-white font-medium rounded-md py-1 px-2">
+            {product.categoryPromo}
+          </span>
+          {product.price !== price ? (
+            <span className="text-sm font-medium text-gray-400 line-through ">
+              ${product.price.toFixed(2)}
             </span>
-            {product.price !== price ? (
-              <p className="text-sm font-medium text-gray-400 line-through ">
-                ${product.price.toFixed(2)}
-              </p>
-            ) : (
-              <h1>${product.price}</h1>
-            )}
-          </div>
-          {promo}
-        </p>
+          ) : (
+            <span>${product.price}</span>
+          )}
+          <span className="font-bold">{promo}</span>
+        </div>
       ) : (
         <p className="text-gray-600 mb-3 text-center font-bold text-lg">
           ${product.price.toFixed(2)}
