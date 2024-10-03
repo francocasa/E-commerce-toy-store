@@ -37,7 +37,7 @@ export default function Footer() {
                 to={`/faq`}
                 className="cursor-pointer hover:text-gray-500 text-base"
               >
-                Preguntas y respuestas
+                FAQ
               </Link>
             </li>
           </ul>

@@ -1,48 +1,59 @@
 import PropTypes from 'prop-types';
+import {
+  DashSquareFill,
+  PlusSquareFill,
+  TrashFill,
+} from 'react-bootstrap-icons';
 
 export default function CartItem({ item, onUpdateQuantity, onRemove }) {
   const { id, title, price, image, quantity } = item;
 
   return (
-    <article className="flex flex-col md:flex-row gap-4 px-3 py-4">
-      <div className="h-32 w-full md:h-24 md:w-32 aspect-square">
-        <img className="w-full h-full object-contain" src={image} alt={title} />
+    <article className="flex flex-row gap-5 px-3 py-4 relative md:py-5">
+      <div className="h-24 overflow-hidden aspect-square flex justify-center items-center md:h-32">
+        <img className="" src={image} alt={title} />
       </div>
       <div className="flex-grow flex flex-col md:flex-row justify-between">
         <div className="flex flex-col justify-between flex-grow">
-          <div className="space-y-1">
-            <h2 className="font-medium">{title}</h2>
-            <p className="text-sm text-slate-700">
-              Precio: ${price.toFixed(2)}
+          <div className="text-sm md:text-base">
+            <h2 className="font-medium text-base mb-2 me-4 md:text-lg">
+              {title}
+            </h2>
+            <p className="text-slate-700">
+              Precio: <span className="font-medium">${price.toFixed(2)}</span>
+            </p>
+            <p className="text-slate-800">
+              Subtotal{' '}
+              <span className="font-bold">
+                ${(price * quantity).toFixed(2)}
+              </span>
             </p>
           </div>
           <div className="flex justify-start items-center gap-2 mt-2">
-            <button
-              className="border w-8 h-8 flex justify-center items-center font-black rounded-md bg-blue-500 text-white hover:bg-blue-400"
+            <DashSquareFill
+              className="text-xl text-blue-500 cursor-pointer hover:text-blue-400"
               onClick={() => onUpdateQuantity(id, quantity - 1)}
               disabled={quantity <= 1}
-            >
-              -
-            </button>
-            <p>{quantity}</p>
-            <button
-              className="border w-8 h-8 flex justify-center items-center font-black rounded-md bg-blue-500 text-white hover:bg-blue-400"
+            />
+
+            <p className="text-sm md:text-base">{quantity}</p>
+
+            <PlusSquareFill
+              className="text-xl text-blue-500 cursor-pointer hover:text-blue-400"
               onClick={() => onUpdateQuantity(id, quantity + 1)}
-            >
-              +
-            </button>
+            />
           </div>
         </div>
-        <div className="flex flex-col justify-start items-center px-4 mt-4 md:mt-0">
+        <div className="hidden flex flex-col justify-start items-center px-4 mt-4 md:mt-0">
           <p className="text-sm text-slate-700">Subtotal</p>
           <p className="font-bold">${(price * quantity).toFixed(2)}</p>
-          <button
-            className="text-red-500 hover:underline mt-2"
-            onClick={() => onRemove(id)}
-          >
-            Eliminar
-          </button>
         </div>
+      </div>
+      <div className="absolute right-2 top-4 md:top-5">
+        <TrashFill
+          className="block text-gray-700 text-xl cursor-pointer hover:text-red-700 hover:scale-125 transition-all md:text-2xl"
+          onClick={() => onRemove(id)}
+        />
       </div>
     </article>
   );
