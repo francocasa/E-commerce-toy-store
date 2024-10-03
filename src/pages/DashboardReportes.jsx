@@ -1,17 +1,28 @@
 import { useEffect, useState } from 'react';
-import { getLoggedAdmin } from '../data/DbUsers'; // Asegúrate de que la ruta sea correcta
+import { fetchAdminData, getLoggedAdmin } from '../services/usersadmin'; // Asegúrate de que la ruta sea correcta
 
 function DashboardReportes() {
   const [admin, setAdmin] = useState(null);
+  const [loading, setLoading] = useState(true); // Para manejar el estado de carga
 
   useEffect(() => {
-    const loggedAdmin = getLoggedAdmin();
-    if (loggedAdmin) {
-      setAdmin(loggedAdmin);
-    } else {
-      // Redirigir a la página de login si no hay un admin logueado
-      window.location.href = '/login'; // Cambia esto por la ruta adecuada
-    }
+    const checkAdminStatus = async () => {
+      const loggedAdmin = getLoggedAdmin();
+      if (loggedAdmin) {
+        // Cargar datos del admin si está logueado
+        const adminData = await fetchAdminData();
+        const foundAdmin = adminData.find(
+          (admin) => admin.id === loggedAdmin.id,
+        );
+
+        if (foundAdmin) {
+          setAdmin(foundAdmin);
+        }
+      }
+      setLoading(false); // Cambiar el estado de carga una vez verificado
+    };
+
+    checkAdminStatus();
   }, []);
 
   const handleLogout = () => {
@@ -19,7 +30,12 @@ function DashboardReportes() {
     window.location.href = '/login'; // Cambia esto por la ruta adecuada
   };
 
-  if (!admin) return null; // Muestra nada mientras se carga
+  if (loading) return <p>Cargando...</p>; // Mostrar un mensaje de carga
+
+  if (!admin) {
+    window.location.href = '/login'; // Redirigir si no hay un admin logueado
+    return null;
+  }
 
   return (
     <div className="container mx-auto p-4 md:p-8">

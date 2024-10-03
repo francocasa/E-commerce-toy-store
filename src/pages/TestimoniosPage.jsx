@@ -1,6 +1,29 @@
-import { testimonials } from '../data/Testimonios'; // Asegúrate de que la ruta sea correcta
+import { useEffect, useState } from 'react';
+import { consultaTestimonios } from '../services/testimonials'; // Importa la función de consulta
 
 function TestimonialsPage() {
+  const [testimonials, setTestimonials] = useState([]); // Estado para los testimonios
+  const [loading, setLoading] = useState(true); // Estado de carga
+  const [error, setError] = useState(null); // Estado de error
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      setLoading(true);
+      try {
+        const data = await consultaTestimonios(); // Obtiene los testimonios
+        setTestimonials(data); // Guarda los testimonios en el estado
+      } catch (err) {
+        setError('Error al cargar testimonios');
+      }
+      setLoading(false);
+    };
+
+    fetchTestimonials();
+  }, []);
+
+  if (loading) return <p>Cargando testimonios...</p>;
+  if (error) return <p className="text-center text-red-500">{error}</p>;
+
   return (
     <main className="my-8 px-4">
       <h2 className="text-2xl font-bold mb-6 text-center">Testimonios</h2>

@@ -1,8 +1,18 @@
-import { useState } from 'react';
-import heroData from '../data/hero';
+import { useEffect, useState } from 'react';
+import { fetchHeroData } from '../services/hero'; // Importar la función desde el nuevo archivo
 
 const HeroSection = () => {
+  const [heroData, setHeroData] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const loadHeroData = async () => {
+      const data = await fetchHeroData(); // Usar la función para obtener los datos
+      setHeroData(data); // Guardar los datos en el estado
+    };
+
+    loadHeroData();
+  }, []);
 
   const handleNext = () => {
     setCurrentSlide((prev) => (prev + 1) % heroData.length);
@@ -11,6 +21,8 @@ const HeroSection = () => {
   const handlePrev = () => {
     setCurrentSlide((prev) => (prev - 1 + heroData.length) % heroData.length);
   };
+
+  if (heroData.length === 0) return <div>Cargando...</div>;
 
   return (
     <section

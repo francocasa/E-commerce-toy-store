@@ -1,23 +1,23 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
-import { authenticateAdmin } from '../data/DbUsers'; // Asegúrate de importar la función
+import { authenticateAdmin } from '../services/usersadmin'; // Importar desde el servicio
 
 function LoginAdmPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Lógica de autenticación para el administrador
-    if (authenticateAdmin(email, password)) {
+    const isAuthenticated = await authenticateAdmin(email, password);
+    if (isAuthenticated) {
       Swal.fire({
         title: 'Éxito!',
         text: 'Has iniciado sesión como administrador.',
         icon: 'success',
         confirmButtonText: 'Aceptar',
       }).then(() => {
-        // Redirigir a la página del administrador o donde desees
         window.location.href = '/admin/dashboard'; // Cambia esta ruta según tu estructura
       });
     } else {

@@ -1,11 +1,31 @@
 import { useParams } from 'react-router-dom';
-import { dbProducts } from '../data/DbProducts'; // Asegúrate de que esto sea correcto
+import { consultaProductoPorId } from '../services/products'; // Importa el servicio
 import { ProductDetailPreCart } from '../components';
+import { useEffect, useState } from 'react';
 
 function DetailsProductPage() {
   const { id } = useParams();
-  const product = dbProducts.find((p) => p.id === id); // Asegúrate de usar dbProducts
+  const [product, setProduct] = useState(null); // Estado para el producto
+  const [loading, setLoading] = useState(true); // Estado de carga
+  const [error, setError] = useState(null); // Estado de error
 
+  useEffect(() => {
+    const fetchProduct = async () => {
+      setLoading(true); // Inicia carga
+      const data = await consultaProductoPorId(id); // Usa el servicio
+      if (data) {
+        setProduct(data);
+      } else {
+        setError('Producto no encontrado');
+      }
+      setLoading(false); // Finaliza carga
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  if (loading) return <p>Cargando...</p>; // Mensaje de carga
+  if (error) return <p className="text-center text-red-500">{error}</p>; // Manejo de error
   if (!product)
     return <p className="text-center text-red-500">Producto no encontrado</p>;
 

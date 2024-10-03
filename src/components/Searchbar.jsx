@@ -1,21 +1,31 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { dbProducts } from '../data/DbProducts'; // Asegúrate de que la ruta sea correcta
+import { consultaProductos } from '../services/products'; // Importa la función de consulta
 
 const Searchbar = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [products, setProducts] = useState([]); // Estado para los productos
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const data = await consultaProductos(); // Usar la función del servicio
+      setProducts(data); // Guarda los productos en el estado
+    };
+
+    fetchProducts();
+  }, []);
 
   useEffect(() => {
     if (searchTerm) {
-      const results = dbProducts.filter((product) =>
+      const results = products.filter((product) =>
         product.title.toLowerCase().includes(searchTerm.toLowerCase()),
       );
       setFilteredProducts(results);
     } else {
       setFilteredProducts([]);
     }
-  }, [searchTerm]);
+  }, [searchTerm, products]); // Añadir products a la dependencia
 
   return (
     <div className="relative flex items-center bg-gray-100 py-1 px-2 lg:px-4 lg:py-2 rounded-md">

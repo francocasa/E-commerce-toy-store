@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getLoggedAdmin } from '../data/DbUsers'; // Asegúrate de que la ruta sea correcta
+import { getLoggedAdmin } from '../services/usersadmin'; // Asegúrate de que la ruta sea correcta
 
 function AdminDashboard() {
   const [admin, setAdmin] = useState(null);

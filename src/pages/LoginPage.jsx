@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { authenticateUser } from '../data/DbUsers';
+import { authenticateUser, getUserProfile } from '../services/userprofile'; // Asegúrate de incluir getUserProfile
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Comprobar si el usuario ya está registrado
@@ -23,9 +23,11 @@ function LoginPage() {
     }
 
     // Lógica de autenticación
-    const isAuthenticated = authenticateUser(email, password);
+    const isAuthenticated = await authenticateUser(email, password);
 
     if (isAuthenticated) {
+      const user = await getUserProfile(isAuthenticated); // Asegúrate de pasar el ID del usuario
+      localStorage.setItem('currentUserId', user.id); // Guarda el ID
       localStorage.setItem('currentUserEmail', email);
       Swal.fire({
         title: 'Éxito!',

@@ -1,17 +1,42 @@
-import { useState } from 'react';
-import { dbProducts } from '../data/DbProducts';
+import { useState, useEffect } from 'react';
+import { consultaProductos } from '../services/products'; // Importa la función de consulta
 import { ProductCard, CategoryFilter } from '../components';
 
 function PromotionsPage() {
   const categoriesPromo = ['Navidad', '3x2'];
   const [selectedCategoryPromo, setSelectedCategoryPromo] = useState('');
+  const [promotions, setPromotions] = useState([]); // Estado para las promociones
+  const [loading, setLoading] = useState(true); // Estado de carga
+  const [error, setError] = useState(null); // Estado de error
 
-  const filteredPromotions = dbProducts.filter(
+  useEffect(() => {
+    const fetchPromotions = async () => {
+      setLoading(true);
+      try {
+        const data = await consultaProductos(); // Obtiene los productos
+        console.log(data); // Ver la respuesta
+        const filteredPromotions = data.filter(
+          (product) => product.promocion === true,
+        ); // Cambiado a booleano
+        setPromotions(filteredPromotions); // Guarda las promociones filtradas
+      } catch (err) {
+        setError('Error al cargar promociones');
+      }
+      setLoading(false);
+    };
+
+    fetchPromotions();
+  }, []);
+
+  const filteredPromotions = promotions.filter(
     (product) =>
-      product.promocion === 'true' &&
-      (selectedCategoryPromo === '' ||
-        product.categoryPromo === selectedCategoryPromo),
+      selectedCategoryPromo === '' ||
+      selectedCategoryPromo === 'Todas' ||
+      product.categoryPromo === selectedCategoryPromo,
   );
+
+  if (loading) return <p>Cargando promociones...</p>;
+  if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
     <main className="my-8">

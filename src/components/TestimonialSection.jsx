@@ -1,18 +1,28 @@
-import { useRef } from 'react';
-import { testimonials } from '../data/Testimonios'; // Asegúrate de que la ruta sea correcta
+import { useRef, useEffect, useState } from 'react';
+import { consultaTestimonios } from '../services/testimonials'; // Importar el servicio
 
 const TestimonialSection = () => {
   const scrollRef = useRef(null); // Referencia al contenedor
+  const [testimonials, setTestimonials] = useState([]); // Estado para los testimonios
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      const data = await consultaTestimonios(); // Usar el servicio para obtener los testimonios
+      setTestimonials(data); // Guarda los testimonios en el estado
+    };
+
+    fetchTestimonials();
+  }, []);
 
   const scrollLeft = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -200, behavior: 'smooth' }); // Ajusta el valor de desplazamiento
+      scrollRef.current.scrollBy({ left: -200, behavior: 'smooth' });
     }
   };
 
   const scrollRight = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 200, behavior: 'smooth' }); // Ajusta el valor de desplazamiento
+      scrollRef.current.scrollBy({ left: 200, behavior: 'smooth' });
     }
   };
 
@@ -29,7 +39,7 @@ const TestimonialSection = () => {
           ref={scrollRef}
           className="flex space-x-6 overflow-x-scroll no-scrollbar"
         >
-          {/* Mapear los testimonios desde el archivo */}
+          {/* Mapear los testimonios desde el estado */}
           {testimonials.map((testimonial) => (
             <div
               key={testimonial.id}
@@ -40,10 +50,7 @@ const TestimonialSection = () => {
                 alt={testimonial.nombrePersona}
                 className="w-24 h-24 object-cover rounded-full mx-auto"
               />
-              <p className="mt-4">
-                &quot;{testimonial.mensaje}&quot;{' '}
-                {/* Utiliza el mensaje del testimonio */}
-              </p>
+              <p className="mt-4">&quot;{testimonial.mensaje}&quot; </p>
               <h4 className="text-lg mt-2 font-medium">
                 {testimonial.nombrePersona}
               </h4>
