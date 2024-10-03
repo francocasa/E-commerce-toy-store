@@ -32,23 +32,23 @@ export default function AddToCart({ product }) {
   };
 
   return (
-    <div className="flex items-center my-4 justify-center">
-      <div className="flex justify-start items-center gap-2 mt-2">
+    <div className="flex gap-4">
+      <div className="flex justify-start items-center gap-2">
         <DashSquareFill
-          className={`text-xl select-none ${quantity <= 1 ? 'text-gray-300 hover:text-gray-300 cursor-default' : 'text-blue-500 cursor-pointer hover:text-blue-400'}`}
+          className={`text-2xl select-none ${quantity <= 1 ? 'text-gray-300 hover:text-gray-300 cursor-default' : 'text-blue-500 cursor-pointer hover:text-blue-400'}`}
           onClick={() => setQuantity(quantity > 1 ? quantity - 1 : quantity)}
         />
 
         <p className="text-sm md:text-base">{quantity}</p>
 
         <PlusSquareFill
-          className="text-xl text-blue-500 cursor-pointer hover:text-blue-400 select-none"
+          className="text-2xl text-blue-500 cursor-pointer hover:text-blue-400 select-none"
           onClick={() => setQuantity(quantity + 1)}
         />
       </div>
       <button
         onClick={addToCart}
-        className="bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition"
+        className="bg-blue-500 text-white py-2 px-3 rounded-md hover:bg-blue-400 transition"
       >
         Añadir al carrito
       </button>
