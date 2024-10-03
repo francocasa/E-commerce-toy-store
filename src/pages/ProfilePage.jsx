@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import { getUsers } from '../data/DbUsers'; // Importa la función para obtener usuarios
+import {
+  getUserProfile,
+  updateUserProfile,
+  getUserIdByEmail,
+} from '../services/userprofile';
 
 function ProfilePage() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -11,43 +15,51 @@ function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    const email = localStorage.getItem('currentUserEmail'); // Obtener el email del usuario actual
-    const users = getUsers(); // Obtener usuarios desde localStorage
-    const user = users.find((user) => user.email === email);
-    if (user) {
-      setCurrentUser(user);
-      setName(user.name || '');
-      setPhoto(user.photo || '');
-      setAddress(user.address || '');
-      setPhone(user.phone || '');
-    }
+    const fetchUserProfile = async () => {
+      const email = localStorage.getItem('currentUserEmail');
+      const userId = await getUserIdByEmail(email); // Debes implementar esta función
+      const user = await getUserProfile(userId);
+      if (user) {
+        setCurrentUser(user);
+        setName(user.name || '');
+        setPhoto(user.photo || '');
+        setAddress(user.address || '');
+        setPhone(user.phone || '');
+      }
+    };
+    fetchUserProfile();
   }, []);
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (currentUser) {
-      currentUser.name = name;
-      currentUser.photo = photo;
-      currentUser.address = address;
-      currentUser.phone = phone;
-      // Guardar los usuarios actualizados en localStorage
-      const users = getUsers();
-      const updatedUsers = users.map((user) =>
-        user.email === currentUser.email ? currentUser : user,
-      );
-      localStorage.setItem('users', JSON.stringify(updatedUsers));
-
-      Swal.fire({
-        title: 'Éxito!',
-        text: 'Datos actualizados correctamente.',
-        icon: 'success',
-        confirmButtonText: 'Aceptar',
-      });
-
-      setIsEditing(false);
+      const updatedUser = {
+        ...currentUser,
+        name,
+        photo,
+        address,
+        phone,
+      };
+      try {
+        await updateUserProfile(updatedUser);
+        Swal.fire({
+          title: 'Éxito!',
+          text: 'Datos actualizados correctamente.',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+        });
+        setIsEditing(false);
+      } catch (error) {
+        Swal.fire({
+          title: 'Error!',
+          text: error.message || 'No se pudieron actualizar los datos.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
+      }
     }
   };
 
@@ -69,7 +81,7 @@ function ProfilePage() {
       icon: 'info',
       confirmButtonText: 'Aceptar',
     });
-    window.location.href = '/login'; // Cambia esto según tu configuración
+    window.location.href = '/login';
   };
 
   return (

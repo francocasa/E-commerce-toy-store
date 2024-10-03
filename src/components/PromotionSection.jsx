@@ -1,27 +1,32 @@
-import { useRef } from 'react';
-import { dbProducts } from '../data/DbProducts'; // Asegúrate de que la ruta sea correcta
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { useRef, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { consultaPromociones } from '../services/promotions'; // Importa la función de consulta
 
 const PromotionSection = () => {
   const scrollRef = useRef(null); // Referencia al contenedor
   const navigate = useNavigate(); // Crea la instancia de navegación
+  const [promotions, setPromotions] = useState([]); // Estado para las promociones
+
+  useEffect(() => {
+    const fetchPromotions = async () => {
+      const data = await consultaPromociones(); // Usar la función del servicio
+      setPromotions(data); // Guarda las promociones en el estado
+    };
+
+    fetchPromotions();
+  }, []);
 
   const scrollLeft = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -200, behavior: 'smooth' }); // Ajusta el valor de desplazamiento
+      scrollRef.current.scrollBy({ left: -200, behavior: 'smooth' });
     }
   };
 
   const scrollRight = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 200, behavior: 'smooth' }); // Ajusta el valor de desplazamiento
+      scrollRef.current.scrollBy({ left: 200, behavior: 'smooth' });
     }
   };
-
-  // Filtrar productos con promociones
-  const filteredPromotions = dbProducts.filter(
-    (product) => product.promocion === 'true',
-  );
 
   const handleViewPromotion = (id) => {
     navigate(`/detailsproduct/${id}`); // Redirige a la ruta deseada
@@ -41,7 +46,7 @@ const PromotionSection = () => {
           className="flex space-x-4 overflow-x-scroll no-scrollbar"
         >
           {/* Mapear las promociones */}
-          {filteredPromotions.map((promo) => (
+          {promotions.map((promo) => (
             <div
               key={promo.id}
               className="min-w-[200px] sm:min-w-[250px] md:min-w-[300px] bg-white shadow-md p-4 rounded-md"

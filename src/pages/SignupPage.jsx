@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createUser } from '../data/DbUsers'; // Asegúrate de importar createUser
+import { createUser, getUserIdByEmail } from '../services/userprofile'; // Asegúrate de importar createUser desde tu archivo de servicios
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,7 +25,7 @@ function SignupPage() {
     setPasswordStrength(checkPasswordStrength(value));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Verificar si hay un usuario activo
@@ -40,9 +40,8 @@ function SignupPage() {
     }
 
     // Verificar que el usuario no exista ya
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-    const existingUser = users.find((user) => user.email === email);
-    if (existingUser) {
+    const existingUserId = await getUserIdByEmail(email);
+    if (existingUserId) {
       Swal.fire({
         title: 'Error!',
         text: 'Este correo ya está registrado.',
@@ -75,19 +74,34 @@ function SignupPage() {
     }
 
     // Crear nuevo usuario
-    createUser(email, password);
-    console.log('Usuario creado:', { email, password });
+    const newUser = {
+      email,
+      password,
+      // Aquí puedes agregar otros campos si los necesitas
+    };
 
-    // Mostrar mensaje de éxito
-    Swal.fire({
-      title: 'Éxito!',
-      text: 'Usuario creado correctamente.',
-      icon: 'success',
-      confirmButtonText: 'Aceptar',
-    }).then(() => {
-      // Redirigir a la página de perfil
-      navigate('/perfil');
-    });
+    try {
+      await createUser(newUser); // Llama a la función para crear el usuario
+      console.log('Usuario creado:', newUser);
+
+      // Mostrar mensaje de éxito
+      Swal.fire({
+        title: 'Éxito!',
+        text: 'Usuario creado correctamente.',
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+      }).then(() => {
+        // Redirigir a la página de perfil
+        navigate('/perfil');
+      });
+    } catch (error) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'No se pudo crear el usuario. Intenta de nuevo más tarde.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+      });
+    }
   };
 
   return (

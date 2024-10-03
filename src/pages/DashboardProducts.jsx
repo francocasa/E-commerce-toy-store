@@ -1,5 +1,10 @@
 import { useState, useEffect } from 'react';
-import { dbProducts } from '../data/DbProducts'; // Asegúrate de que esta importación sea correcta
+import {
+  consultaProductos,
+  agregarProducto,
+  editarProducto,
+  eliminarProducto,
+} from '../services/products';
 import { ProductCard } from '../components';
 import { CategoryFilter } from '../components';
 import Swal from 'sweetalert2';
@@ -24,16 +29,16 @@ function DashboardProducts() {
   const categories = ['Educativo', 'Acción'];
 
   useEffect(() => {
-    const storedProducts = localStorage.getItem('ProductoCreado');
-    if (storedProducts) {
-      setProducts(JSON.parse(storedProducts));
-    } else {
-      setProducts(dbProducts); // Cargar desde DbProducts si no hay productos en Local Storage
-    }
+    const fetchProducts = async () => {
+      const fetchedProducts = await consultaProductos(); // Cargar desde el servicio
+      setProducts(fetchedProducts);
+    };
+
+    fetchProducts();
   }, []);
 
-  const handleDelete = (id) => {
-    Swal.fire({
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
       title: '¿Confirma eliminar?',
       text: '¡Esta acción no se puede deshacer!',
       icon: 'warning',
@@ -42,14 +47,17 @@ function DashboardProducts() {
       cancelButtonColor: '#3085d6',
       confirmButtonText: 'Eliminar',
       cancelButtonText: 'Cancelar',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const updatedProducts = products.filter((product) => product.id !== id);
-        setProducts(updatedProducts);
-        localStorage.setItem('ProductoCreado', JSON.stringify(updatedProducts));
-        Swal.fire('Eliminado!', 'El producto ha sido eliminado.', 'success');
-      }
     });
+
+    if (result.isConfirmed) {
+      const success = await eliminarProducto(id); // Eliminar desde el API
+      if (success) {
+        setProducts(products.filter((product) => product.id !== id));
+        Swal.fire('Eliminado!', 'El producto ha sido eliminado.', 'success');
+      } else {
+        Swal.fire('Error', 'No se pudo eliminar el producto.', 'error');
+      }
+    }
   };
 
   const handleEdit = (product) => {
@@ -73,7 +81,7 @@ function DashboardProducts() {
     });
   };
 
-  const handleAddOrEditProduct = () => {
+  const handleAddOrEditProduct = async () => {
     if (
       !newProduct.title ||
       !newProduct.price ||
@@ -100,31 +108,36 @@ function DashboardProducts() {
       return;
     }
 
-    const newProductWithId = {
+    const productData = {
       ...newProduct,
-      id: newProduct.id
-        ? newProduct.id
-        : String(
-            Number(products.length ? products[products.length - 1].id : 0) + 1,
-          ),
       price: parseFloat(newProduct.price), // Convertir a número
     };
 
-    let updatedProducts;
     if (newProduct.id) {
       // Modificación de producto existente
-      updatedProducts = products.map((product) =>
-        product.id === newProduct.id ? newProductWithId : product,
-      );
+      const updatedProduct = await editarProducto(newProduct.id, productData);
+      if (updatedProduct) {
+        setProducts(
+          products.map((product) =>
+            product.id === newProduct.id ? updatedProduct : product,
+          ),
+        );
+        Swal.fire('Éxito', 'Producto editado correctamente.', 'success');
+      } else {
+        Swal.fire('Error', 'No se pudo editar el producto.', 'error');
+      }
     } else {
       // Creación de nuevo producto
-      updatedProducts = [...products, newProductWithId];
+      const addedProduct = await agregarProducto(productData);
+      if (addedProduct) {
+        setProducts([...products, addedProduct]);
+        Swal.fire('Éxito', 'Producto agregado correctamente.', 'success');
+      } else {
+        Swal.fire('Error', 'No se pudo agregar el producto.', 'error');
+      }
     }
 
-    setProducts(updatedProducts);
-    localStorage.setItem('ProductoCreado', JSON.stringify(updatedProducts));
     handleCancelEdit();
-    Swal.fire('Éxito', 'Producto agregado o editado correctamente.', 'success');
   };
 
   const handleDescriptionPromoChange = (value) => {
