@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Swal from 'sweetalert2';
+import { DashSquareFill, PlusSquareFill } from 'react-bootstrap-icons';
 
 export default function AddToCart({ product }) {
   const [quantity, setQuantity] = useState(1);
@@ -32,13 +33,19 @@ export default function AddToCart({ product }) {
 
   return (
     <div className="flex items-center my-4 justify-center">
-      <input
-        type="number"
-        min="1"
-        value={quantity}
-        onChange={(e) => setQuantity(Number(e.target.value))}
-        className="border rounded-md p-2 mr-2 w-20 text-center"
-      />
+      <div className="flex justify-start items-center gap-2 mt-2">
+        <DashSquareFill
+          className={`text-xl select-none ${quantity <= 1 ? 'text-gray-300 hover:text-gray-300 cursor-default' : 'text-blue-500 cursor-pointer hover:text-blue-400'}`}
+          onClick={() => setQuantity(quantity > 1 ? quantity - 1 : quantity)}
+        />
+
+        <p className="text-sm md:text-base">{quantity}</p>
+
+        <PlusSquareFill
+          className="text-xl text-blue-500 cursor-pointer hover:text-blue-400 select-none"
+          onClick={() => setQuantity(quantity + 1)}
+        />
+      </div>
       <button
         onClick={addToCart}
         className="bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition"

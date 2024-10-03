@@ -69,7 +69,7 @@ const Header = () => {
           </button>
         </div>
         <div
-          className={`items-center ${!isMenuOpen && `hidden`} justify-between flex-grow md:flex md:order-1`}
+          className={`items-center ${!isMenuOpen && `hidden`} justify-between w-full md:w-auto md:flex-grow-0 md:flex md:order-1`}
           id="navbar-sticky"
           ref={navRef}
         >

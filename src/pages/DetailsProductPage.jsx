@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { consultaProductoPorId } from '../services/products'; // Importa el servicio
-import { ProductDetailPreCart } from '../components';
+import { AddToCart } from '../components';
 import { useEffect, useState } from 'react';
 
 function DetailsProductPage() {
@@ -69,7 +69,7 @@ function DetailsProductPage() {
         </div>
 
         {/* Columna 3: Componente de pre-carrito */}
-        <ProductDetailPreCart product={product} />
+        <AddToCart product={product} />
       </div>
     </main>
   );
