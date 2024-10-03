@@ -30,7 +30,7 @@ function DetailsProductPage() {
     return <p className="text-center text-red-500">Producto no encontrado</p>;
 
   return (
-    <main className="container mx-auto p-4 md:p-8">
+    <main className="container mx-auto p-5">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Columna 1: Imagen del producto */}
         <div className="flex justify-center items-center">
@@ -42,18 +42,17 @@ function DetailsProductPage() {
         </div>
 
         {/* Columna 2: Detalles del producto */}
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold mb-2">
-            {product.title}
-          </h1>
-          <p className="text-xl mb-2">${product.price.toFixed(2)}</p>
-          <p className="text-md mb-2">
+        <div className="text-md space-y-2">
+          <h1 className="font-bold text-2xl">{product.title}</h1>
+          <p className="font-medium text-xl">${product.price.toFixed(2)}</p>
+          <p className="">
             <strong>Marca:</strong> {product.marca}
           </p>
-          <p className="text-md mb-2">
-            <strong>Material:</strong> {product.material}
+          <p className="">
+            <strong>Material:</strong>{' '}
+            <span className="capitalize">{product.material}</span>
           </p>
-          <p className="text-md mb-2">
+          <p className="">
             <strong>Categoría:</strong> {product.category}
           </p>
 
