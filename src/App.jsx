@@ -3,6 +3,7 @@ import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import LoginAdmPage from './pages/LoginAdmPage';
 import ProductsPage from './pages/ProductsPage';
+import HistoryPage from './pages/HistoryPage';
 import AboutUs from './pages/AboutUs';
 import Politica from './pages/Politica';
 import FaqPage from './pages/FaqPage';
@@ -49,6 +50,7 @@ function App() {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/promotions" element={<PromotionsPage />} />
         <Route path="/testimonios" element={<TestimoniosPage />} />
+        <Route path="/history/:id" element={<HistoryPage />} />
       </Routes>
       <Footer />
     </Router>

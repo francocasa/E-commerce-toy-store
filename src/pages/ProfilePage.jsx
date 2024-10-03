@@ -9,6 +9,7 @@ import {
 function ProfilePage() {
   const [currentUser, setCurrentUser] = useState(null);
   const [name, setName] = useState('');
+  const [id, setId] = useState('');
   const [photo, setPhoto] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
@@ -22,6 +23,7 @@ function ProfilePage() {
       if (user) {
         setCurrentUser(user);
         setName(user.name || '');
+        setId(userId);
         setPhoto(user.photo || '');
         setAddress(user.address || '');
         setPhone(user.phone || '');
@@ -71,6 +73,10 @@ function ProfilePage() {
       setAddress(currentUser.address);
       setPhone(currentUser.phone);
     }
+  };
+
+  const handleHistory = () => {
+    window.location.href = '/history/' + id;
   };
 
   const handleLogout = () => {
@@ -161,12 +167,20 @@ function ProfilePage() {
                   </button>
                 </>
               ) : (
-                <button
-                  onClick={handleEdit}
-                  className="bg-green-500 text-white p-2 rounded hover:bg-green-600 transition"
-                >
-                  Modificar Datos
-                </button>
+                <>
+                  <button
+                    onClick={handleEdit}
+                    className="bg-green-500 text-white p-2 rounded hover:bg-green-600 transition"
+                  >
+                    Modificar Datos
+                  </button>
+                  <button
+                    onClick={handleHistory}
+                    className="bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600 transition"
+                  >
+                    Historial de compra
+                  </button>
+                </>
               )}
               <button
                 onClick={handleLogout}

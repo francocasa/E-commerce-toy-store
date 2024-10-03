@@ -12,7 +12,7 @@
     "preview": "vite preview",
     "prepare": "husky",
     "test": "echo \"Error: no test specified\"",
-    "api":"json-server --watch db.json --routes routes.json --port 9090"
+    "api": "json-server --watch db.json --routes routes.json --port 9090"
   },
   "dependencies": {
     "react": "^18.3.1",
