@@ -43,7 +43,7 @@ const PromotionSection = () => {
       <div className="relative">
         <div
           ref={scrollRef}
-          className="flex space-x-4 overflow-x-scroll no-scrollbar"
+          className="flex space-x-4 overflow-x-scroll no-scrollbar p-2"
         >
           {/* Mapear las promociones */}
           {promotions.map((promo) => (

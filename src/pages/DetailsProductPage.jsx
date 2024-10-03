@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { consultaProductoPorId } from '../services/products'; // Importa el servicio
-import { AddToCart } from '../components';
+import { AddToCart, ProductsSection } from '../components';
 import { useEffect, useState } from 'react';
 
 function DetailsProductPage() {
@@ -30,26 +30,27 @@ function DetailsProductPage() {
     return <p className="text-center text-red-500">Producto no encontrado</p>;
 
   return (
-    <main className="container mx-auto p-5">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <main className="container mx-auto p-5 md:pt-8 lg:pt-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Columna 1: Imagen del producto */}
         <div className="flex justify-center items-center">
           <img
             src={product.image}
             alt={product.title}
-            className="w-full h-64 object-cover md:h-auto"
+            className="w-full h-64 object-contain md:h-auto md:max-h-96"
           />
         </div>
 
-        <div className="px-3 space-y-4">
+        <div className="px-8 space-y-4">
           {/* Columna 2: Detalles del producto */}
-          <div className="text-md space-y-2">
+          <div className="text-md">
             <h1 className="font-bold text-2xl">{product.title}</h1>
             <p className="font-medium text-xl">${product.price.toFixed(2)}</p>
-            <p className="">
+            <p className="my-3">{product.descripcion}</p>
+            <p className="mb-1">
               <strong>Marca:</strong> {product.marca}
             </p>
-            <p className="">
+            <p className="mb-1">
               <strong>Material:</strong>{' '}
               <span className="capitalize">{product.material}</span>
             </p>
@@ -72,6 +73,10 @@ function DetailsProductPage() {
           {/* Columna 3: Componente de pre-carrito */}
           <AddToCart product={product} />
         </div>
+      </div>
+
+      <div className="md:mt-4">
+        <ProductsSection />
       </div>
     </main>
   );

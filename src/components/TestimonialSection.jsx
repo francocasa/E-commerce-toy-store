@@ -37,7 +37,7 @@ const TestimonialSection = () => {
       <div className="relative">
         <div
           ref={scrollRef}
-          className="flex space-x-6 overflow-x-scroll no-scrollbar"
+          className="flex space-x-6 overflow-x-scroll no-scrollbar p-2"
         >
           {/* Mapear los testimonios desde el estado */}
           {testimonials.map((testimonial) => (
