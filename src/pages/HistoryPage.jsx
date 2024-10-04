@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { getUserProfile } from '../services/userprofile'; // Importa el servicio
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { HistoryDetails } from '../components';
 
 function HistoryPage() {
   const { id } = useParams();
-  const [userProfile, setUserProfile] = useState([]); // Estado para los productos
+  const [history, setHistory] = useState([]); // Estado para el historial
+  const [historyDetail, setHistoryDetail] = useState([]); // Estado para la compra
   const [loading, setLoading] = useState(true); // Estado de carga
   const [error, setError] = useState(null); // Estado de error
 
@@ -14,7 +15,7 @@ function HistoryPage() {
       setLoading(true); // Inicia carga
       const data = await getUserProfile(id); // Usa el servicio
       if (data) {
-        setUserProfile(data);
+        setHistory(data.history);
       } else {
         setError('Error al cargar los productos');
       }
@@ -23,6 +24,10 @@ function HistoryPage() {
 
     fetchProducts();
   }, []);
+
+  const handleHistoryDetail = (id) => {
+    setHistoryDetail(history.filter((his) => his.id == id));
+  };
 
   if (loading) return <p>Cargando historial...</p>; // Mensaje de carga
   if (error) return <p className="text-center text-red-500">{error}</p>; // Manejo de error
@@ -53,7 +58,7 @@ function HistoryPage() {
               </tr>
             </thead>
             <tbody>
-              {userProfile.history.map((history) => (
+              {history.map((history) => (
                 <tr className="bg-white border-b" key={history.id}>
                   <>
                     <th
@@ -69,9 +74,12 @@ function HistoryPage() {
                       ${history.total}
                     </td>
                     <td className="md:px-6 md:py-4">
-                      <Link to={`/`} className="text-blue-500">
-                        Ver más
-                      </Link>
+                      <button
+                        className="text-blue-500"
+                        onClick={() => handleHistoryDetail(history.id)}
+                      >
+                        {'Ver más'}
+                      </button>
                     </td>
                   </>
                 </tr>
@@ -79,7 +87,9 @@ function HistoryPage() {
             </tbody>
           </table>
         </div>
-        <HistoryDetails />
+        {typeof historyDetail[0] != 'undefined' && (
+          <HistoryDetails purchases={historyDetail[0].purchase} />
+        )}
       </section>
     </main>
   );
