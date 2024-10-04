@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getUserProfile } from '../services/userprofile'; // Importa el servicio
 import { Link, useParams } from 'react-router-dom';
+import { HistoryDetails } from '../components';
 
 function HistoryPage() {
   const { id } = useParams();
@@ -78,6 +79,7 @@ function HistoryPage() {
             </tbody>
           </table>
         </div>
+        <HistoryDetails />
       </section>
     </main>
   );

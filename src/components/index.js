@@ -5,6 +5,7 @@ import ProductsSection from './ProductsSection';
 import TestimonialSection from './TestimonialSection';
 import PromotionSection from './PromotionSection';
 import ProductCard from './ProductCard';
+import HistoryDetails from './HistoryDetails';
 import CategoryCard from './CategoryCard';
 import TestimonialCard from './TestimonialCard';
 //import PromotionCard from './PromotionCard';
@@ -23,6 +24,7 @@ export {
   TestimonialSection,
   PromotionSection,
   ProductCard,
+  HistoryDetails,
   CategoryCard as CategorieCard,
   TestimonialCard,
   // PromotionCard, Eliminar
