@@ -15,6 +15,7 @@ import CartSummary from './CartSummary';
 import AddToCart from './AddToCart';
 import ProductDetailPreCart from './ProductDetailPreCart';
 import CategoryFilter from './CategoryFilter';
+import VerMas from './VerMas';
 
 export {
   Header,
@@ -34,4 +35,5 @@ export {
   AddToCart,
   ProductDetailPreCart,
   CategoryFilter,
+  VerMas,
 };

@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types'; // Importar PropTypes
-import { Link } from 'react-router-dom';
-import { ArrowUpRightSquare } from 'react-bootstrap-icons';
+import VerMas from './VerMas';
 
 function ProductCard({ product }) {
   let price = product.price;
@@ -48,13 +47,8 @@ function ProductCard({ product }) {
           ${product.price.toFixed(2)}
         </p>
       )}
-      <Link
-        to={`/detailsproduct/${product.id}`}
-        className="flex items-center gap-2 text-white font-medium py-2 px-3 bg-blue-500 rounded-md w-fit mx-auto cursor-pointer hover:bg-blue-400 transition"
-      >
-        <span>Ver más</span>
-        <ArrowUpRightSquare />
-      </Link>
+
+      <VerMas link={`/detailsproduct/${product.id}`} />
     </div>
   );
 }
