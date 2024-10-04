@@ -3,11 +3,9 @@ import { Link } from 'react-router-dom';
 
 function CategoryCard({ category }) {
   return (
-    <div className="border p-4 rounded-lg shadow-lg w-[270px] mx-auto">
-      {' '}
+    <div className="border px-4 py-6 rounded-lg shadow-lg w-full mx-auto">
       {/* Ancho fijo de 270 px */}
       <div className="flex justify-center mb-4">
-        {' '}
         {/* Contenedor flex para centrar la imagen */}
         <img
           src={category.image}
