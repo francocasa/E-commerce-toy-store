@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'; // Importar PropTypes
-import { Link } from 'react-router-dom';
+import VerMas from './VerMas';
 
 function CategoryCard({ category }) {
   return (
@@ -16,12 +16,8 @@ function CategoryCard({ category }) {
       <h3 className="text-lg font-bold text-center">
         {category.title.toUpperCase()}
       </h3>
-      <Link
-        to={`/products/${category.title}`}
-        className="text-blue-500 text-center block"
-      >
-        Ver más
-      </Link>
+
+      <VerMas link={`/products/${category.title}`} />
     </div>
   );
 }

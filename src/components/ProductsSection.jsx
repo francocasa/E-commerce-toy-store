@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import ProductCard from './ProductCard';
 import { consultaProductos } from '../services/products'; // Importa la función de consulta
 
 const ProductsSection = () => {
@@ -38,35 +38,12 @@ const ProductsSection = () => {
       <div className="relative">
         <div
           ref={scrollRef}
-          className="flex space-x-4 overflow-x-scroll no-scrollbar p-2"
+          className="flex gap-3 overflow-x-scroll no-scrollbar p-2"
         >
           {/* Mapear los productos */}
           {products.map((product) => (
-            <div
-              key={product.id}
-              className="min-w-[200px] sm:min-w-[250px] md:min-w-[300px] bg-white shadow-md p-4 rounded-md"
-            >
-              <div className="h-[160px] flex items-center justify-center overflow-hidden">
-                <img
-                  src={product.image}
-                  alt={product.title}
-                  className="h-auto w-auto object-cover rounded-md"
-                  style={{ maxHeight: '150px' }}
-                />
-              </div>
-
-              <h3 className="text-lg mt-2 font-medium text-center">
-                {product.title}
-              </h3>
-              <p className="text-gray-500 text-center">
-                ${product.price.toFixed(2)}
-              </p>
-              <Link
-                to={`/detailsproduct/${product.id}`}
-                className="text-blue-600 hover:underline text-center block"
-              >
-                Ver producto
-              </Link>
+            <div className="min-w-60" key={product.id}>
+              <ProductCard product={product} />
             </div>
           ))}
         </div>
