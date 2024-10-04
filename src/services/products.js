@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_URL; // Obtener la URL base desde el .env
+const BASE_URL = import.meta.env.API_URL; // Obtener la URL base desde el .env
 
 export const consultaProductos = async () => {
   const URL = `${BASE_URL}/products`; // Construir la URL para los producstos
@@ -17,7 +17,7 @@ export const consultaProductos = async () => {
 };
 
 export const consultaProductoPorId = async (id) => {
-  const URL = `${BASE_URL}/products/${id}`; // Construir la URL para un producto específico
+  const URL = `${BASE_URL}/products/id/${id}`; // Construir la URL para un producto específico
 
   try {
     const response = await fetch(URL); // Usar la URL construida
