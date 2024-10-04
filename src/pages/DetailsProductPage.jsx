@@ -30,18 +30,18 @@ function DetailsProductPage() {
     return <p className="text-center text-red-500">Producto no encontrado</p>;
 
   return (
-    <main className="container mx-auto p-5 md:pt-8 lg:pt-10">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <main className="container mx-auto p-5 md:mt-8 lg:mt-10">
+      <div className="flex flex-col gap-6 md:flex-row md:justify-center">
         {/* Columna 1: Imagen del producto */}
         <div className="flex justify-center items-center">
           <img
             src={product.image}
             alt={product.title}
-            className="w-full h-64 object-contain md:h-auto md:max-h-96"
+            className="w-full h-64 object-contain md:h-72 lg:h-80"
           />
         </div>
 
-        <div className="px-8 space-y-4">
+        <div className="px-8 space-y-4 w-fit md:max-w-96">
           {/* Columna 2: Detalles del producto */}
           <div className="text-md">
             <h1 className="font-bold text-2xl">{product.title}</h1>
