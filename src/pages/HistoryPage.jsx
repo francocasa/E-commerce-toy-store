@@ -9,6 +9,7 @@ function HistoryPage() {
   const [historyDetail, setHistoryDetail] = useState([]); // Estado para la compra
   const [loading, setLoading] = useState(true); // Estado de carga
   const [error, setError] = useState(null); // Estado de error
+  const [idDetail, setidDetail] = useState(0); //se tiene que cambiar
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -27,6 +28,7 @@ function HistoryPage() {
 
   const handleHistoryDetail = (id) => {
     setHistoryDetail(history.filter((his) => his.id == id));
+    setidDetail(id); //se tiene que cambiar
   };
 
   if (loading) return <p>Cargando historial...</p>; // Mensaje de carga
@@ -88,7 +90,12 @@ function HistoryPage() {
           </table>
         </div>
         {typeof historyDetail[0] != 'undefined' && (
-          <HistoryDetails purchases={historyDetail[0].purchase} />
+          <>
+            <h2 className="text-2xl font-bold mb-4 mt-4">
+              Detalle de compra {idDetail}
+            </h2>
+            <HistoryDetails purchases={historyDetail[0].purchase} />
+          </>
         )}
       </section>
     </main>
