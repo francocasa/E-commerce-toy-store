@@ -392,7 +392,8 @@
         "items": []
       }
     }
-  ],  "users_admin": [
+  ],
+  "users_admin": [
     {
       "id": "1",
       "email": "mikelyto@gmail.com",
