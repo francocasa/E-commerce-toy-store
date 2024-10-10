@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import Toastify from 'toastify-js';
+import 'toastify-js/src/toastify.css';
 import { authenticateUser, getUserProfile } from '../services/userprofile';
 
 function LoginPage() {
@@ -8,17 +9,31 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  const showToast = (title, text, type) => {
+    Toastify({
+      text: `${title}: ${text}`,
+      duration: 3000,
+      gravity: 'top',
+      position: 'right',
+      backgroundColor: type === 'success' ? '#4CAF50' : '#FF9800',
+      stopOnFocus: true,
+      offset: {
+        x: 20,
+        y: 60,
+      },
+    }).showToast();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Comprobar si el usuario ya está registrado
     if (localStorage.getItem('currentUserEmail')) {
-      Swal.fire({
-        title: 'Usuario logueado con éxito!',
-        text: 'No se puede crear una nueva cuenta mientras estés conectado.',
-        icon: 'info',
-        confirmButtonText: 'Aceptar',
-      });
+      showToast(
+        'Usuario logueado con éxito!',
+        'No se puede crear una nueva cuenta mientras estés conectado.',
+        'info',
+      );
       return;
     }
 
@@ -30,29 +45,19 @@ function LoginPage() {
       if (user) {
         localStorage.setItem('currentUserId', user.id); // Guarda el ID
         localStorage.setItem('currentUserEmail', email);
-        Swal.fire({
-          title: 'Éxito!',
-          text: 'Inicio de sesión aceptado.',
-          icon: 'success',
-          confirmButtonText: 'Aceptar',
-        }).then(() => {
+        showToast('Éxito!', 'Inicio de sesión aceptado.', 'success');
+        setTimeout(() => {
           navigate('/perfil');
-        });
+        }, 3000); // Espera antes de redirigir
       } else {
-        Swal.fire({
-          title: 'Error!',
-          text: 'No se pudo obtener el perfil del usuario.',
-          icon: 'error',
-          confirmButtonText: 'Intentar de nuevo',
-        });
+        showToast(
+          'Error!',
+          'No se pudo obtener el perfil del usuario.',
+          'error',
+        );
       }
     } else {
-      Swal.fire({
-        title: 'Error!',
-        text: 'Usuario o contraseña incorrectos.',
-        icon: 'error',
-        confirmButtonText: 'Intentar de nuevo',
-      });
+      showToast('Error!', 'Usuario o contraseña incorrectos.', 'error');
     }
   };
 

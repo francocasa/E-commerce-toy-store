@@ -10,13 +10,18 @@ function CategoriesPage() {
   useEffect(() => {
     const fetchCategories = async () => {
       setLoading(true); // Inicia carga
-      const data = await consultaDatos(); // Llama a la función para obtener los datos
-      if (data.length) {
-        setCategories(data); // Guarda las categorías en el estado
-      } else {
-        setError('Error al cargar las categorías');
+      try {
+        const data = await consultaDatos(); // Llama a la función para obtener los datos
+        if (Array.isArray(data) && data.length) {
+          setCategories(data); // Guarda las categorías en el estado
+        } else {
+          setError('No se encontraron categorías.');
+        }
+      } catch (err) {
+        setError('Error al cargar las categorías: ' + err.message);
+      } finally {
+        setLoading(false); // Finaliza carga
       }
-      setLoading(false); // Finaliza carga
     };
 
     fetchCategories();

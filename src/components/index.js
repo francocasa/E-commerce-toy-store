@@ -13,7 +13,6 @@ import Searchbar from './Searchbar';
 import CartItem from './CartItem';
 import CartSummary from './CartSummary';
 import AddToCart from './AddToCart';
-import ProductDetailPreCart from './ProductDetailPreCart';
 import CategoryFilter from './CategoryFilter';
 import VerMas from './VerMas';
 
@@ -33,7 +32,6 @@ export {
   CartItem,
   CartSummary,
   AddToCart,
-  ProductDetailPreCart,
   CategoryFilter,
   VerMas,
 };

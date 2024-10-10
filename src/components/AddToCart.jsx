@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import Swal from 'sweetalert2';
+import Toastify from 'toastify-js';
+import 'toastify-js/src/toastify.css';
 import { DashSquareFill, PlusSquareFill } from 'react-bootstrap-icons';
 
 export default function AddToCart({ product }) {
@@ -8,34 +9,49 @@ export default function AddToCart({ product }) {
 
   const addToCart = () => {
     const existingCart = JSON.parse(localStorage.getItem('Cart')) || [];
-    const existingProduct = existingCart.find((item) => item.id === product.id); // Comparar por id como string
+    const existingProduct = existingCart.find((item) => item.id === product.id);
 
     if (existingProduct) {
       // Aumentar la cantidad del producto existente
       existingProduct.quantity += quantity;
-      Swal.fire({
-        title: 'Cantidad actualizada',
-        text: 'Has actualizado la cantidad para la compra',
-        icon: 'info',
-      });
+      showToast(
+        'Cantidad actualizada',
+        'Has actualizado la cantidad para la compra',
+        'info',
+      );
     } else {
       // Si se añade el producto
       existingCart.push({
-        id: product.id, // Se mantiene como string
-        title: product.name, // Cambiado de title a name
+        id: product.id,
+        title: product.name,
         price: product.price,
-        image: product.image[0].url, // Asegúrate de obtener la URL de la imagen
+        image: product.image[0].url,
         quantity,
-        categoryId: product.categoryId, // Añadir categoryId aquí
+        categoryId: product.categoryId,
       });
-      Swal.fire({
-        title: 'Producto añadido',
-        text: 'Se añadió el producto al carrito',
-        icon: 'success',
-      });
+      showToast(
+        'Producto añadido',
+        'Se añadió el producto al carrito',
+        'success',
+      );
     }
 
     localStorage.setItem('Cart', JSON.stringify(existingCart));
+  };
+
+  const showToast = (title, text, type) => {
+    Toastify({
+      text: `${title}: ${text}`,
+      duration: 3000,
+      gravity: 'top', // Mantiene la posición en la parte superior
+      position: 'right', // Cambiado a 'right'
+      backgroundColor: type === 'success' ? '#4CAF50' : '#FF9800',
+      stopOnFocus: true,
+      offset: {
+        x: 20, // Distancia desde el borde derecho
+        y: 60, // Distancia desde la parte superior
+      },
+    }).showToast();
   };
 
   return (
@@ -64,18 +80,18 @@ export default function AddToCart({ product }) {
 // Validación de prop-types
 AddToCart.propTypes = {
   product: PropTypes.shape({
-    id: PropTypes.string.isRequired, // Se mantiene como string
-    name: PropTypes.string.isRequired, // Cambiado de title a name
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     image: PropTypes.arrayOf(
       PropTypes.shape({
         url: PropTypes.string.isRequired,
       }),
     ).isRequired,
-    description: PropTypes.string, // Si necesitas usarlo
+    description: PropTypes.string,
     brandId: PropTypes.string,
     materialId: PropTypes.string,
-    categoryId: PropTypes.string.isRequired, // Asegúrate de que categoryId sea requerido
+    categoryId: PropTypes.string.isRequired,
     discountId: PropTypes.string,
   }).isRequired,
 };

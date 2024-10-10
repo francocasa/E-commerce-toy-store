@@ -2,7 +2,7 @@
   "products": [
     {
       "id": "1",
-      "name": "Producto AAA",
+      "name": "Producto A",
       "description": "Juguete para varones",
       "price": 60,
       "stock": 100,
@@ -18,7 +18,7 @@
     },
     {
       "id": "2",
-      "name": "Producto B",
+      "name": "Producto BB",
       "description": "Juguete educativo",
       "price": 55,
       "stock": 100,
@@ -218,56 +218,81 @@
       "brandId": "1",
       "materialId": "2",
       "image": "",
-      "discountId": "null"
+      "discountId": null
     }
   ],
   "categories": [
     {
       "id": "1",
-      "title": "Educativo",
-      "image": "/Products/juguete2.png"
+      "name": "Educativo",
+      "description": "Juguetes y materiales educativos para el aprendizaje.",
+      "image": "/Products/juguete2.png",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "isDeleted": false
     },
     {
       "id": "2",
-      "title": "Acción",
-      "image": "/Promociones/promo6.png"
+      "name": "Acción",
+      "description": "Juguetes y juegos de acción para momentos emocionantes.",
+      "image": "/Promociones/promo6.png",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "isDeleted": false
     }
   ],
-
   "brands": [
     {
       "id": "1",
       "name": "Marca A",
-      "description": "Descripción de la marca A"
+      "description": "Descripción de la marca A",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "isDeleted": false
     },
     {
       "id": "2",
       "name": "Marca B",
-      "description": "Descripción de la marca B"
+      "description": "Descripción de la marca B",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "isDeleted": false
     }
   ],
   "materials": [
     {
       "id": "1",
       "name": "Madera",
-      "description": "Material de madera"
+      "description": "Material de madera",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "isDeleted": false
     },
     {
       "id": "2",
       "name": "Metal",
-      "description": "Material de metal"
+      "description": "Material de metal",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "isDeleted": false
     }
   ],
   "discounts": [
     {
       "id": "1",
       "description": "3X2",
-      "discount_amount": 0.33333
+      "discount": 0.33333,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "isDeleted": false
     },
     {
       "id": "2",
       "description": "Navidad",
-      "discount_amount": 0.3
+      "discount": 0.3,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "isDeleted": false
     }
   ],
   "users": [
@@ -275,136 +300,172 @@
       "id": "1",
       "fullName": "Juan Pérez Alvaaro",
       "email": "habsro112@example.com",
-      "password": "1234",
+      "passwordHash": "1234",
       "address": "Calle Falsa 123",
       "phone": "123456789",
-      "orders": [
-        {
-          "orderId": "1",
-          "totalAmount": 320,
-          "orderDate": "2024-10-02",
-          "status": "completed",
-          "items": [
-            {
-              "productId": "1",
-              "quantity": 2,
-              "price": 120
-            },
-            {
-              "productId": "10",
-              "quantity": 10,
-              "price": 200
-            }
-          ]
-        },
-        {
-          "orderId": "2",
-          "totalAmount": 230,
-          "orderDate": "2024-10-04",
-          "status": "completed",
-          "items": [
-            {
-              "productId": "1",
-              "quantity": 3,
-              "price": 130
-            },
-            {
-              "productId": "10",
-              "quantity": 5,
-              "price": 100
-            }
-          ]
-        },
-        {
-          "orderId": "3",
-          "totalAmount": 130,
-          "orderDate": "2024-10-04",
-          "status": "completed",
-          "items": [
-            {
-              "productId": "3",
-              "quantity": 3,
-              "price": 130
-            }
-          ]
-        }
-      ],
-      "cart": {
-        "cartId": "1",
-        "items": [
-          {
-            "productId": "3",
-            "quantity": 1
-          }
-        ]
-      },
-      "photo": ""
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "isDeleted": false
     },
     {
       "id": "2",
       "fullName": "María López",
       "email": "cliente2@example.com",
-      "password": "1234",
+      "passwordHash": "1234",
       "address": "Avenida Siempre Viva 742aaaa",
       "phone": "987654321",
-      "orders": [],
-      "cart": {
-        "cartId": "2",
-        "items": []
-      }
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "isDeleted": false
     },
     {
       "id": "5QoE7Nk",
       "fullName": "Usuario 3",
       "email": "blabla@gmail.com",
-      "password": "Miguel24773!",
+      "passwordHash": "1234",
       "address": "",
       "phone": "",
-      "orders": [],
-      "cart": {
-        "cartId": "3",
-        "items": []
-      }
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "isDeleted": false
     },
     {
       "id": "saeckjt5b",
       "fullName": "Genial",
       "email": "popis@gmail.com",
-      "password": "Mi24773!",
+      "passwordHash": "1234",
       "address": "12313",
       "phone": "asfasfa",
-      "orders": [],
-      "cart": {
-        "cartId": "4",
-        "items": []
-      }
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "isDeleted": false
     },
     {
       "id": "vznqdjtds",
       "fullName": "Usuario 5",
       "email": "ada@gmail.com",
-      "password": "Miguel24773!",
+      "passwordHash": "1234",
       "address": "",
       "phone": "",
-      "orders": [],
-      "cart": {
-        "cartId": "5",
-        "items": []
-      }
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "isDeleted": false
+    }
+  ],
+  "orders": [
+    {
+      "id": "1",
+      "userId": "1",
+      "totalAmount": 320,
+      "orderDate": "2024-10-02",
+      "status": "completed",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "isDeleted": false
+    },
+    {
+      "id": "2",
+      "userId": "1",
+      "totalAmount": 230,
+      "orderDate": "2024-10-04",
+      "status": "completed",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "isDeleted": false
+    },
+    {
+      "id": "3",
+      "userId": "1",
+      "totalAmount": 130,
+      "orderDate": "2024-10-04",
+      "status": "completed",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "isDeleted": false
+    }
+  ],
+  "orderItems": [
+    {
+      "id": "1",
+      "orderId": "1",
+      "productId": "1",
+      "quantity": 2
+    },
+    {
+      "id": "2",
+      "orderId": "1",
+      "productId": "10",
+      "quantity": 10
+    },
+    {
+      "id": "3",
+      "orderId": "2",
+      "productId": "1",
+      "quantity": 3
+    },
+    {
+      "id": "4",
+      "orderId": "2",
+      "productId": "10",
+      "quantity": 5
+    },
+    {
+      "id": "5",
+      "orderId": "3",
+      "productId": "3",
+      "quantity": 3
+    }
+  ],
+  "carts": [
+    {
+      "id": "1",
+      "userId": "1"
+    },
+    {
+      "id": "2",
+      "userId": "2"
+    },
+    {
+      "id": "3",
+      "userId": "5QoE7Nk"
+    },
+    {
+      "id": "4",
+      "userId": "saeckjt5b"
+    },
+    {
+      "id": "5",
+      "userId": "vznqdjtds"
+    }
+  ],
+  "cartItems": [
+    {
+      "id": "1",
+      "cartId": "1",
+      "productId": "3",
+      "quantity": 1
     }
   ],
   "users_admin": [
     {
       "id": "1",
+      "fullName": "Mikelyto Pariona",
       "email": "mikelyto@gmail.com",
-      "password": "1234",
-      "name": "Mikelyto Pariona"
+      "username": "mikelyto",
+      "passwordHash": "1234",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "isDeleted": false
     },
     {
       "id": "2",
+      "fullName": "Miguel Chavez",
       "email": "miguel@gmail.com",
-      "password": "4481",
-      "name": "Miguel Chavez"
+      "username": "miguel",
+      "passwordHash": "1234",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "isDeleted": false
     }
   ]
 }

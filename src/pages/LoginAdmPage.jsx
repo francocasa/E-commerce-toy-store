@@ -1,32 +1,55 @@
 import { useState } from 'react';
-import Swal from 'sweetalert2';
-import { authenticateAdmin } from '../services/usersadmin'; // Importar desde el servicio
+import Toastify from 'toastify-js';
+import 'toastify-js/src/toastify.css';
+import { authenticateAdmin } from '../services/usersadmin';
 
 function LoginAdmPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const showToast = (title, text, type) => {
+    Toastify({
+      text: `${title}: ${text}`,
+      duration: 3000,
+      gravity: 'top',
+      position: 'right',
+      backgroundColor: type === 'success' ? '#4CAF50' : '#FF9800',
+      stopOnFocus: true,
+      offset: {
+        x: 20,
+        y: 60,
+      },
+    }).showToast();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Lógica de autenticación para el administrador
-    const isAuthenticated = await authenticateAdmin(email, password);
-    if (isAuthenticated) {
-      Swal.fire({
-        title: 'Éxito!',
-        text: 'Has iniciado sesión como administrador.',
-        icon: 'success',
-        confirmButtonText: 'Aceptar',
-      }).then(() => {
-        window.location.href = '/admin/dashboard'; // Cambia esta ruta según tu estructura
-      });
-    } else {
-      Swal.fire({
-        title: 'Error!',
-        text: 'Credenciales incorrectas. Por favor, intenta de nuevo.',
-        icon: 'error',
-        confirmButtonText: 'Aceptar',
-      });
+    try {
+      const admin = await authenticateAdmin(email, password);
+
+      if (admin) {
+        showToast(
+          'Éxito!',
+          `Bienvenido, ${admin.fullName}. Has iniciado sesión como administrador.`,
+          'success',
+        );
+        setTimeout(() => {
+          window.location.href = '/admin/dashboard';
+        }, 3000); // Espera antes de redirigir
+      } else {
+        showToast(
+          'Error!',
+          'Credenciales incorrectas. Por favor, intenta de nuevo.',
+          'error',
+        );
+      }
+    } catch (error) {
+      showToast(
+        'Error!',
+        'Hubo un problema al autenticarte. Intenta nuevamente.',
+        'error',
+      );
     }
   };
 
