@@ -1,18 +1,35 @@
-import { useEffect, useState } from 'react';
-import { fetchHeroData } from '../services/hero'; // Importar la función desde el nuevo archivo
+import { useState } from 'react';
 
 const HeroSection = () => {
-  const [heroData, setHeroData] = useState([]);
+  // Datos estáticos
+  const heroData = [
+    {
+      id: 1,
+      title: 'Promociones que te esperan',
+      description: 'Productos seleccionados con 33% de descuento',
+      buttonText: 'Ver Ofertas',
+      buttonLink: '/promotions',
+      backgroundImage: '/FondoHero/FondoHero.png',
+    },
+    {
+      id: 2,
+      title: 'Mira nuestros nuevos productos',
+      description: 'Lo nuevo ha llegado',
+      buttonText: 'Ver Productos',
+      buttonLink: '/products',
+      backgroundImage: '/FondoHero/FondoHero2.png',
+    },
+    {
+      id: 3,
+      title: 'Mira los testimonios',
+      description: 'Varios ya compraron',
+      buttonText: 'Ver Testimonios',
+      buttonLink: '/Testimonios',
+      backgroundImage: '/FondoHero/FondoHero3.png',
+    },
+  ];
+
   const [currentSlide, setCurrentSlide] = useState(0);
-
-  useEffect(() => {
-    const loadHeroData = async () => {
-      const data = await fetchHeroData(); // Usar la función para obtener los datos
-      setHeroData(data); // Guardar los datos en el estado
-    };
-
-    loadHeroData();
-  }, []);
 
   const handleNext = () => {
     setCurrentSlide((prev) => (prev + 1) % heroData.length);
@@ -21,8 +38,6 @@ const HeroSection = () => {
   const handlePrev = () => {
     setCurrentSlide((prev) => (prev - 1 + heroData.length) % heroData.length);
   };
-
-  if (heroData.length === 0) return <div>Cargando...</div>;
 
   return (
     <section

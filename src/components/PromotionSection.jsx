@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { consultaPromociones } from '../services/promotions'; // Importa la función de consulta
+import { consultaPromociones } from '../services/products'; // Importa la función de consulta
 
 const PromotionSection = () => {
   const scrollRef = useRef(null); // Referencia al contenedor
@@ -10,6 +10,7 @@ const PromotionSection = () => {
   useEffect(() => {
     const fetchPromotions = async () => {
       const data = await consultaPromociones(); // Usar la función del servicio
+      console.log('Promociones:', data); // Verificar la salida
       setPromotions(data); // Guarda las promociones en el estado
     };
 
@@ -49,20 +50,21 @@ const PromotionSection = () => {
           {promotions.map((promo) => (
             <div
               key={promo.id}
-              className="min-w-[200px] sm:min-w-[250px] md:min-w-[300px] bg-white shadow-md p-4 rounded-md"
+              className="min-w-[200px] sm:min-w-[250px] md:min-w-[300px] bg-white shadow-md p-4 rounded-md mx-auto"
             >
               <img
-                src={promo.image}
-                alt={promo.title}
-                className="w-full h-40 object-cover rounded-md"
+                src={promo.image[0]?.url} // Accede al primer elemento del array de imágenes
+                alt={promo.name}
+                className="w-auto h-40 object-cover rounded-md mx-auto"
               />
-              <h3 className="text-lg mt-2 font-medium">
-                {promo.categoryPromo}
+              <h3 className="text-lg mt-2 font-medium text-center">
+                {promo.name} {/* Mostrar el nombre del producto */}
               </h3>
-              <p className="text-gray-500">{promo.descriptionPromo}</p>
+              <p className="text-gray-500 text-center">{promo.description}</p>{' '}
+              {/* Mostrar la descripción */}
               <button
                 onClick={() => handleViewPromotion(promo.id)} // Cambia a un botón
-                className="text-blue-600 hover:underline"
+                className="text-blue-600 hover:underline block mx-auto"
               >
                 Ver promoción
               </button>

@@ -1,18 +1,47 @@
-import { useRef, useEffect, useState } from 'react';
-import { consultaTestimonios } from '../services/testimonials'; // Importar el servicio
+import { useRef } from 'react';
 
 const TestimonialSection = () => {
   const scrollRef = useRef(null); // Referencia al contenedor
-  const [testimonials, setTestimonials] = useState([]); // Estado para los testimonios
 
-  useEffect(() => {
-    const fetchTestimonials = async () => {
-      const data = await consultaTestimonios(); // Usar el servicio para obtener los testimonios
-      setTestimonials(data); // Guarda los testimonios en el estado
-    };
-
-    fetchTestimonials();
-  }, []);
+  // Datos estáticos de testimonios
+  const testimonials = [
+    {
+      id: 'test1',
+      nombrePersona: 'Miguel Pariona',
+      image: '/Perfil/photo_1.png',
+      mensaje: 'Me gustó mucho el carrito.',
+    },
+    {
+      id: 'test2',
+      nombrePersona: 'Juan Pérez',
+      image: '/Perfil/photo_2.png',
+      mensaje: 'Me gustó el tractor.',
+    },
+    {
+      id: 'test3',
+      nombrePersona: 'Ana Gómez',
+      image: '/Perfil/photo_3.png',
+      mensaje: 'Excelente calidad en los juguetes.',
+    },
+    {
+      id: 'test4',
+      nombrePersona: 'Luis Fernández',
+      image: '/Perfil/photo_4.png',
+      mensaje: 'Los precios son muy accesibles.',
+    },
+    {
+      id: 'test5',
+      nombrePersona: 'Sofía López',
+      image: '/Perfil/photo_5.png',
+      mensaje: 'Gran variedad de productos.',
+    },
+    {
+      id: 'test6',
+      nombrePersona: 'Carlos Rodríguez',
+      image: '/Perfil/photo_6.png',
+      mensaje: 'Me encantó la atención al cliente.',
+    },
+  ];
 
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -39,7 +68,7 @@ const TestimonialSection = () => {
           ref={scrollRef}
           className="flex space-x-6 overflow-x-scroll no-scrollbar p-2"
         >
-          {/* Mapear los testimonios desde el estado */}
+          {/* Mapear los testimonios desde el arreglo estático */}
           {testimonials.map((testimonial) => (
             <div
               key={testimonial.id}
@@ -50,7 +79,7 @@ const TestimonialSection = () => {
                 alt={testimonial.nombrePersona}
                 className="w-24 h-24 object-cover rounded-full mx-auto"
               />
-              <p className="mt-4">&quot;{testimonial.mensaje}&quot; </p>
+              <p className="mt-4">&quot;{testimonial.mensaje}&quot;</p>
               <h4 className="text-lg mt-2 font-medium">
                 {testimonial.nombrePersona}
               </h4>

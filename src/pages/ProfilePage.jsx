@@ -18,11 +18,11 @@ function ProfilePage() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       const email = localStorage.getItem('currentUserEmail');
-      const userId = await getUserIdByEmail(email); // Debes implementar esta función
-      const user = await getUserProfile(userId);
+      const userId = await getUserIdByEmail(email); // Cambia según el nuevo esquema
+      const user = await getUserProfile(userId); // Cambia la ruta según el nuevo esquema
       if (user) {
         setCurrentUser(user);
-        setName(user.name || '');
+        setName(user.fullName || ''); // Asegúrate de que coincida con el nuevo campo
         setId(userId);
         setPhoto(user.photo || '');
         setAddress(user.address || '');
@@ -40,13 +40,13 @@ function ProfilePage() {
     if (currentUser) {
       const updatedUser = {
         ...currentUser,
-        name,
+        fullName: name, // Cambia según el nuevo campo
         photo,
         address,
         phone,
       };
       try {
-        await updateUserProfile(updatedUser);
+        await updateUserProfile(updatedUser); // Asegúrate de que esta función esté adaptada
         Swal.fire({
           title: 'Éxito!',
           text: 'Datos actualizados correctamente.',
@@ -68,7 +68,7 @@ function ProfilePage() {
   const handleCancel = () => {
     setIsEditing(false);
     if (currentUser) {
-      setName(currentUser.name);
+      setName(currentUser.fullName); // Asegúrate de que coincida
       setPhoto(currentUser.photo);
       setAddress(currentUser.address);
       setPhone(currentUser.phone);

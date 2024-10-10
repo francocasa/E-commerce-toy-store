@@ -1,11 +1,12 @@
+import axios from 'axios';
+
 const BASE_URL = import.meta.env.VITE_API_URL; // Obtener la URL base desde el .env
 
 // Obtener el perfil del usuario
 export const getUserProfile = async (id) => {
   try {
-    const response = await fetch(`${BASE_URL}/users_cliente/${id}`);
-    if (!response.ok) throw new Error('User not found');
-    return await response.json();
+    const response = await axios.get(`${BASE_URL}/users/${id}`);
+    return response.data;
   } catch (error) {
     console.error('Error fetching user profile:', error);
     return null;
@@ -15,20 +16,7 @@ export const getUserProfile = async (id) => {
 // Actualizar el perfil del usuario
 export const updateUserProfile = async (updatedUser) => {
   try {
-    const response = await fetch(
-      `${BASE_URL}/users_cliente/${updatedUser.id}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedUser),
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error('Failed to update user profile');
-    }
+    await axios.put(`${BASE_URL}/users/${updatedUser.id}`, updatedUser);
   } catch (error) {
     console.error('Error updating user profile:', error);
   }
@@ -37,8 +25,8 @@ export const updateUserProfile = async (updatedUser) => {
 // Autenticar al usuario
 export const authenticateUser = async (email, password) => {
   try {
-    const response = await fetch(`${BASE_URL}/users_cliente?email=${email}`);
-    const users = await response.json();
+    const response = await axios.get(`${BASE_URL}/users?email=${email}`);
+    const users = response.data;
     const user = users.find((user) => user.password === password);
     return user ? user.id : null; // Devuelve el ID si se autentica
   } catch (error) {
@@ -49,8 +37,8 @@ export const authenticateUser = async (email, password) => {
 
 export const getUserIdByEmail = async (email) => {
   try {
-    const response = await fetch(`${BASE_URL}/users_cliente?email=${email}`);
-    const users = await response.json();
+    const response = await axios.get(`${BASE_URL}/users?email=${email}`);
+    const users = response.data;
     return users.length > 0 ? users[0].id : null; // Devuelve el ID si se encuentra
   } catch (error) {
     console.error('Error fetching user ID by email:', error);
@@ -66,36 +54,21 @@ export const createUser = async (user) => {
       ...user, // Spread operator para incluir el resto de las propiedades
     };
 
-    const response = await fetch(`${BASE_URL}/users_cliente`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newUser),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to create user');
-    }
-
-    return await response.json(); // Devuelve el usuario creado
+    const response = await axios.post(`${BASE_URL}/users`, newUser);
+    return response.data; // Devuelve el usuario creado
   } catch (error) {
     console.error('Error creating user:', error);
     throw error; // Lanza el error para manejarlo en el componente
   }
 };
 
-// Esta libreria no soporta json anidados
-// Obtener el perfil del usuario
+// Obtener el historial del usuario
 export const getHistory = async (id) => {
   try {
-    const response = await fetch(
-      `${BASE_URL}/users_cliente/${id}?_embed=history`,
-    );
-    if (!response.ok) throw new Error('History not found');
-    return await response.json();
+    const response = await axios.get(`${BASE_URL}/users/${id}`);
+    return response.data.orders || []; // Retorna las órdenes (historial) del usuario
   } catch (error) {
-    console.error('Error fetching user profile:', error);
+    console.error('Error fetching user history:', error);
     return null;
   }
 };
