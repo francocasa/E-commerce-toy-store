@@ -13,7 +13,7 @@ function ProductCard({ product, discounts }) {
     // Aplicar descuento basado en discountId
     const discount = discounts.find((d) => d.id === product.discountId);
     if (discount) {
-      updatedPrice *= 1 - discount.discount_amount; // Aplicar descuento
+      updatedPrice *= 1 - discount.discount; // Usar el porcentaje correcto
       discountPromo = discount.description; // Usar la descripción del descuento
     }
 
@@ -47,7 +47,7 @@ function ProductCard({ product, discounts }) {
               ${product.price.toFixed(2)}
             </span>
           ) : (
-            <span>${product.price}</span>
+            <span>${product.price.toFixed(2)}</span>
           )}
           <span className="font-bold">${price.toFixed(2)}</span>
         </div>
@@ -79,7 +79,7 @@ ProductCard.propTypes = {
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       description: PropTypes.string.isRequired,
-      discount_amount: PropTypes.number.isRequired,
+      discount: PropTypes.number.isRequired, // Cambiado a discount
     }),
   ).isRequired,
 };

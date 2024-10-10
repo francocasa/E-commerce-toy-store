@@ -23,7 +23,8 @@
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.26.2",
     "styled-components": "^6.1.13",
-    "sweetalert2": "^11.14.1"
+    "sweetalert2": "^11.14.1",
+    "toastify-js": "^1.12.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",

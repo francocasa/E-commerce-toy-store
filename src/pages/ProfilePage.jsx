@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import Swal from 'sweetalert2';
+import Toastify from 'toastify-js';
+import 'toastify-js/src/toastify.css';
 import {
   getUserProfile,
   updateUserProfile,
@@ -18,11 +19,11 @@ function ProfilePage() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       const email = localStorage.getItem('currentUserEmail');
-      const userId = await getUserIdByEmail(email); // Cambia según el nuevo esquema
-      const user = await getUserProfile(userId); // Cambia la ruta según el nuevo esquema
+      const userId = await getUserIdByEmail(email);
+      const user = await getUserProfile(userId);
       if (user) {
         setCurrentUser(user);
-        setName(user.fullName || ''); // Asegúrate de que coincida con el nuevo campo
+        setName(user.fullName || '');
         setId(userId);
         setPhoto(user.photo || '');
         setAddress(user.address || '');
@@ -32,6 +33,21 @@ function ProfilePage() {
     fetchUserProfile();
   }, []);
 
+  const showToast = (title, text, type) => {
+    Toastify({
+      text: `${title}: ${text}`,
+      duration: 3000,
+      gravity: 'top',
+      position: 'right',
+      backgroundColor: type === 'success' ? '#4CAF50' : '#FF9800',
+      stopOnFocus: true,
+      offset: {
+        x: 20,
+        y: 60,
+      },
+    }).showToast();
+  };
+
   const handleEdit = () => {
     setIsEditing(true);
   };
@@ -40,27 +56,21 @@ function ProfilePage() {
     if (currentUser) {
       const updatedUser = {
         ...currentUser,
-        fullName: name, // Cambia según el nuevo campo
+        fullName: name,
         photo,
         address,
         phone,
       };
       try {
-        await updateUserProfile(updatedUser); // Asegúrate de que esta función esté adaptada
-        Swal.fire({
-          title: 'Éxito!',
-          text: 'Datos actualizados correctamente.',
-          icon: 'success',
-          confirmButtonText: 'Aceptar',
-        });
+        await updateUserProfile(updatedUser);
+        showToast('Éxito!', 'Datos actualizados correctamente.', 'success');
         setIsEditing(false);
       } catch (error) {
-        Swal.fire({
-          title: 'Error!',
-          text: error.message || 'No se pudieron actualizar los datos.',
-          icon: 'error',
-          confirmButtonText: 'Aceptar',
-        });
+        showToast(
+          'Error!',
+          error.message || 'No se pudieron actualizar los datos.',
+          'error',
+        );
       }
     }
   };
@@ -68,7 +78,7 @@ function ProfilePage() {
   const handleCancel = () => {
     setIsEditing(false);
     if (currentUser) {
-      setName(currentUser.fullName); // Asegúrate de que coincida
+      setName(currentUser.fullName);
       setPhoto(currentUser.photo);
       setAddress(currentUser.address);
       setPhone(currentUser.phone);
@@ -81,12 +91,7 @@ function ProfilePage() {
 
   const handleLogout = () => {
     localStorage.removeItem('currentUserEmail');
-    Swal.fire({
-      title: 'Sesión Cerrada',
-      text: 'Has cerrado sesión.',
-      icon: 'info',
-      confirmButtonText: 'Aceptar',
-    });
+    showToast('Sesión Cerrada', 'Has cerrado sesión.', 'info');
     window.location.href = '/login';
   };
 

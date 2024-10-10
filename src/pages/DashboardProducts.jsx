@@ -10,7 +10,8 @@ import {
   consultaCategories,
   consultaDescuentos,
 } from '../services/products';
-import Swal from 'sweetalert2';
+import Toastify from 'toastify-js';
+import 'toastify-js/src/toastify.css';
 import Modal from 'react-modal';
 
 Modal.setAppElement('#root');
@@ -59,26 +60,32 @@ function DashboardProducts() {
 
     fetchProductsAndBrands();
   }, []);
+  const showToast = (title, text, type) => {
+    Toastify({
+      text: `${title}: ${text}`,
+      duration: 3000,
+      gravity: 'top',
+      position: 'right',
+      backgroundColor: type === 'success' ? '#4CAF50' : '#FF9800',
+      stopOnFocus: true,
+      offset: {
+        x: 20, // Distancia desde el borde derecho
+        y: 80, // Distancia desde la parte superior
+      },
+    }).showToast();
+  };
 
   const handleDelete = async (id) => {
-    const result = await Swal.fire({
-      title: '¿Confirma eliminar?',
-      text: '¡Esta acción no se puede deshacer!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Eliminar',
-      cancelButtonText: 'Cancelar',
-    });
-
-    if (result.isConfirmed) {
+    const result = window.confirm(
+      '¿Confirma eliminar? ¡Esta acción no se puede deshacer!',
+    );
+    if (result) {
       const success = await eliminarProducto(id);
       if (success) {
         setProducts(products.filter((product) => product.id !== id));
-        Swal.fire('Eliminado!', 'El producto ha sido eliminado.', 'success');
+        showToast('Eliminado!', 'El producto ha sido eliminado.', 'success');
       } else {
-        Swal.fire('Error', 'No se pudo eliminar el producto.', 'error');
+        showToast('Error', 'No se pudo eliminar el producto.', 'error');
       }
     }
   };
@@ -107,13 +114,13 @@ function DashboardProducts() {
             product.id === newProduct.id ? updatedProduct : product,
           ),
         );
-        Swal.fire('Éxito', 'Producto editado correctamente.', 'success');
+        showToast('Éxito', 'Producto editado correctamente.', 'success');
       }
     } else {
       const addedProduct = await agregarProducto(productData);
       if (addedProduct) {
         setProducts([...products, addedProduct]);
-        Swal.fire('Éxito', 'Producto agregado correctamente.', 'success');
+        showToast('Éxito', 'Producto agregado correctamente.', 'success');
       }
     }
 
@@ -257,7 +264,7 @@ function DashboardProducts() {
             <option value="">Seleccione una categoría</option>
             {categories.map((category) => (
               <option key={category.id} value={category.id}>
-                {category.title} {/* Mostrar título aquí */}
+                {category.name} {/* Mostrar título aquí */}
               </option>
             ))}
           </select>
@@ -278,7 +285,10 @@ function DashboardProducts() {
           <select
             value={newProduct.discountId}
             onChange={(e) =>
-              setNewProduct({ ...newProduct, discountId: e.target.value })
+              setNewProduct({
+                ...newProduct,
+                discountId: e.target.value === 'null' ? null : e.target.value, // Cambiado aquí
+              })
             }
             className="border p-2 rounded"
           >

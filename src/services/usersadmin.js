@@ -13,16 +13,17 @@ export const fetchAdminData = async () => {
 
 export const authenticateAdmin = async (email, password) => {
   const admins = await fetchAdminData();
-  const admin = admins.find(
-    (admin) => admin.email === email && admin.password === password,
-  );
 
-  if (admin) {
+  // Aquí se busca el admin por el email y se compara el password con passwordHash
+  const admin = admins.find((admin) => admin.email === email);
+
+  if (admin && admin.passwordHash === password) {
+    // Asegúrate de usar un método seguro para comparar contraseñas
     localStorage.setItem('AdminLogueado', JSON.stringify(admin)); // Almacena el admin logueado
-    return true;
+    return admin; // Retorna el objeto admin
   }
 
-  return false;
+  return null; // Retorna null si las credenciales no son válidas
 };
 
 export const getLoggedAdmin = () => {

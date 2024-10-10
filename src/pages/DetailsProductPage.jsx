@@ -78,7 +78,7 @@ function DetailsProductPage() {
       ? 'Lleva 03 juguetes por precio de 02'
       : discount?.id === '2'
         ? 'Por temporada navideña'
-        : `${(discount?.discount_amount * 100).toFixed(0)}% de descuento`;
+        : `${(discount?.discount * 100).toFixed(0)}% de descuento`;
 
   return (
     <main className="container mx-auto p-5 md:mt-8 lg:mt-10">
@@ -111,7 +111,7 @@ function DetailsProductPage() {
             </p>
             <p className="">
               <strong>Categoría:</strong>{' '}
-              {category ? category.title : 'No disponible'}
+              {category ? category.name : 'No disponible'}
             </p>
 
             {/* Sección de promociones si aplica */}
@@ -121,7 +121,7 @@ function DetailsProductPage() {
                 <h3 className="text-lg font-bold mb-2">{discountMessage}</h3>
                 <p className="text-md mb-2">
                   {discount.id === '2'
-                    ? `Descuento del ${(discount.discount_amount * 100).toFixed(0)}%`
+                    ? `Descuento del ${(discount.discount * 100).toFixed(0)}%`
                     : ''}
                 </p>
               </div>

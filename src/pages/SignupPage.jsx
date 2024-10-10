@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { createUser, getUserIdByEmail } from '../services/userprofile';
-import Swal from 'sweetalert2';
+import Toastify from 'toastify-js';
+import 'toastify-js/src/toastify.css';
 import { useNavigate } from 'react-router-dom';
 
 function SignupPage() {
@@ -25,75 +26,66 @@ function SignupPage() {
     setPasswordStrength(checkPasswordStrength(value));
   };
 
+  const showToast = (title, text, type) => {
+    Toastify({
+      text: `${title}: ${text}`,
+      duration: 3000,
+      gravity: 'top',
+      position: 'right',
+      backgroundColor: type === 'success' ? '#4CAF50' : '#FF9800',
+      stopOnFocus: true,
+      offset: {
+        x: 20,
+        y: 60,
+      },
+    }).showToast();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (localStorage.getItem('currentUserEmail')) {
-      Swal.fire({
-        title: 'Error!',
-        text: 'Cerrar Sesión del usuario actual.',
-        icon: 'error',
-        confirmButtonText: 'Aceptar',
-      });
+      showToast('Error!', 'Cerrar sesión del usuario actual.', 'error');
       return;
     }
 
     const existingUserId = await getUserIdByEmail(email);
     if (existingUserId) {
-      Swal.fire({
-        title: 'Error!',
-        text: 'Este correo ya está registrado.',
-        icon: 'error',
-        confirmButtonText: 'Aceptar',
-      });
+      showToast('Error!', 'Este correo ya está registrado.', 'error');
       return;
     }
 
     if (password !== confirmPassword) {
-      Swal.fire({
-        title: 'Error!',
-        text: 'Las contraseñas no coinciden.',
-        icon: 'error',
-        confirmButtonText: 'Aceptar',
-      });
+      showToast('Error!', 'Las contraseñas no coinciden.', 'error');
       return;
     }
 
     if (passwordStrength < 4) {
-      Swal.fire({
-        title: 'Error!',
-        text: 'La contraseña debe cumplir con los siguientes requisitos:\n1. Mayor a 8 caracteres\n2. Contener minúsculas y mayúsculas\n3. Contener un número\n4. Contener un carácter especial (@!?¡&gt;)',
-        icon: 'error',
-        confirmButtonText: 'Aceptar',
-      });
+      showToast(
+        'Error!',
+        'La contraseña debe cumplir con los siguientes requisitos:\n1. Mayor a 8 caracteres\n2. Contener minúsculas y mayúsculas\n3. Contener un número\n4. Contener un carácter especial (@!?¡&gt;)',
+        'error',
+      );
       return;
     }
 
     const newUser = {
       email,
       password,
-      // Agregar otros campos aquí según sea necesario
       fullName: '', // Si necesitas este campo
       photo: '', // Si necesitas este campo
     };
 
     try {
       await createUser(newUser);
-      Swal.fire({
-        title: 'Éxito!',
-        text: 'Usuario creado correctamente.',
-        icon: 'success',
-        confirmButtonText: 'Aceptar',
-      }).then(() => {
-        navigate('/perfil'); // Redirige al perfil o a otra página
-      });
+      showToast('Éxito!', 'Usuario creado correctamente.', 'success');
+      navigate('/perfil'); // Redirige al perfil o a otra página
     } catch (error) {
-      Swal.fire({
-        title: 'Error!',
-        text: 'No se pudo crear el usuario. Intenta de nuevo más tarde.',
-        icon: 'error',
-        confirmButtonText: 'Aceptar',
-      });
+      showToast(
+        'Error!',
+        'No se pudo crear el usuario. Intenta de nuevo más tarde.',
+        'error',
+      );
     }
   };
 

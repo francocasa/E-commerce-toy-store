@@ -16,22 +16,23 @@ function CartPage() {
     }
   }, []);
 
-  const calculateTotal = (product) => {
-    let price = product.price;
+  const calculateTotal = (item) => {
+    const basePrice = item.price * item.quantity;
 
-    // Aplicar descuentos
-    if (product.categoryPromo === 'Navidad') {
-      price *= 0.7;
+    // Aplicar descuentos según las condiciones
+    let discount = 0;
+    if (item.categoryPromo === 'Navidad') {
+      discount = basePrice * 0.3; // Descuento de Navidad
     }
-    if (product.categoryPromo === '3x2' && product.quantity % 3 === 0) {
-      price *= 0.66667;
+    if (item.categoryPromo === '3x2' && item.quantity % 3 === 0) {
+      discount = item.price * (item.quantity / 3); // Descuento 3x2
     }
 
-    return price * product.quantity;
+    return basePrice - discount; // Total después del descuento
   };
 
   const subtotal = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+    (acc, item) => acc + calculateTotal(item),
     0,
   );
 

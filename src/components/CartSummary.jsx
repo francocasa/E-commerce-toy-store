@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-export default function CartSummary({ subtotal, discounts }) {
+export default function CartSummary({ subtotal, discounts, total }) {
   return (
     <aside className="border rounded-lg shadow w-full flex flex-col p-4 font-medium gap-4 h-fit sm:gap-6 lg:w-1/3">
       <header>
@@ -8,7 +8,6 @@ export default function CartSummary({ subtotal, discounts }) {
           Resumen de compra
         </h1>
       </header>
-
       <section className="flex-grow px-2 space-y-4 sm:flex sm:gap-6 sm:space-y-0 lg:flex-col lg:min-w-64">
         <div className="space-y-1 sm:flex-grow">
           <div className="flex justify-between">
@@ -21,20 +20,18 @@ export default function CartSummary({ subtotal, discounts }) {
           </div>
           <div className="flex justify-between">
             <p>Total</p>
-            <p className="font-black">${(subtotal - discounts).toFixed(2)}</p>
+            <p className="font-black">${total.toFixed(2)}</p>
           </div>
         </div>
-
         <div className="flex gap-2 sm:w-1/3 sm:flex-col lg:w-full">
           <a className="block flex-grow text-center py-1 text-base text-slate-500 border-2 border-slate-400 rounded-md font-bold cursor-pointer hover:bg-slate-400 hover:text-white transition-colors lg:py-2">
             Seguir Comprando
           </a>
-          <a className="block flex-grow text-center py-1 text-white text-base  border-2 border-blue-500 bg-blue-500 rounded-md font-bold hover:bg-blue-400 hover:border-blue-400 cursor-pointer transition-colors lg:py-2">
+          <a className="block flex-grow text-center py-1 text-white text-base border-2 border-blue-500 bg-blue-500 rounded-md font-bold hover:bg-blue-400 hover:border-blue-400 cursor-pointer transition-colors lg:py-2">
             Pagar
           </a>
         </div>
       </section>
-
       <footer className="text-center mt-1">
         <a href="#">Política de Devoluciones</a>
       </footer>
@@ -46,4 +43,5 @@ export default function CartSummary({ subtotal, discounts }) {
 CartSummary.propTypes = {
   subtotal: PropTypes.number.isRequired,
   discounts: PropTypes.number.isRequired,
+  total: PropTypes.number.isRequired,
 };
