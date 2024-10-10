@@ -2,187 +2,397 @@
   "products": [
     {
       "id": "1",
-      "title": "Producto AAA",
+      "name": "Producto AAA",
+      "description": "Juguete para varones",
       "price": 60,
-      "image": "/Products/juguete1.png",
-      "descripcion": "Juguete para varones",
-      "marca": "Marca A",
-      "material": "madera",
-      "category": ["Educativo"],
-      "promocion": false,
-      "descriptionPromo": "",
-      "categoryPromo": ""
+      "stock": 100,
+      "categoryId": "1",
+      "brandId": "1",
+      "materialId": "1",
+      "discountId": null,
+      "image": [
+        {
+          "url": "/Products/juguete1.png"
+        }
+      ]
     },
     {
       "id": "2",
-      "title": "Producto B",
+      "name": "Producto B",
+      "description": "Juguete educativo",
       "price": 55,
-      "image": "/Products/juguete2.png",
-      "descripcion": "Juguete educativo",
-      "marca": "Marca B",
-      "material": "madera",
-      "category": ["Educativo"],
-      "promocion": false,
-      "descriptionPromo": "",
-      "categoryPromo": ""
+      "stock": 100,
+      "categoryId": "1",
+      "brandId": "2",
+      "materialId": "1",
+      "discountId": null,
+      "image": [
+        {
+          "url": "/Products/juguete2.png"
+        }
+      ]
     },
     {
       "id": "3",
-      "title": "Producto C",
+      "name": "Producto C",
+      "description": "Juguete para construir",
       "price": 60,
-      "image": "/Products/juguete3.png",
-      "descripcion": "Juguete para construir",
-      "marca": "Marca C",
-      "material": "madera",
-      "category": ["Educativo"],
-      "promocion": false,
-      "descriptionPromo": "",
-      "categoryPromo": ""
+      "stock": 100,
+      "categoryId": "1",
+      "brandId": "3",
+      "materialId": "1",
+      "discountId": null,
+      "image": [
+        {
+          "url": "/Products/juguete3.png"
+        }
+      ]
     },
     {
       "id": "4",
-      "title": "Producto D",
+      "name": "Producto D",
+      "description": "Juguete interactivo",
       "price": 55,
-      "image": "/Products/juguete4.png",
-      "descripcion": "Juguete interactivo",
-      "marca": "Marca D",
-      "material": "madera",
-      "category": ["Educativo"],
-      "promocion": false,
-      "descriptionPromo": "",
-      "categoryPromo": ""
+      "stock": 100,
+      "categoryId": "1",
+      "brandId": "4",
+      "materialId": "1",
+      "discountId": null,
+      "image": [
+        {
+          "url": "/Products/juguete4.png"
+        }
+      ]
     },
     {
       "id": "5",
-      "title": "Producto E",
+      "name": "Producto E",
+      "description": "Juguete clásico",
       "price": 60,
-      "image": "/Products/juguete5.png",
-      "descripcion": "Juguete clásico",
-      "marca": "Marca E",
-      "material": "madera",
-      "category": ["Educativo"],
-      "promocion": false,
-      "descriptionPromo": "",
-      "categoryPromo": ""
+      "stock": 100,
+      "categoryId": "1",
+      "brandId": "5",
+      "materialId": "1",
+      "discountId": null,
+      "image": [
+        {
+          "url": "/Products/juguete5.png"
+        }
+      ]
     },
     {
       "id": "6",
-      "title": "Producto F",
+      "name": "Producto F",
+      "description": "Juguete para jugar al aire libre",
       "price": 55,
-      "image": "/Products/juguete6.png",
-      "descripcion": "Juguete para jugar al aire libre",
-      "marca": "Marca F",
-      "material": "madera",
-      "category": ["Educativo"],
-      "promocion": false,
-      "descriptionPromo": "",
-      "categoryPromo": ""
+      "stock": 100,
+      "categoryId": "1",
+      "brandId": "6",
+      "materialId": "1",
+      "discountId": null,
+      "image": [
+        {
+          "url": "/Products/juguete6.png"
+        }
+      ]
     },
     {
       "id": "7",
-      "title": "Producto G",
+      "name": "Producto G",
+      "description": "Juguete para su niño",
       "price": 20,
-      "image": "/Promociones/promo1.png",
-      "descripcion": "Juguete para su niño",
-      "marca": "Marca F",
-      "material": "madera",
-      "category": ["Educativo"],
-      "promocion": true,
-      "descriptionPromo": "Compra 3 y paga 2",
-      "categoryPromo": "3x2"
+      "stock": 100,
+      "categoryId": "1",
+      "brandId": "6",
+      "materialId": "1",
+      "discountId": "1",
+      "image": [
+        {
+          "url": "/Promociones/promo1.png"
+        }
+      ]
     },
     {
       "id": "8",
-      "title": "Producto H",
+      "name": "Producto H",
+      "description": "Juguete para su niño",
       "price": 20,
-      "image": "/Promociones/promo2.png",
-      "descripcion": "Juguete para su niño",
-      "marca": "Marca H",
-      "material": "madera",
-      "category": ["Acción"],
-      "promocion": true,
-      "descriptionPromo": "30% de descuento en juguetes seleccionados",
-      "categoryPromo": "Navidad"
+      "stock": 100,
+      "categoryId": "2",
+      "brandId": "7",
+      "materialId": "1",
+      "discountId": "2",
+      "image": [
+        {
+          "url": "/Promociones/promo2.png"
+        }
+      ]
     },
     {
       "id": "9",
-      "title": "Producto I",
+      "name": "Producto I",
+      "description": "Juguete para su niño",
       "price": 20,
-      "image": "/Promociones/promo3.png",
-      "descripcion": "Juguete para su niño",
-      "marca": "Marca I",
-      "material": "madera",
-      "category": ["Acción"],
-      "promocion": true,
-      "descriptionPromo": "Compra 3 y paga 2",
-      "categoryPromo": "3x2"
+      "stock": 100,
+      "categoryId": "2",
+      "brandId": "8",
+      "materialId": "1",
+      "discountId": "1",
+      "image": [
+        {
+          "url": "/Promociones/promo3.png"
+        }
+      ]
     },
     {
       "id": "10",
-      "title": "Producto J",
+      "name": "Producto J",
+      "description": "Juguete para su niño",
       "price": 20,
-      "image": "/Promociones/promo4.png",
-      "descripcion": "Juguete para su niño",
-      "marca": "Marca J",
-      "material": "madera",
-      "category": ["Acción"],
-      "promocion": true,
-      "descriptionPromo": "30% de descuento en productos navideños",
-      "categoryPromo": "Navidad"
+      "stock": 100,
+      "categoryId": "2",
+      "brandId": "9",
+      "materialId": "1",
+      "discountId": "2",
+      "image": [
+        {
+          "url": "/Promociones/promo4.png"
+        }
+      ]
     },
     {
       "id": "11",
-      "title": "Producto K",
+      "name": "Producto K",
+      "description": "Juguete para su niño",
       "price": 20,
-      "image": "/Promociones/promo5.png",
-      "descripcion": "Juguete para su niño",
-      "marca": "Marca K",
-      "material": "madera",
-      "category": ["Acción"],
-      "promocion": true,
-      "descriptionPromo": "Compra 3 y paga 2",
-      "categoryPromo": "3x2"
+      "stock": 100,
+      "categoryId": "2",
+      "brandId": "10",
+      "materialId": "1",
+      "discountId": "1",
+      "image": [
+        {
+          "url": "/Promociones/promo5.png"
+        }
+      ]
     },
     {
       "id": "12",
-      "title": "Producto L",
+      "name": "Producto L",
+      "description": "Juguete para su niño",
       "price": 20,
-      "image": "/Promociones/promo6.png",
-      "descripcion": "Juguete para su niño",
-      "marca": "Marca L",
-      "material": "madera",
-      "category": ["Acción", "Educativo"],
-      "promocion": true,
-      "descriptionPromo": "30% de descuento en toda la tienda",
-      "categoryPromo": "Navidad"
+      "stock": 100,
+      "categoryId": "2",
+      "brandId": "11",
+      "materialId": "1",
+      "discountId": "2",
+      "image": [
+        {
+          "url": "/Promociones/promo6.png"
+        }
+      ]
     },
     {
       "id": "uVPYvvl",
-      "title": "PRODUCTO VVV",
+      "name": "PRODUCTO VVV",
+      "description": "asdada",
       "price": 12,
-      "image": "xxx",
-      "descripcion": "asdada",
-      "marca": "marca",
-      "material": "material",
-      "category": ["Educativo"],
-      "promocion": "false",
-      "descriptionPromo": "",
-      "categoryPromo": ""
+      "stock": 100,
+      "categoryId": "1",
+      "brandId": "12",
+      "materialId": "1",
+      "discountId": null,
+      "image": [
+        {
+          "url": "xxx"
+        }
+      ]
+    },
+    {
+      "id": "6C3BGjF",
+      "name": "Mike",
+      "description": "MikeWusosky",
+      "price": 20,
+      "stock": 10,
+      "categoryId": "1",
+      "brandId": "1",
+      "materialId": "2",
+      "image": "",
+      "discountId": "null"
     }
   ],
   "categories": [
     {
-      "id": "2",
+      "id": "1",
       "title": "Educativo",
       "image": "/Products/juguete2.png"
     },
     {
-      "id": "5",
+      "id": "2",
       "title": "Acción",
       "image": "/Promociones/promo6.png"
     }
   ],
-  "users_admin": [
+
+  "brands": [
+    {
+      "id": "1",
+      "name": "Marca A",
+      "description": "Descripción de la marca A"
+    },
+    {
+      "id": "2",
+      "name": "Marca B",
+      "description": "Descripción de la marca B"
+    }
+  ],
+  "materials": [
+    {
+      "id": "1",
+      "name": "Madera",
+      "description": "Material de madera"
+    },
+    {
+      "id": "2",
+      "name": "Metal",
+      "description": "Material de metal"
+    }
+  ],
+  "discounts": [
+    {
+      "id": "1",
+      "description": "3X2",
+      "discount_amount": 0.33333
+    },
+    {
+      "id": "2",
+      "description": "Navidad",
+      "discount_amount": 0.3
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "fullName": "Juan Pérez Alvaaro",
+      "email": "habsro112@example.com",
+      "password": "1234",
+      "address": "Calle Falsa 123",
+      "phone": "123456789",
+      "orders": [
+        {
+          "orderId": "1",
+          "totalAmount": 320,
+          "orderDate": "2024-10-02",
+          "status": "completed",
+          "items": [
+            {
+              "productId": "1",
+              "quantity": 2,
+              "price": 120
+            },
+            {
+              "productId": "10",
+              "quantity": 10,
+              "price": 200
+            }
+          ]
+        },
+        {
+          "orderId": "2",
+          "totalAmount": 230,
+          "orderDate": "2024-10-04",
+          "status": "completed",
+          "items": [
+            {
+              "productId": "1",
+              "quantity": 3,
+              "price": 130
+            },
+            {
+              "productId": "10",
+              "quantity": 5,
+              "price": 100
+            }
+          ]
+        },
+        {
+          "orderId": "3",
+          "totalAmount": 130,
+          "orderDate": "2024-10-04",
+          "status": "completed",
+          "items": [
+            {
+              "productId": "3",
+              "quantity": 3,
+              "price": 130
+            }
+          ]
+        }
+      ],
+      "cart": {
+        "cartId": "1",
+        "items": [
+          {
+            "productId": "3",
+            "quantity": 1
+          }
+        ]
+      },
+      "photo": ""
+    },
+    {
+      "id": "2",
+      "fullName": "María López",
+      "email": "cliente2@example.com",
+      "password": "1234",
+      "address": "Avenida Siempre Viva 742aaaa",
+      "phone": "987654321",
+      "orders": [],
+      "cart": {
+        "cartId": "2",
+        "items": []
+      }
+    },
+    {
+      "id": "5QoE7Nk",
+      "fullName": "Usuario 3",
+      "email": "blabla@gmail.com",
+      "password": "Miguel24773!",
+      "address": "",
+      "phone": "",
+      "orders": [],
+      "cart": {
+        "cartId": "3",
+        "items": []
+      }
+    },
+    {
+      "id": "saeckjt5b",
+      "fullName": "Genial",
+      "email": "popis@gmail.com",
+      "password": "Mi24773!",
+      "address": "12313",
+      "phone": "asfasfa",
+      "orders": [],
+      "cart": {
+        "cartId": "4",
+        "items": []
+      }
+    },
+    {
+      "id": "vznqdjtds",
+      "fullName": "Usuario 5",
+      "email": "ada@gmail.com",
+      "password": "Miguel24773!",
+      "address": "",
+      "phone": "",
+      "orders": [],
+      "cart": {
+        "cartId": "5",
+        "items": []
+      }
+    }
+  ],  "users_admin": [
     {
       "id": "1",
       "email": "mikelyto@gmail.com",
@@ -194,161 +404,6 @@
       "email": "miguel@gmail.com",
       "password": "4481",
       "name": "Miguel Chavez"
-    }
-  ],
-  "users_cliente": [
-    {
-      "id": "1",
-      "email": "cliente1@example.com",
-      "name": "Juan Pérez",
-      "photo": "https://example.com/perfil1.jpg",
-      "address": "Calle Falsa 123",
-      "phone": "123456789",
-      "password": "1234",
-      "history": [
-        {
-          "id": "1",
-          "date": "2024-10-02",
-          "purchase": [
-            {
-              "id": "1",
-              "amount": "2",
-              "price": "120"
-            },
-            {
-              "id": "10",
-              "amount": "10",
-              "price": "200"
-            }
-          ],
-          "total": 320
-        },
-        {
-          "id": "2",
-          "date": "2024-10-04",
-          "purchase": [
-            {
-              "id": "1",
-              "amount": "3",
-              "price": "130"
-            },
-            {
-              "id": "10",
-              "amount": "5",
-              "price": "100"
-            }
-          ],
-          "total": 230
-        },
-        {
-          "id": "3",
-          "date": "2024-10-04",
-          "purchase": [
-            {
-              "id": "3",
-              "amount": "3",
-              "price": "130"
-            }
-          ],
-          "total": 130
-        }
-      ]
-    },
-    {
-      "id": "2",
-      "email": "cliente2@example.com",
-      "name": "María López",
-      "photo": "https://example.com/perfil2.jpg",
-      "address": "Avenida Siempre Viva 742aaaa",
-      "phone": "987654321",
-      "password": "1234",
-      "history": []
-    },
-    {
-      "email": "blabla@gmail.com",
-      "password": "Miguel24773!",
-      "id": "5QoE7Nk",
-      "history": []
-    },
-    {
-      "id": "saeckjt5b",
-      "email": "popis@gmail.com",
-      "password": "Mi24773!",
-      "name": "Genial",
-      "photo": "asaf",
-      "address": "12313",
-      "phone": "asfasfa",
-      "history": []
-    },
-    {
-      "id": "vznqdjtds",
-      "email": "ada@gmail.com",
-      "password": "Miguel24773!",
-      "history": []
-    }
-  ],
-  "hero": [
-    {
-      "id": 1,
-      "title": "Promociones que te esperan",
-      "description": "Productos seleccionados con 33% de descuento",
-      "buttonText": "Ver Ofertas",
-      "buttonLink": "/promotions",
-      "backgroundImage": "/FondoHero/FondoHero.png"
-    },
-    {
-      "id": 2,
-      "title": "Mira nuestros nuevos productos",
-      "description": "Lo nuevo ha llegado",
-      "buttonText": "Ver Productos",
-      "buttonLink": "/products",
-      "backgroundImage": "/FondoHero/FondoHero2.png"
-    },
-    {
-      "id": 3,
-      "title": "Mira los testimonios",
-      "description": "Varios ya compraron",
-      "buttonText": "Ver Testimonios",
-      "buttonLink": "/Testimonios",
-      "backgroundImage": "/FondoHero/FondoHero3.png"
-    }
-  ],
-  "testimonials": [
-    {
-      "id": "test1",
-      "nombrePersona": "Miguel Pariona",
-      "image": "/Perfil/photo_1.png",
-      "mensaje": "Me gustó mucho el carrito."
-    },
-    {
-      "id": "test2",
-      "nombrePersona": "Juan Pérez",
-      "image": "/Perfil/photo_2.png",
-      "mensaje": "Me gustó el tractor."
-    },
-    {
-      "id": "test3",
-      "nombrePersona": "Ana Gómez",
-      "image": "/Perfil/photo_3.png",
-      "mensaje": "Excelente calidad en los juguetes."
-    },
-    {
-      "id": "test4",
-      "nombrePersona": "Luis Fernández",
-      "image": "/Perfil/photo_4.png",
-      "mensaje": "Los precios son muy accesibles."
-    },
-    {
-      "id": "test5",
-      "nombrePersona": "Sofía López",
-      "image": "/Perfil/photo_5.png",
-      "mensaje": "Gran variedad de productos."
-    },
-    {
-      "id": "test6",
-      "nombrePersona": "Carlos Rodríguez",
-      "image": "/Perfil/photo_6.png",
-      "mensaje": "Me encantó la atención al cliente."
     }
   ]
 }

@@ -8,11 +8,11 @@ export default function AddToCart({ product }) {
 
   const addToCart = () => {
     const existingCart = JSON.parse(localStorage.getItem('Cart')) || [];
-    const existingProduct = existingCart.find((item) => item.id === product.id);
+    const existingProduct = existingCart.find((item) => item.id === product.id); // Comparar por id como string
 
     if (existingProduct) {
-      // Reemplazar la cantidad del producto
-      existingProduct.quantity = quantity;
+      // Aumentar la cantidad del producto existente
+      existingProduct.quantity += quantity;
       Swal.fire({
         title: 'Cantidad actualizada',
         text: 'Has actualizado la cantidad para la compra',
@@ -20,7 +20,14 @@ export default function AddToCart({ product }) {
       });
     } else {
       // Si se añade el producto
-      existingCart.push({ ...product, quantity });
+      existingCart.push({
+        id: product.id, // Se mantiene como string
+        title: product.name, // Cambiado de title a name
+        price: product.price,
+        image: product.image[0].url, // Asegúrate de obtener la URL de la imagen
+        quantity,
+        categoryId: product.categoryId, // Añadir categoryId aquí
+      });
       Swal.fire({
         title: 'Producto añadido',
         text: 'Se añadió el producto al carrito',
@@ -38,9 +45,7 @@ export default function AddToCart({ product }) {
           className={`text-2xl select-none ${quantity <= 1 ? 'text-gray-300 hover:text-gray-300 cursor-default' : 'text-blue-500 cursor-pointer hover:text-blue-400'}`}
           onClick={() => setQuantity(quantity > 1 ? quantity - 1 : quantity)}
         />
-
         <p className="text-sm md:text-base">{quantity}</p>
-
         <PlusSquareFill
           className="text-2xl text-blue-500 cursor-pointer hover:text-blue-400 select-none"
           onClick={() => setQuantity(quantity + 1)}
@@ -59,13 +64,18 @@ export default function AddToCart({ product }) {
 // Validación de prop-types
 AddToCart.propTypes = {
   product: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired, // Se mantiene como string
+    name: PropTypes.string.isRequired, // Cambiado de title a name
     price: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-    descripcion: PropTypes.string,
-    marca: PropTypes.string,
-    material: PropTypes.string,
-    categoryPromo: PropTypes.string, // Agregar validación para categoryPromo
+    image: PropTypes.arrayOf(
+      PropTypes.shape({
+        url: PropTypes.string.isRequired,
+      }),
+    ).isRequired,
+    description: PropTypes.string, // Si necesitas usarlo
+    brandId: PropTypes.string,
+    materialId: PropTypes.string,
+    categoryId: PropTypes.string.isRequired, // Asegúrate de que categoryId sea requerido
+    discountId: PropTypes.string,
   }).isRequired,
 };

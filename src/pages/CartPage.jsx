@@ -7,7 +7,12 @@ function CartPage() {
   useEffect(() => {
     const storedCart = localStorage.getItem('Cart');
     if (storedCart) {
-      setCartItems(JSON.parse(storedCart));
+      const parsedCart = JSON.parse(storedCart);
+      const updatedCart = parsedCart.map((item) => ({
+        ...item,
+        id: Number(item.id), // Asegúrate de que id sea un número
+      }));
+      setCartItems(updatedCart);
     }
   }, []);
 
@@ -25,25 +30,26 @@ function CartPage() {
     return price * product.quantity;
   };
 
-  // Calcular subtotal sin descuentos
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0,
   );
 
-  // Calcular descuentos
   const discounts = cartItems.reduce((acc, item) => {
     let discount = 0;
-    if (item.categoryPromo === 'Navidad') {
+
+    // Cambia la lógica de discount a usar categoryId
+    if (item.categoryId === '2') {
+      // "Navidad"
       discount += item.price * item.quantity * 0.3;
     }
-    if (item.categoryPromo === '3x2' && item.quantity % 3 === 0) {
+    if (item.categoryId === '1' && item.quantity % 3 === 0) {
+      // "3x2"
       discount += item.price * (item.quantity / 3);
     }
     return acc + discount;
   }, 0);
 
-  // Calcular total
   const total = subtotal - discounts;
 
   const updateQuantity = (id, quantity) => {
@@ -72,14 +78,23 @@ function CartPage() {
             {cartItems.length === 0 ? (
               <p>No hay artículos en el carrito.</p>
             ) : (
-              cartItems.map((item) => (
-                <CartItem
-                  key={item.id}
-                  item={{ ...item, total: calculateTotal(item) }}
-                  onUpdateQuantity={updateQuantity}
-                  onRemove={removeItem}
-                />
-              ))
+              cartItems.map((item) => {
+                // Verifica que title esté definido
+                if (!item.title) {
+                  console.error(
+                    `El artículo con id ${item.id} no tiene un título definido.`,
+                  );
+                  return null; // O manejar de otra forma
+                }
+                return (
+                  <CartItem
+                    key={item.id}
+                    item={{ ...item, total: calculateTotal(item) }}
+                    onUpdateQuantity={updateQuantity}
+                    onRemove={removeItem}
+                  />
+                );
+              })
             )}
           </div>
         </section>

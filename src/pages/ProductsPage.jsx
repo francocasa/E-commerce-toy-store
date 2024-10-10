@@ -1,39 +1,62 @@
 import { useState, useEffect } from 'react';
-import { consultaProductos } from '../services/products'; // Importa el servicio
-import { ProductCard } from '../components';
-import { CategoryFilter } from '../components';
+import { consultaProductos, consultaDescuentos } from '../services/products'; // Importa el servicio
+import { ProductCard, CategoryFilter } from '../components';
 import { useParams } from 'react-router-dom';
 
 function ProductsPage() {
   const { cat } = useParams();
-  let categoria;
-
   const categories = ['Educativo', 'Acción'];
-  categoria = cat || '';
 
+  const categoryMap = {
+    1: 'Educativo',
+    2: 'Acción',
+  };
+
+  const categoria = cat || '';
   const [selectedCategory, setSelectedCategory] = useState(categoria);
   const [products, setProducts] = useState([]); // Estado para los productos
+  const [discounts, setDiscounts] = useState([]); // Estado para los descuentos
   const [loading, setLoading] = useState(true); // Estado de carga
   const [error, setError] = useState(null); // Estado de error
 
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true); // Inicia carga
-      const data = await consultaProductos(); // Usa el servicio
-      if (data) {
-        setProducts(data);
-      } else {
+      try {
+        const data = await consultaProductos(); // Usa el servicio
+        if (data) {
+          setProducts(data);
+        } else {
+          setError('Error al cargar los productos');
+        }
+      } catch (err) {
         setError('Error al cargar los productos');
+      } finally {
+        setLoading(false); // Finaliza carga
       }
-      setLoading(false); // Finaliza carga
+    };
+
+    const fetchDiscounts = async () => {
+      try {
+        const data = await consultaDescuentos(); // Asegúrate de que este servicio esté definido
+        if (data) {
+          setDiscounts(data);
+        } else {
+          setError('Error al cargar los descuentos');
+        }
+      } catch (err) {
+        setError('Error al cargar los descuentos');
+      }
     };
 
     fetchProducts();
+    fetchDiscounts();
   }, []);
 
   const filteredProducts = products.filter((product) => {
     return (
-      selectedCategory === '' || product.category.includes(selectedCategory)
+      selectedCategory === '' ||
+      categoryMap[product.categoryId] === selectedCategory
     );
   });
 
@@ -56,7 +79,8 @@ function ProductsPage() {
         <div className="flex flex-wrap gap-3 justify-center">
           {filteredProducts.map((product) => (
             <div className="w-4/5 max-w-80" key={product.id}>
-              <ProductCard product={product} />
+              <ProductCard product={product} discounts={discounts} />{' '}
+              {/* Pasa el producto y los descuentos */}
             </div>
           ))}
         </div>

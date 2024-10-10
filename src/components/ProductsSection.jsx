@@ -1,9 +1,10 @@
 import { useEffect, useState, useRef } from 'react';
 import ProductCard from './ProductCard';
-import { consultaProductos } from '../services/products'; // Importa la función de consulta
+import { consultaProductos, consultaDescuentos } from '../services/products'; // Importa la función de consulta
 
 const ProductsSection = () => {
   const [products, setProducts] = useState([]); // Estado para almacenar los productos
+  const [discounts, setDiscounts] = useState([]); // Estado para almacenar los descuentos
   const scrollRef = useRef(null); // Referencia al contenedor
 
   useEffect(() => {
@@ -12,7 +13,13 @@ const ProductsSection = () => {
       setProducts(data); // Guarda los productos en el estado
     };
 
+    const fetchDiscounts = async () => {
+      const data = await consultaDescuentos(); // Usar la función del servicio para descuentos
+      setDiscounts(data); // Guarda los descuentos en el estado
+    };
+
     fetchProducts();
+    fetchDiscounts();
   }, []);
 
   const scrollLeft = () => {
@@ -43,7 +50,8 @@ const ProductsSection = () => {
           {/* Mapear los productos */}
           {products.map((product) => (
             <div className="min-w-60" key={product.id}>
-              <ProductCard product={product} />
+              <ProductCard product={product} discounts={discounts} />{' '}
+              {/* Asegúrate de pasar discounts aquí */}
             </div>
           ))}
         </div>

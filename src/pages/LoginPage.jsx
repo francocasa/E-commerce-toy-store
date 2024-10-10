@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { authenticateUser, getUserProfile } from '../services/userprofile'; // Asegúrate de incluir getUserProfile
+import { authenticateUser, getUserProfile } from '../services/userprofile';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -23,20 +23,29 @@ function LoginPage() {
     }
 
     // Lógica de autenticación
-    const isAuthenticated = await authenticateUser(email, password);
+    const userId = await authenticateUser(email, password);
 
-    if (isAuthenticated) {
-      const user = await getUserProfile(isAuthenticated); // Asegúrate de pasar el ID del usuario
-      localStorage.setItem('currentUserId', user.id); // Guarda el ID
-      localStorage.setItem('currentUserEmail', email);
-      Swal.fire({
-        title: 'Éxito!',
-        text: 'Inicio de sesión aceptado.',
-        icon: 'success',
-        confirmButtonText: 'Aceptar',
-      }).then(() => {
-        navigate('/perfil');
-      });
+    if (userId) {
+      const user = await getUserProfile(userId); // Obtener el perfil del usuario
+      if (user) {
+        localStorage.setItem('currentUserId', user.id); // Guarda el ID
+        localStorage.setItem('currentUserEmail', email);
+        Swal.fire({
+          title: 'Éxito!',
+          text: 'Inicio de sesión aceptado.',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+        }).then(() => {
+          navigate('/perfil');
+        });
+      } else {
+        Swal.fire({
+          title: 'Error!',
+          text: 'No se pudo obtener el perfil del usuario.',
+          icon: 'error',
+          confirmButtonText: 'Intentar de nuevo',
+        });
+      }
     } else {
       Swal.fire({
         title: 'Error!',

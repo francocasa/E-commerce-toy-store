@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createUser, getUserIdByEmail } from '../services/userprofile'; // Asegúrate de importar createUser desde tu archivo de servicios
+import { createUser, getUserIdByEmail } from '../services/userprofile';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,7 +8,7 @@ function SignupPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordStrength, setPasswordStrength] = useState(0);
-  const navigate = useNavigate(); // Hook para redireccionar
+  const navigate = useNavigate();
 
   const checkPasswordStrength = (password) => {
     let strength = 0;
@@ -28,7 +28,6 @@ function SignupPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Verificar si hay un usuario activo
     if (localStorage.getItem('currentUserEmail')) {
       Swal.fire({
         title: 'Error!',
@@ -39,7 +38,6 @@ function SignupPage() {
       return;
     }
 
-    // Verificar que el usuario no exista ya
     const existingUserId = await getUserIdByEmail(email);
     if (existingUserId) {
       Swal.fire({
@@ -51,7 +49,6 @@ function SignupPage() {
       return;
     }
 
-    // Verificar que las contraseñas coincidan
     if (password !== confirmPassword) {
       Swal.fire({
         title: 'Error!',
@@ -62,7 +59,6 @@ function SignupPage() {
       return;
     }
 
-    // Verificar que se cumplan los requisitos de la contraseña
     if (passwordStrength < 4) {
       Swal.fire({
         title: 'Error!',
@@ -73,26 +69,23 @@ function SignupPage() {
       return;
     }
 
-    // Crear nuevo usuario
     const newUser = {
       email,
       password,
-      // Aquí puedes agregar otros campos si los necesitas
+      // Agregar otros campos aquí según sea necesario
+      fullName: '', // Si necesitas este campo
+      photo: '', // Si necesitas este campo
     };
 
     try {
-      await createUser(newUser); // Llama a la función para crear el usuario
-      console.log('Usuario creado:', newUser);
-
-      // Mostrar mensaje de éxito
+      await createUser(newUser);
       Swal.fire({
         title: 'Éxito!',
         text: 'Usuario creado correctamente.',
         icon: 'success',
         confirmButtonText: 'Aceptar',
       }).then(() => {
-        // Redirigir a la página de perfil
-        navigate('/perfil');
+        navigate('/perfil'); // Redirige al perfil o a otra página
       });
     } catch (error) {
       Swal.fire({

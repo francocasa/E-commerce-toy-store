@@ -11,10 +11,10 @@ function CategoriesPage() {
     const fetchCategories = async () => {
       setLoading(true); // Inicia carga
       const data = await consultaDatos(); // Llama a la función para obtener los datos
-      if (data) {
+      if (data.length) {
         setCategories(data); // Guarda las categorías en el estado
       } else {
-        setError('Error al cargar los productos');
+        setError('Error al cargar las categorías');
       }
       setLoading(false); // Finaliza carga
     };
@@ -22,7 +22,7 @@ function CategoriesPage() {
     fetchCategories();
   }, []); // Solo ejecuta una vez al montar el componente
 
-  if (loading) return <p>Cargando categorias...</p>; // Mensaje de carga
+  if (loading) return <p>Cargando categorías...</p>; // Mensaje de carga
   if (error) return <p className="text-center text-red-500">{error}</p>; // Manejo de error
 
   return (
