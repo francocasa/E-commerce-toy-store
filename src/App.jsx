@@ -14,6 +14,7 @@ import SignupPage from './pages/SignupPage';
 import CartPage from './pages/CartPage';
 import DashboardAdmin from './pages/DashboardAdmin';
 import DashboardProducts from './pages/DashboardProducts';
+import DashboardCategories from './pages/adminCRUD/DashboardCategories';
 import DashboardReportes from './pages/DashboardReportes';
 import PromotionsPage from './pages/PromotionsPage';
 import ProfilePage from './pages/ProfilePage';
@@ -34,6 +35,10 @@ function App() {
             <Route
               path="/admin/dashboard/products"
               element={<DashboardProducts />}
+            />
+            <Route
+              path="/admin/dashboard/categories"
+              element={<DashboardCategories />}
             />
             <Route
               path="/admin/dashboard/reportes"

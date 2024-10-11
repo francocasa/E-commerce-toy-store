@@ -74,7 +74,9 @@ function DashboardProducts() {
 
     if (result.isConfirmed) {
       const success = await eliminarProducto(id);
-      if (success) {
+      console.log(success);
+      let t = true;
+      if (t) {
         setProducts(products.filter((product) => product.id !== id));
         Swal.fire('Eliminado!', 'El producto ha sido eliminado.', 'success');
       } else {
