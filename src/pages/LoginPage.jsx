@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { authenticateUser, getUserProfile } from '../services/userprofile';
+import { useCounter } from '../components/counter/Context';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const { setUser } = useCounter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,6 +38,7 @@ function LoginPage() {
           icon: 'success',
           confirmButtonText: 'Aceptar',
         }).then(() => {
+          setUser(userId);
           navigate('/perfil');
         });
       } else {
