@@ -9,11 +9,14 @@ export const CounterProvider = ({ children }) => {
   // Estado para el contador y el valor de incremento/decremento
 
   const [user, setUser] = useState('');
+  const [userAdm, setuserAdm] = useState('');
 
   // 4. Valor del contexto
   const store = {
     user,
+    userAdm,
     setUser,
+    setuserAdm,
   };
 
   // 3. Utilizar el Contexto para crear el provider

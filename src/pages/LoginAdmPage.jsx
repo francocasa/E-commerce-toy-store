@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { authenticateAdmin } from '../services/usersadmin'; // Importar desde el servicio
+import { useNavigate } from 'react-router-dom';
+import { useCounter } from '../components/counter/Context';
 
 function LoginAdmPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  const { setuserAdm } = useCounter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,7 +22,9 @@ function LoginAdmPage() {
         icon: 'success',
         confirmButtonText: 'Aceptar',
       }).then(() => {
-        window.location.href = '/admin/dashboard'; // Cambia esta ruta según tu estructura
+        console.log('entro');
+        setuserAdm(email); // Cambia la variable de contexto para indicar que el usuario es administrador
+        navigate('/admin/dashboard'); // Cambia esta ruta según tu estructura
       });
     } else {
       Swal.fire({
