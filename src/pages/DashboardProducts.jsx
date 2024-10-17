@@ -73,7 +73,7 @@ function DashboardProducts() {
     });
 
     if (result.isConfirmed) {
-      const success = await eliminarProducto(id);
+      const success = await eliminarProducto(parseInt(id));
       console.log(success);
       let t = true;
       if (t) {

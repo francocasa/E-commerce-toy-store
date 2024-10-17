@@ -52,12 +52,12 @@ export const consultaMaterials = async () => {
 
 // Función para consultar todas las categorías
 export const consultaCategories = async () => {
-  const URL = `${BASE_URL}/categories`; // Ajusta la ruta según tu API
+  const URL = `${BASE_URL}/brands`; // Ajusta la ruta según tu API
   try {
     const response = await axios.get(URL);
     return response.data; // Retornar los datos obtenidos
   } catch (error) {
-    console.error('Error fetching categories:', error);
+    console.error('Error fetching brands:', error);
     return []; // Retornar un arreglo vacío en caso de error
   }
 };
@@ -133,7 +133,9 @@ export const editarProducto = async (id, producto) => {
 export const eliminarProducto = async (id) => {
   const URL = `${BASE_URL}/products/${id}`;
   try {
-    await axios.delete(URL);
+    await axios.delete(URL).then((response) => {
+      console.log(response);
+    });
     return true; // Retornar true si se eliminó correctamente
   } catch (error) {
     console.error('Error deleting product:', error);
