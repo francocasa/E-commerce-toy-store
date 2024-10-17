@@ -38,8 +38,6 @@ function CartPage() {
     0,
   );
 
-  console.log('hola');
-
   const discounts = cartItems.reduce((acc, item) => {
     let discount = 0;
 
