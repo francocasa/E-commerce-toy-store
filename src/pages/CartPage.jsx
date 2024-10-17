@@ -1,20 +1,22 @@
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
 import { CartItem, CartSummary } from '../components';
+import { useCounter } from '../components/counter/Context';
 
 function CartPage() {
-  const [cartItems, setCartItems] = useState([]);
+  // const [cartItems, setCartItems] = useState([]);
+  const { cartItems, setCartItems } = useCounter();
 
-  useEffect(() => {
-    const storedCart = localStorage.getItem('Cart');
-    if (storedCart) {
-      const parsedCart = JSON.parse(storedCart);
-      const updatedCart = parsedCart.map((item) => ({
-        ...item,
-        id: Number(item.id), // Asegúrate de que id sea un número
-      }));
-      setCartItems(updatedCart);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const storedCart = localStorage.getItem('Cart');
+  //   if (storedCart) {
+  //     const parsedCart = JSON.parse(storedCart);
+  //     const updatedCart = parsedCart.map((item) => ({
+  //       ...item,
+  //       id: Number(item.id), // Asegúrate de que id sea un número
+  //     }));
+  //     setCartItems(updatedCart);
+  //   }
+  // }, []);
 
   const calculateTotal = (product) => {
     let price = product.price;
@@ -30,10 +32,13 @@ function CartPage() {
     return price * product.quantity;
   };
 
+  console.log(cartItems);
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0,
   );
+
+  console.log('hola');
 
   const discounts = cartItems.reduce((acc, item) => {
     let discount = 0;
