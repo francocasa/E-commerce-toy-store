@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 // 1. Crear el contexto
@@ -10,13 +10,28 @@ export const CounterProvider = ({ children }) => {
 
   const [user, setUser] = useState('');
   const [userAdm, setuserAdm] = useState('');
+  const [cartItems, setCartItems] = useState([]);
 
+  // cart
+  useEffect(() => {
+    const storedCart = localStorage.getItem('Cart');
+    if (storedCart) {
+      const parsedCart = JSON.parse(storedCart);
+      const updatedCart = parsedCart.map((item) => ({
+        ...item,
+        id: Number(item.id), // Asegúrate de que id sea un número
+      }));
+      setCartItems(updatedCart);
+    }
+  }, []);
   // 4. Valor del contexto
   const store = {
     user,
     userAdm,
+    cartItems,
     setUser,
     setuserAdm,
+    setCartItems,
   };
 
   // 3. Utilizar el Contexto para crear el provider
