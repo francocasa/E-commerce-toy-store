@@ -2,9 +2,11 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Swal from 'sweetalert2';
 import { DashSquareFill, PlusSquareFill } from 'react-bootstrap-icons';
+import { useCounter } from './counter/Context';
 
 export default function AddToCart({ product }) {
   const [quantity, setQuantity] = useState(1);
+  const { setCartItems } = useCounter();
 
   const addToCart = () => {
     const existingCart = JSON.parse(localStorage.getItem('Cart')) || [];
@@ -34,7 +36,7 @@ export default function AddToCart({ product }) {
         icon: 'success',
       });
     }
-
+    setCartItems(existingCart);
     localStorage.setItem('Cart', JSON.stringify(existingCart));
   };
 
