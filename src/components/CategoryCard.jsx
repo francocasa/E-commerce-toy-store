@@ -9,15 +9,15 @@ function CategoryCard({ category }) {
         {/* Contenedor flex para centrar la imagen */}
         <img
           src={category.image}
-          alt={category.title}
+          alt={category.name}
           className="w-auto h-40 object-cover" // Mantiene el ajuste de la imagen
         />
       </div>
       <h3 className="text-lg font-bold text-center">
-        {category.title.toUpperCase()}
+        {category.name.toUpperCase()}
       </h3>
 
-      <VerMas link={`/products/${category.title}`} />
+      <VerMas link={`/products/${category.name}`} />
     </div>
   );
 }
@@ -26,7 +26,7 @@ function CategoryCard({ category }) {
 CategoryCard.propTypes = {
   category: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     image: PropTypes.string.isRequired,
   }).isRequired,
 };

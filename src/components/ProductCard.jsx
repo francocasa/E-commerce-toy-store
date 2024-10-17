@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 function ProductCard({ product, discounts }) {
   const [price, setPrice] = useState(product.price);
   const [promo, setPromo] = useState('');
-
   useEffect(() => {
     let updatedPrice = product.price;
     let discountPromo = '';
