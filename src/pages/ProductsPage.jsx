@@ -1,20 +1,16 @@
 import { useState, useEffect } from 'react';
 import { consultaProductos, consultaDescuentos } from '../services/products'; // Importa el servicio
+import { consultaCategories } from '../services/categories'; // Importa el servicio
 import { ProductCard, CategoryFilter } from '../components';
 import { useParams } from 'react-router-dom';
 
 function ProductsPage() {
   const { cat } = useParams();
-  const categories = ['Educativo', 'Acción'];
-
-  const categoryMap = {
-    1: 'Educativo',
-    2: 'Acción',
-  };
 
   const categoria = cat || '';
   const [selectedCategory, setSelectedCategory] = useState(categoria);
   const [products, setProducts] = useState([]); // Estado para los productos
+  const [categories, setCategories] = useState([]); // Estado para los productos
   const [discounts, setDiscounts] = useState([]); // Estado para los descuentos
   const [loading, setLoading] = useState(true); // Estado de carga
   const [error, setError] = useState(null); // Estado de error
@@ -26,6 +22,22 @@ function ProductsPage() {
         const data = await consultaProductos(); // Usa el servicio
         if (data) {
           setProducts(data);
+        } else {
+          setError('Error al cargar los productos');
+        }
+      } catch (err) {
+        setError('Error al cargar los productos');
+      } finally {
+        setLoading(false); // Finaliza carga
+      }
+    };
+
+    const fetchBrands = async () => {
+      setLoading(true); // Inicia carga
+      try {
+        const data = await consultaCategories(); // Usa el servicio
+        if (data) {
+          setCategories(data);
         } else {
           setError('Error al cargar los productos');
         }
@@ -50,14 +62,12 @@ function ProductsPage() {
     };
 
     fetchProducts();
+    fetchBrands(); // Este código se ejecuta solo una vez al cargar la página
     fetchDiscounts();
   }, []);
 
   const filteredProducts = products.filter((product) => {
-    return (
-      selectedCategory === '' ||
-      categoryMap[product.categoryId] === selectedCategory
-    );
+    return selectedCategory === '' || product.categoryId === selectedCategory;
   });
 
   if (loading) return <p>Cargando productos...</p>; // Mensaje de carga

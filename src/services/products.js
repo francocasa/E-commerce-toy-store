@@ -28,12 +28,12 @@ export const consultaProductoPorId = async (id) => {
 
 // Función para consultar todas las marcas
 export const consultaMarcas = async () => {
-  const URL = `${BASE_URL}/brands`; // Ajusta la ruta según tu API
+  const URL = `${BASE_URL}/categories`; // Ajusta la ruta según tu API
   try {
     const response = await axios.get(URL);
     return response.data; // Retornar los datos obtenidos
   } catch (error) {
-    console.error('Error fetching brands:', error);
+    console.error('Error fetching categories:', error);
     return []; // Retornar un arreglo vacío en caso de error
   }
 };
@@ -52,12 +52,12 @@ export const consultaMaterials = async () => {
 
 // Función para consultar todas las categorías
 export const consultaCategories = async () => {
-  const URL = `${BASE_URL}/brands`; // Ajusta la ruta según tu API
+  const URL = `${BASE_URL}/categories`; // Ajusta la ruta según tu API
   try {
     const response = await axios.get(URL);
     return response.data; // Retornar los datos obtenidos
   } catch (error) {
-    console.error('Error fetching brands:', error);
+    console.error('Error fetching categories:', error);
     return []; // Retornar un arreglo vacío en caso de error
   }
 };
