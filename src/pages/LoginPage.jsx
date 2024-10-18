@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { authenticateUser } from '../services/userprofile';
+import { authenticateUser } from '../services/users';
 import { useCounter } from '../components/counter/Context';
 
 function LoginPage() {

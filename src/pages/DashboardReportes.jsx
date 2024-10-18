@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchAdminData, getLoggedAdmin } from '../services/usersadmin'; // Asegúrate de que la ruta sea correcta
+import { fetchAdminData, getLoggedAdmin } from '../services/admins'; // Asegúrate de que la ruta sea correcta
 
 function DashboardReportes() {
   const [admin, setAdmin] = useState(null);

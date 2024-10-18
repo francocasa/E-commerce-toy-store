@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
-import { authenticateAdmin } from '../services/usersadmin'; // Importar desde el servicio
+import { authenticateAdmin } from '../services/admins'; // Importar desde el servicio
 import { useNavigate } from 'react-router-dom';
 import { useCounter } from '../components/counter/Context';
 

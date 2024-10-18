@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getUserProfile } from '../services/userprofile'; // Importa el servicio
+import { getUserProfile } from '../services/users'; // Importa el servicio
 import { useParams } from 'react-router-dom';
 import { HistoryDetails } from '../components';
 

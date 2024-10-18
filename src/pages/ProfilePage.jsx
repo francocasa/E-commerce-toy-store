@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import { updateUserProfile } from '../services/userprofile';
+import { updateUserProfile } from '../services/users';
 import { useCounter } from '../components/counter/Context';
 
 function ProfilePage() {
