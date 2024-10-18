@@ -8,8 +8,9 @@ const CounterContext = createContext();
 export const CounterProvider = ({ children }) => {
   // Estado para el contador y el valor de incremento/decremento
 
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState({});
   const [userAdm, setuserAdm] = useState('');
+  const [token, setToken] = useState('');
   const [cartItems, setCartItems] = useState([]);
 
   // cart
@@ -29,9 +30,11 @@ export const CounterProvider = ({ children }) => {
     user,
     userAdm,
     cartItems,
+    token,
     setUser,
     setuserAdm,
     setCartItems,
+    setToken,
   };
 
   // 3. Utilizar el Contexto para crear el provider

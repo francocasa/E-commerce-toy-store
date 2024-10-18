@@ -14,9 +14,15 @@ export const getUserProfile = async (id) => {
 };
 
 // Actualizar el perfil del usuario
-export const updateUserProfile = async (updatedUser) => {
+export const updateUserProfile = async (updatedUser, token) => {
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
   try {
-    await axios.put(`${BASE_URL}/users/${updatedUser.id}`, updatedUser);
+    await axios.put(`${BASE_URL}/users/${updatedUser.id}`, updatedUser, {
+      headers,
+    });
   } catch (error) {
     console.error('Error updating user profile:', error);
   }
