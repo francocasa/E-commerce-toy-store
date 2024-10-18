@@ -11,7 +11,7 @@ export default function AddToCart({ product }) {
   const addToCart = () => {
     const existingCart = JSON.parse(localStorage.getItem('Cart')) || [];
     const existingProduct = existingCart.find((item) => item.id === product.id); // Comparar por id como string
-
+    console.log('1');
     if (existingProduct) {
       // Aumentar la cantidad del producto existente
       existingProduct.quantity += quantity;
@@ -20,13 +20,16 @@ export default function AddToCart({ product }) {
         text: 'Has actualizado la cantidad para la compra',
         icon: 'info',
       });
+      console.log('existe');
     } else {
       // Si se añade el producto
+      console.log('nuevo');
+      console.log(product);
       existingCart.push({
         id: product.id, // Se mantiene como string
         title: product.name, // Cambiado de title a name
         price: product.price,
-        image: product.image[0].url, // Asegúrate de obtener la URL de la imagen
+        image: 'product.image[0].url', // Asegúrate de obtener la URL de la imagen
         quantity,
         categoryId: product.categoryId, // Añadir categoryId aquí
       });

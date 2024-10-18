@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { authenticateUser, getUserProfile } from '../services/userprofile';
+import { authenticateUser } from '../services/userprofile';
 import { useCounter } from '../components/counter/Context';
 
 function LoginPage() {
@@ -25,30 +25,22 @@ function LoginPage() {
     }
 
     // Lógica de autenticación
-    const userId = await authenticateUser(email, password);
+    const responseData = await authenticateUser(email, password);
+    const user = responseData.user;
+    // const tokenId = responseData.token;
 
-    if (userId) {
-      const user = await getUserProfile(userId); // Obtener el perfil del usuario
-      if (user) {
-        localStorage.setItem('currentUserId', user.id); // Guarda el ID
-        localStorage.setItem('currentUserEmail', email);
-        Swal.fire({
-          title: 'Éxito!',
-          text: 'Inicio de sesión aceptado.',
-          icon: 'success',
-          confirmButtonText: 'Aceptar',
-        }).then(() => {
-          setUser(userId);
-          navigate('/perfil');
-        });
-      } else {
-        Swal.fire({
-          title: 'Error!',
-          text: 'No se pudo obtener el perfil del usuario.',
-          icon: 'error',
-          confirmButtonText: 'Intentar de nuevo',
-        });
-      }
+    if (user) {
+      localStorage.setItem('currentUserId', user.id); // Guarda el ID
+      localStorage.setItem('currentUserEmail', email);
+      Swal.fire({
+        title: 'Éxito!',
+        text: 'Inicio de sesión aceptado.',
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+      }).then(() => {
+        setUser(user.id);
+        navigate('/perfil');
+      });
     } else {
       Swal.fire({
         title: 'Error!',

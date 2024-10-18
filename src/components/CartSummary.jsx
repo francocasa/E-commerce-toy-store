@@ -1,6 +1,13 @@
 import PropTypes from 'prop-types';
+//import { useCounter } from './counter/Context';
+//import Swal from 'sweetalert2';
 
 export default function CartSummary({ subtotal, discounts }) {
+  //const { CartItems, setCartItems } = useCounter();
+  const payment = () => {
+    console.log('pagado');
+  };
+
   return (
     <aside className="border rounded-lg shadow w-full flex flex-col p-4 font-medium gap-4 h-fit sm:gap-6 lg:w-1/3">
       <header>
@@ -29,7 +36,10 @@ export default function CartSummary({ subtotal, discounts }) {
           <a className="block flex-grow text-center py-1 text-base text-slate-500 border-2 border-slate-400 rounded-md font-bold cursor-pointer hover:bg-slate-400 hover:text-white transition-colors lg:py-2">
             Seguir Comprando
           </a>
-          <a className="block flex-grow text-center py-1 text-white text-base  border-2 border-blue-500 bg-blue-500 rounded-md font-bold hover:bg-blue-400 hover:border-blue-400 cursor-pointer transition-colors lg:py-2">
+          <a
+            onClick={payment}
+            className="block flex-grow text-center py-1 text-white text-base  border-2 border-blue-500 bg-blue-500 rounded-md font-bold hover:bg-blue-400 hover:border-blue-400 cursor-pointer transition-colors lg:py-2"
+          >
             Pagar
           </a>
         </div>
