@@ -24,6 +24,22 @@ export const updateUserProfile = async (updatedUser, headers) => {
   }
 };
 
+export const updateUserImage = async (id, data, headers) => {
+  try {
+    const response = await axios.patch(`${BASE_URL}/users/${id}/image`, data, {
+      headers: {
+        ...headers,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    // Actualizar la imagen del usuario
+    return response.data.profileImage;
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+  }
+};
+
 // Autenticar al usuario
 export const authenticateUser = async (email, password) => {
   try {

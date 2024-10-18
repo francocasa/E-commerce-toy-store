@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import { updateUserProfile } from '../services/users';
+import { updateUserProfile, updateUserImage } from '../services/users';
 import { useCounter } from '../components/counter/Context';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function ProfilePage() {
   const [name, setName] = useState('');
   const [id, setId] = useState('');
-  const [photo, setPhoto] = useState('');
+  const [profileImage, setProfileImage] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
   const [isEditing, setIsEditing] = useState(false);
@@ -16,7 +17,7 @@ function ProfilePage() {
     if (user) {
       setName(user.fullName || ''); // Asegúrate de que coincida con el nuevo campo
       setId(user.id);
-      setPhoto(user.photo || '');
+      setProfileImage(user.profileImage || '');
       setAddress(user.address || '');
       setPhone(user.phone || '');
     }
@@ -28,7 +29,7 @@ function ProfilePage() {
 
   const handleSave = async () => {
     user.fullName = name; // Cambia según el nuevo campo
-    user.photo = photo;
+    user.profileImage = profileImage;
     user.address = address;
     user.phone = phone;
     try {
@@ -53,7 +54,7 @@ function ProfilePage() {
   const handleCancel = () => {
     setIsEditing(false);
     setName(user.name);
-    setPhoto(user.photo);
+    setProfileImage(user.profileImage);
     setAddress(user.address);
     setPhone(user.phone);
   };
@@ -74,6 +75,20 @@ function ProfilePage() {
     window.location.href = '/login';
   };
 
+  const handlePhotoChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('image', file);
+      const newImage = await updateUserImage(id, formData, headers);
+      setProfileImage(newImage);
+    }
+  };
+
+  const handlePhotoClick = () => {
+    document.getElementById('photoInput').click(); // Activa el input de archivo cuando se hace clic en la foto
+  };
+
   return (
     <main className="my-8">
       <div className="container mx-auto">
@@ -86,19 +101,45 @@ function ProfilePage() {
 
             <div className="mb-4 flex">
               <div
-                className="border border-gray-300 p-4 rounded flex items-center justify-center mr-4"
+                className="border border-gray-300 p-4 rounded flex items-center justify-center mr-4 relative cursor-pointer"
                 style={{ width: '100px', height: '100px' }}
+                onClick={handlePhotoClick} // Click en la foto dispara el input de archivos
               >
-                {photo ? (
+                {profileImage ? (
                   <img
-                    src={photo}
+                    crossOrigin="anonymous"
+                    src={`${BASE_URL}/${profileImage}`}
                     alt="Perfil"
                     className="w-full h-full object-cover rounded"
                   />
                 ) : (
                   <span className="text-gray-400">👤</span>
                 )}
+                <input
+                  id="photoInput"
+                  type="file"
+                  accept="profileImage/*"
+                  onChange={handlePhotoChange}
+                  style={{ display: 'none' }} // Escondemos el input de archivos
+                />
+                <span className="absolute inset-0 bg-black bg-opacity-50 text-white text-center opacity-0 hover:opacity-100 transition-opacity">
+                  Cambiar Foto
+                </span>
               </div>
+              {/* <div
+                className="border border-gray-300 p-4 rounded flex items-center justify-center mr-4"
+                style={{ width: '100px', height: '100px' }}
+              >
+                {profileImage ? (
+                  <img
+                    src={profileImage}
+                    alt="Perfil"
+                    className="w-full h-full object-cover rounded"
+                  />
+                ) : (
+                  <span className="text-gray-400">👤</span>
+                )}
+              </div> */}
               <input
                 type="text"
                 value={name}
@@ -111,8 +152,8 @@ function ProfilePage() {
 
             <input
               type="text"
-              value={photo}
-              onChange={(e) => setPhoto(e.target.value)}
+              value={profileImage}
+              onChange={(e) => setProfileImage(e.target.value)}
               placeholder="URL de la foto"
               className={`border p-2 w-full mb-2 rounded ${isEditing ? '' : 'bg-gray-200 cursor-not-allowed'}`}
               disabled={!isEditing}
