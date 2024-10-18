@@ -25,10 +25,13 @@ export const updateUserProfile = async (updatedUser) => {
 // Autenticar al usuario
 export const authenticateUser = async (email, password) => {
   try {
-    const response = await axios.get(`${BASE_URL}/users?email=${email}`);
-    const users = response.data;
-    const user = users.find((user) => user.password === password);
-    return user ? user.id : null; // Devuelve el ID si se autentica
+    const data = {
+      email: email,
+      password: password,
+    };
+    const response = await axios.post(`${BASE_URL}/users/login`, data);
+    console.log(response.data);
+    return response.data;
   } catch (error) {
     console.error('Error authenticating user:', error);
     return null;
@@ -76,4 +79,15 @@ export const getHistory = async (id) => {
 // Función para generar un ID único (puedes modificar esto según tus necesidades)
 const generateUniqueId = () => {
   return Math.random().toString(36).substr(2, 9); // Genera un ID aleatorio
+};
+
+// Obtener el historial del usuario
+export const postPayment = async (id) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/users/${id}`);
+    return response.data.orders || []; // Retorna las órdenes (historial) del usuario
+  } catch (error) {
+    console.error('Error fetching user history:', error);
+    return null;
+  }
 };
