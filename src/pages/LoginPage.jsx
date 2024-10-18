@@ -8,7 +8,7 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { setUser } = useCounter();
+  const { setUser, setToken } = useCounter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +27,8 @@ function LoginPage() {
     // Lógica de autenticación
     const responseData = await authenticateUser(email, password);
     const user = responseData.user;
-    // const tokenId = responseData.token;
+    const tokenId = responseData.token;
+    setToken(tokenId);
 
     if (user) {
       localStorage.setItem('currentUserId', user.id); // Guarda el ID
@@ -38,7 +39,7 @@ function LoginPage() {
         icon: 'success',
         confirmButtonText: 'Aceptar',
       }).then(() => {
-        setUser(user.id);
+        setUser(user);
         navigate('/perfil');
       });
     } else {

@@ -1,78 +1,61 @@
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import {
-  getUserProfile,
-  updateUserProfile,
-  getUserIdByEmail,
-} from '../services/userprofile';
+import { updateUserProfile } from '../services/userprofile';
+import { useCounter } from '../components/counter/Context';
 
 function ProfilePage() {
-  const [currentUser, setCurrentUser] = useState(null);
   const [name, setName] = useState('');
   const [id, setId] = useState('');
   const [photo, setPhoto] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+  const { user, token } = useCounter();
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      const email = localStorage.getItem('currentUserEmail');
-      const userId = await getUserIdByEmail(email); // Cambia según el nuevo esquema
-      const user = await getUserProfile(userId); // Cambia la ruta según el nuevo esquema
-      if (user) {
-        setCurrentUser(user);
-        setName(user.fullName || ''); // Asegúrate de que coincida con el nuevo campo
-        setId(userId);
-        setPhoto(user.photo || '');
-        setAddress(user.address || '');
-        setPhone(user.phone || '');
-      }
-    };
-    fetchUserProfile();
-  }, []);
+    if (user) {
+      setName(user.fullName || ''); // Asegúrate de que coincida con el nuevo campo
+      setId(user.id);
+      setPhoto(user.photo || '');
+      setAddress(user.address || '');
+      setPhone(user.phone || '');
+    }
+  }, [user]);
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
   const handleSave = async () => {
-    if (currentUser) {
-      const updatedUser = {
-        ...currentUser,
-        fullName: name, // Cambia según el nuevo campo
-        photo,
-        address,
-        phone,
-      };
-      try {
-        await updateUserProfile(updatedUser); // Asegúrate de que esta función esté adaptada
-        Swal.fire({
-          title: 'Éxito!',
-          text: 'Datos actualizados correctamente.',
-          icon: 'success',
-          confirmButtonText: 'Aceptar',
-        });
-        setIsEditing(false);
-      } catch (error) {
-        Swal.fire({
-          title: 'Error!',
-          text: error.message || 'No se pudieron actualizar los datos.',
-          icon: 'error',
-          confirmButtonText: 'Aceptar',
-        });
-      }
+    user.fullName = name; // Cambia según el nuevo campo
+    user.photo = photo;
+    user.address = address;
+    user.phone = phone;
+    try {
+      await updateUserProfile(user, token); // Asegúrate de que esta función esté adaptada
+      Swal.fire({
+        title: 'Éxito!',
+        text: 'Datos actualizados correctamente.',
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+      });
+      setIsEditing(false);
+    } catch (error) {
+      Swal.fire({
+        title: 'Error!',
+        text: error.message || 'No se pudieron actualizar los datos.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+      });
     }
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    if (currentUser) {
-      setName(currentUser.fullName); // Asegúrate de que coincida
-      setPhoto(currentUser.photo);
-      setAddress(currentUser.address);
-      setPhone(currentUser.phone);
-    }
+    setName(user.name);
+    setPhoto(user.photo);
+    setAddress(user.address);
+    setPhone(user.phone);
   };
 
   const handleHistory = () => {
@@ -93,11 +76,11 @@ function ProfilePage() {
   return (
     <main className="my-8">
       <div className="container mx-auto">
-        {currentUser ? (
+        {user ? (
           <div className="bg-white p-6 rounded shadow-md">
             <h1 className="text-2xl font-bold mb-4">Perfil de Usuario</h1>
             <p className="mb-4">
-              <strong>Email:</strong> {currentUser.email}
+              <strong>Email:</strong> {user.email}
             </p>
 
             <div className="mb-4 flex">
