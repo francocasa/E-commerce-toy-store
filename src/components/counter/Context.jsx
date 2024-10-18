@@ -11,7 +11,7 @@ export const CounterProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const [userAdm, setuserAdm] = useState('');
   const [token, setToken] = useState('');
-  const [authHeaders, setAuthHeaders] = useState({});
+  const [headers, setHeaders] = useState({});
   const [cartItems, setCartItems] = useState([]);
 
   // cart
@@ -32,12 +32,12 @@ export const CounterProvider = ({ children }) => {
     userAdm,
     cartItems,
     token,
-    authHeaders,
+    headers,
     setUser,
     setuserAdm,
     setCartItems,
     setToken,
-    setAuthHeaders,
+    setHeaders,
   };
 
   // 3. Utilizar el Contexto para crear el provider

@@ -10,7 +10,7 @@ function ProfilePage() {
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  const { user, token, setAuthHeaders } = useCounter();
+  const { user, headers, setHeaders } = useCounter();
 
   useEffect(() => {
     if (user) {
@@ -32,7 +32,7 @@ function ProfilePage() {
     user.address = address;
     user.phone = phone;
     try {
-      await updateUserProfile(user, token); // Asegúrate de que esta función esté adaptada
+      await updateUserProfile(user, headers); // Asegúrate de que esta función esté adaptada
       Swal.fire({
         title: 'Éxito!',
         text: 'Datos actualizados correctamente.',
@@ -63,7 +63,7 @@ function ProfilePage() {
   };
 
   const handleLogout = () => {
-    setAuthHeaders({});
+    setHeaders({});
     localStorage.removeItem('currentUserEmail');
     Swal.fire({
       title: 'Sesión Cerrada',
