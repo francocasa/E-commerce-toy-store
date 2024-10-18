@@ -10,7 +10,7 @@ function ProfilePage() {
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  const { user, token } = useCounter();
+  const { user, token, setAuthHeaders } = useCounter();
 
   useEffect(() => {
     if (user) {
@@ -63,6 +63,7 @@ function ProfilePage() {
   };
 
   const handleLogout = () => {
+    setAuthHeaders({});
     localStorage.removeItem('currentUserEmail');
     Swal.fire({
       title: 'Sesión Cerrada',

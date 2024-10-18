@@ -8,7 +8,7 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { setUser, setToken } = useCounter();
+  const { setUser, setToken, setAuthHeaders } = useCounter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,6 +29,9 @@ function LoginPage() {
     const user = responseData.user;
     const tokenId = responseData.token;
     setToken(tokenId);
+    setAuthHeaders({
+      Authorization: `Bearer ${tokenId}`,
+    });
 
     if (user) {
       localStorage.setItem('currentUserId', user.id); // Guarda el ID
