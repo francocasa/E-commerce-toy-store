@@ -9,7 +9,7 @@ import {
   consultaMaterials,
   consultaCategories,
   consultaDescuentos,
-} from '../services/products';
+} from '../../services/products';
 import Swal from 'sweetalert2';
 import Modal from 'react-modal';
 
@@ -26,7 +26,7 @@ function DashboardProducts() {
     categoryId: '',
     brandId: '',
     materialId: '',
-    image: [{ url: '' }],
+    images: [],
     discountId: null,
   });
   const [brands, setBrands] = useState([]);
@@ -37,27 +37,34 @@ function DashboardProducts() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   useEffect(() => {
-    const fetchProductsAndBrands = async () => {
-      const fetchedProducts = await consultaProductos();
-      const fetchedBrands = await consultaMarcas();
-      const fetchedCategories = await consultaCategories();
-      const fetchedMaterials = await consultaMaterials();
-      const fetchedDiscounts = await consultaDescuentos();
+    // Verificar si el adminToken está en localStorage
+    const adminToken = localStorage.getItem('adminToken');
+    if (!adminToken) {
+      // Redirigir a la página de inicio si no hay token
+      window.location.href = '/'; // Cambia esto a la ruta que necesites
+    } else {
+      const fetchProductsAndBrands = async () => {
+        const fetchedProducts = await consultaProductos();
+        const fetchedBrands = await consultaMarcas();
+        const fetchedCategories = await consultaCategories();
+        const fetchedMaterials = await consultaMaterials();
+        const fetchedDiscounts = await consultaDescuentos();
 
-      setProducts(fetchedProducts);
-      setBrands(fetchedBrands);
-      setCategories(fetchedCategories);
-      setMaterials(fetchedMaterials);
-      setDiscounts(fetchedDiscounts);
+        setProducts(fetchedProducts);
+        setBrands(fetchedBrands);
+        setCategories(fetchedCategories);
+        setMaterials(fetchedMaterials);
+        setDiscounts(fetchedDiscounts);
 
-      const brandMapping = {};
-      fetchedBrands.forEach((brand) => {
-        brandMapping[brand.id] = brand.name;
-      });
-      setBrandMap(brandMapping);
-    };
+        const brandMapping = {};
+        fetchedBrands.forEach((brand) => {
+          brandMapping[brand.id] = brand.name;
+        });
+        setBrandMap(brandMapping);
+      };
 
-    fetchProductsAndBrands();
+      fetchProductsAndBrands();
+    }
   }, []);
 
   const handleDelete = async (id) => {
@@ -73,10 +80,8 @@ function DashboardProducts() {
     });
 
     if (result.isConfirmed) {
-      const success = await eliminarProducto(parseInt(id));
-      console.log(success);
-      let t = true;
-      if (t) {
+      const success = await eliminarProducto(id);
+      if (success) {
         setProducts(products.filter((product) => product.id !== id));
         Swal.fire('Eliminado!', 'El producto ha sido eliminado.', 'success');
       } else {
@@ -88,38 +93,78 @@ function DashboardProducts() {
   const handleEdit = async (product) => {
     const productDetails = await consultaProductoPorId(product.id);
     if (productDetails) {
-      setNewProduct(productDetails);
+      setNewProduct({
+        ...productDetails,
+        images: productDetails.images || [],
+      });
     }
     setModalIsOpen(true);
   };
 
   const handleAddOrEditProduct = async () => {
-    const productData = {
-      ...newProduct,
-      price: parseFloat(newProduct.price),
-      stock: parseInt(newProduct.stock, 10),
-      image: [{ url: newProduct.image[0].url }],
-    };
-
-    if (newProduct.id) {
-      const updatedProduct = await editarProducto(newProduct.id, productData);
-      if (updatedProduct) {
-        setProducts(
-          products.map((product) =>
-            product.id === newProduct.id ? updatedProduct : product,
-          ),
-        );
-        Swal.fire('Éxito', 'Producto editado correctamente.', 'success');
-      }
-    } else {
-      const addedProduct = await agregarProducto(productData);
-      if (addedProduct) {
-        setProducts([...products, addedProduct]);
-        Swal.fire('Éxito', 'Producto agregado correctamente.', 'success');
-      }
+    // Validación de campos
+    if (
+      !newProduct.name ||
+      !newProduct.price ||
+      !newProduct.stock ||
+      !newProduct.categoryId ||
+      !newProduct.brandId ||
+      !newProduct.materialId
+    ) {
+      Swal.fire(
+        'Error',
+        'Por favor, complete todos los campos obligatorios.',
+        'error',
+      );
+      return;
     }
 
-    handleCloseModal();
+    const productData = {
+      name: newProduct.name,
+      description: newProduct.description,
+      price: parseFloat(newProduct.price),
+      stock: parseInt(newProduct.stock, 10),
+      categoryId: newProduct.categoryId,
+      brandId: newProduct.brandId,
+      materialId: newProduct.materialId,
+      ...(newProduct.discountId && { discountId: newProduct.discountId }), // Solo agregar si discountId existe
+    };
+
+    console.log(productData); // Log para depuración
+
+    try {
+      let response;
+      if (newProduct.id) {
+        response = await editarProducto(newProduct.id, productData);
+        if (response) {
+          setProducts(
+            products.map((product) =>
+              product.id === newProduct.id ? response : product,
+            ),
+          );
+          Swal.fire('Éxito', 'Producto editado correctamente.', 'success');
+        }
+      } else {
+        response = await agregarProducto(productData);
+        if (response) {
+          setProducts([...products, response]);
+          Swal.fire('Éxito', 'Producto agregado correctamente.', 'success');
+        }
+      }
+
+      handleCloseModal();
+    } catch (error) {
+      console.error(
+        'Error al agregar o editar el producto:',
+        error.response ? error.response.data : error,
+      );
+      Swal.fire(
+        'Error',
+        error.response?.data?.details[0]?.message ||
+          'Ocurrió un error inesperado.',
+        'error',
+      );
+    }
   };
 
   const handleCloseModal = () => {
@@ -132,7 +177,7 @@ function DashboardProducts() {
       categoryId: '',
       brandId: '',
       materialId: '',
-      image: [{ url: '' }],
+      images: [],
       discountId: null,
     });
     setModalIsOpen(false);
@@ -188,6 +233,7 @@ function DashboardProducts() {
           ))}
         </tbody>
       </table>
+
       <Modal isOpen={modalIsOpen} onRequestClose={handleCloseModal}>
         <h3 className="text-xl mb-2 mt-10">
           {newProduct.id ? 'Editar Producto' : 'Agregar Nuevo Producto'}
@@ -236,7 +282,7 @@ function DashboardProducts() {
             className="border p-2 rounded"
           />
           <select
-            value={newProduct.brandId}
+            value={newProduct.brandId || ''}
             onChange={(e) =>
               setNewProduct({ ...newProduct, brandId: e.target.value })
             }
@@ -249,8 +295,9 @@ function DashboardProducts() {
               </option>
             ))}
           </select>
+
           <select
-            value={newProduct.categoryId}
+            value={newProduct.categoryId || ''}
             onChange={(e) =>
               setNewProduct({ ...newProduct, categoryId: e.target.value })
             }
@@ -259,12 +306,13 @@ function DashboardProducts() {
             <option value="">Seleccione una categoría</option>
             {categories.map((category) => (
               <option key={category.id} value={category.id}>
-                {category.title} {/* Mostrar título aquí */}
+                {category.name}
               </option>
             ))}
           </select>
+
           <select
-            value={newProduct.materialId}
+            value={newProduct.materialId || ''}
             onChange={(e) =>
               setNewProduct({ ...newProduct, materialId: e.target.value })
             }
@@ -277,49 +325,47 @@ function DashboardProducts() {
               </option>
             ))}
           </select>
+
           <select
-            value={newProduct.discountId}
+            value={newProduct.discountId || ''}
             onChange={(e) =>
               setNewProduct({ ...newProduct, discountId: e.target.value })
             }
             className="border p-2 rounded"
           >
             <option value="">Seleccione un descuento</option>
-            <option value="null">Ninguno</option>{' '}
-            {/* Opción para seleccionar ninguno */}
             {discounts.map((discount) => (
               <option key={discount.id} value={discount.id}>
-                {discount.description}
+                {discount.name}
               </option>
             ))}
           </select>
+
           <input
             type="text"
             placeholder="URL de la imagen"
-            value={newProduct.image[0]?.url || ''} // Manejar caso vacío
+            value={newProduct.images.length > 0 ? newProduct.images[0].url : ''}
             onChange={(e) =>
               setNewProduct({
                 ...newProduct,
-                image: [{ url: e.target.value }],
+                images: [{ url: e.target.value }],
               })
             }
             className="border p-2 rounded"
           />
         </div>
-        <div className="mt-4">
-          <button
-            onClick={handleAddOrEditProduct}
-            className="bg-blue-500 text-white py-2 px-4 rounded"
-          >
-            {newProduct.id ? 'Actualizar Producto' : 'Agregar Producto'}
-          </button>
-          <button
-            onClick={handleCloseModal}
-            className="ml-2 bg-gray-500 text-white py-2 px-4 rounded"
-          >
-            Cancelar
-          </button>
-        </div>
+        <button
+          onClick={handleAddOrEditProduct}
+          className="bg-green-500 text-white py-2 px-4 rounded mt-4"
+        >
+          {newProduct.id ? 'Actualizar Producto' : 'Agregar Producto'}
+        </button>
+        <button
+          onClick={handleCloseModal}
+          className="bg-gray-500 text-white py-2 px-4 rounded mt-4 ml-2"
+        >
+          Cancelar
+        </button>
       </Modal>
     </main>
   );

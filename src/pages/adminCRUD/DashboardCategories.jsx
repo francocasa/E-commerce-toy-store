@@ -14,16 +14,22 @@ Modal.setAppElement('#root');
 function DashboardCategories() {
   const [newCategory, setNewCategory] = useState({
     id: '',
-    title: '',
-    image: '',
+    name: '',
+    description: '', // Agregado
+    image: null, // Cambiado a null
   });
   const [categories, setCategories] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   useEffect(() => {
     const fetchProductsAndBrands = async () => {
-      const fetchedCategories = await consultaCategories();
+      const token = localStorage.getItem('adminToken'); // Cambia esto si el nombre del token es diferente
+      if (!token) {
+        window.location.href = '/login'; // Redirigir si no hay un admin logueado
+        return;
+      }
 
+      const fetchedCategories = await consultaCategories();
       setCategories(fetchedCategories);
     };
 
@@ -59,7 +65,12 @@ function DashboardCategories() {
   const handleEdit = async (category) => {
     const categoryDetails = await consultaCategoriaPorId(category.id);
     if (categoryDetails) {
-      setNewCategory(categoryDetails);
+      setNewCategory({
+        id: categoryDetails.id,
+        name: categoryDetails.name,
+        description: categoryDetails.description || '', // Asegúrate de manejar posibles valores nulos
+        image: categoryDetails.image || null, // Manejo de valor nulo
+      });
     }
     setModalIsOpen(true);
   };
@@ -97,7 +108,7 @@ function DashboardCategories() {
     setNewCategory({
       id: '',
       title: '',
-      image: '',
+      name: '',
     });
     setModalIsOpen(false);
   };
@@ -118,7 +129,8 @@ function DashboardCategories() {
           <tr>
             <th className="border p-2">Item</th>
             <th className="border p-2">Nombre</th>
-            <th className="border p-2">Imagen</th>
+            <th className="border p-2">Descripción</th>{' '}
+            {/* Cambiado a Descripción */}
             <th className="border p-2">Acciones</th>
           </tr>
         </thead>
@@ -126,8 +138,11 @@ function DashboardCategories() {
           {categories.map((category, index) => (
             <tr key={category.id}>
               <td className="border p-2">{index + 1}</td>
-              <td className="border p-2">{category.title}</td>
-              <td className="border p-2">{category.image}</td>
+              <td className="border p-2">{category.name}</td>
+              <td className="border p-2">
+                {category.description || 'Sin descripción'}
+              </td>{' '}
+              {/* Mostrando descripción */}
               <td className="border p-2">
                 <button
                   onClick={() => handleEdit(category)}
@@ -154,9 +169,21 @@ function DashboardCategories() {
           <input
             type="text"
             placeholder="Nombre de la categoria"
-            value={newCategory.title}
+            value={newCategory.name}
             onChange={(e) =>
-              setNewCategory({ ...newCategory, title: e.target.value })
+              setNewCategory({ ...newCategory, name: e.target.value })
+            }
+            className="border p-2 rounded"
+          />
+          <input
+            type="text"
+            placeholder="Descripción de la categoria" // Agregado
+            value={newCategory.description} // Maneja la descripción
+            onChange={(e) =>
+              setNewCategory({
+                ...newCategory,
+                description: e.target.value,
+              })
             }
             className="border p-2 rounded"
           />
