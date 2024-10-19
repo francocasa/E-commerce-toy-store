@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCounter } from '../components/counter/Context';
 
 function LoginAdmPage() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState(''); // Cambiado a username
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const { setuserAdm } = useCounter();
@@ -14,16 +14,27 @@ function LoginAdmPage() {
     e.preventDefault();
 
     // Lógica de autenticación para el administrador
-    const isAuthenticated = await authenticateAdmin(email, password);
-    if (isAuthenticated) {
+    const responseData = await authenticateAdmin(username, password);
+    console.log(responseData);
+    if (responseData && responseData.admin) {
+      const admin = responseData.admin;
+      const tokenId = responseData.token;
+
+      // Guardar el token en el localStorage
+      localStorage.setItem('adminToken', tokenId);
+
+      // Guardar el ID del admin en el localStorage
+      localStorage.setItem('AdminLogueado', JSON.stringify(admin)); // Guarda el objeto completo si es necesario
+
+      // Si estás usando un contexto para el usuario admin
+      setuserAdm(admin);
+
       Swal.fire({
         title: 'Éxito!',
         text: 'Has iniciado sesión como administrador.',
         icon: 'success',
         confirmButtonText: 'Aceptar',
       }).then(() => {
-        console.log('entro');
-        setuserAdm(email); // Cambia la variable de contexto para indicar que el usuario es administrador
         navigate('/admin/dashboard'); // Cambia esta ruta según tu estructura
       });
     } else {
@@ -46,10 +57,10 @@ function LoginAdmPage() {
           Iniciar Sesión Administrador
         </h1>
         <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="text" // Cambiado a text para username
+          placeholder="Nombre de Usuario"
+          value={username} // Cambiado a username
+          onChange={(e) => setUsername(e.target.value)} // Cambiado a setUsername
           className="border p-2 w-full mb-4 rounded"
           required
         />

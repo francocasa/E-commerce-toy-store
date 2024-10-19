@@ -1,3 +1,4 @@
+import axios from 'axios';
 const BASE_URL = import.meta.env.VITE_API_URL; // Define tu URL base
 
 export const fetchAdminData = async () => {
@@ -11,21 +12,28 @@ export const fetchAdminData = async () => {
   }
 };
 
-export const authenticateAdmin = async (email, password) => {
-  const admins = await fetchAdminData();
-  const admin = admins.find(
-    (admin) => admin.email === email && admin.password === password,
-  );
-
-  if (admin) {
-    localStorage.setItem('AdminLogueado', JSON.stringify(admin)); // Almacena el admin logueado
-    return true;
+// Autenticar al administrador
+export const authenticateAdmin = async (username, password) => {
+  try {
+    const data = {
+      username: username, // Cambiado de email a username
+      password: password,
+    };
+    const response = await axios.post(`${BASE_URL}/admins/login`, data); // Cambiado a /admin/login
+    console.log(response.data);
+    return response.data; // Asumiendo que la respuesta contiene información de autenticación
+  } catch (error) {
+    console.error('Error authenticating admin:', error);
+    return null;
   }
-
-  return false;
 };
 
 export const getLoggedAdmin = () => {
-  const admin = localStorage.getItem('AdminLogueado');
-  return admin ? JSON.parse(admin) : null; // Devuelve el admin si está logueado
+  const adminData = localStorage.getItem('AdminLogueado');
+  try {
+    return adminData ? JSON.parse(adminData) : null;
+  } catch (error) {
+    console.error('Error parsing admin data:', error);
+    return null;
+  }
 };

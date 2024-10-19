@@ -13,9 +13,12 @@ import DetailsProductPage from './pages/DetailsProductPage';
 import SignupPage from './pages/SignupPage';
 import CartPage from './pages/CartPage';
 import DashboardAdmin from './pages/DashboardAdmin';
-import DashboardProducts from './pages/DashboardProducts';
+import DashboardProducts from './pages/adminCRUD/DashboardProducts';
 import DashboardCategories from './pages/adminCRUD/DashboardCategories';
-import DashboardReportes from './pages/DashboardReportes';
+import DashboardReportes from './pages/adminCRUD/DashboardReportes';
+import DashboardDescuentos from './pages/adminCRUD/DashboardDiscounts';
+import DashboardMarcas from './pages/adminCRUD/DashboardBrands';
+import DashboardMateriales from './pages/adminCRUD/DashboardMaterials';
 import PromotionsPage from './pages/PromotionsPage';
 import ProfilePage from './pages/ProfilePage';
 import TestimoniosPage from './pages/TestimoniosPage';
@@ -44,6 +47,21 @@ function App() {
               path="/admin/dashboard/reportes"
               element={<DashboardReportes />}
             />
+            <Route
+              path="/admin/dashboard/descuento"
+              element={<DashboardDescuentos />}
+            />{' '}
+            {/* Nueva ruta */}
+            <Route
+              path="/admin/dashboard/marca"
+              element={<DashboardMarcas />}
+            />{' '}
+            {/* Nueva ruta */}
+            <Route
+              path="/admin/dashboard/material"
+              element={<DashboardMateriales />}
+            />{' '}
+            {/* Nueva ruta */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/loginAdm" element={<LoginAdmPage />} />
             <Route path="/signup" element={<SignupPage />} />
