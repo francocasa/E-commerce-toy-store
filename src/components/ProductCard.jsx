@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import VerMas from './VerMas';
 import { useEffect, useState } from 'react';
+const IMAGES_URL = import.meta.env.VITE_IMAGES_URL; // Obtener la URL base desde el .env
 
 function ProductCard({ product, discounts }) {
   const [price, setPrice] = useState(product.price);
@@ -22,14 +23,15 @@ function ProductCard({ product, discounts }) {
 
   // Manejo de la imagen
   const imageUrl =
-    Array.isArray(product.image) && product.image.length > 0
-      ? product.image[0].url
+    Array.isArray(product.images) && product.images.length > 0
+      ? IMAGES_URL + '/' + product.images[0].url
       : '';
 
   return (
     <div className="border px-4 py-6 rounded-lg shadow-lg w-full mx-auto">
       <div className="flex justify-center mb-4">
         <img
+          crossOrigin="anonymous"
           src={imageUrl}
           alt={product.name}
           className="w-auto h-40 object-cover"
@@ -66,7 +68,7 @@ ProductCard.propTypes = {
   product: PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    image: PropTypes.arrayOf(
+    images: PropTypes.arrayOf(
       PropTypes.shape({
         url: PropTypes.string.isRequired,
       }),
