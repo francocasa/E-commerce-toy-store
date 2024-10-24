@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchAdminData } from '../../services/usersadmin'; // Ajusta según tu ruta
+import { fetchAdminData } from '../../services/admins'; // Ajusta según tu ruta
 
 function DashboardReportes() {
   const [admin, setAdmin] = useState(null);

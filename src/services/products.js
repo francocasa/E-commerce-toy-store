@@ -64,16 +64,16 @@ export const consultaCategories = async () => {
 
 // Función para consultar promociones
 export const consultaPromociones = async () => {
-  const URL = `${BASE_URL}/products`; // Asegúrate de que esta ruta sea correcta
+  const URL = `${BASE_URL}/discounts`; // Asegúrate de que esta ruta sea correcta
   try {
     const response = await axios.get(URL);
-    // Filtrar productos con discountId no nulo
+    // Filtrar productos con discountId no nulo y no vacío
     const promotions = response.data.filter(
-      (product) => product.discountId !== null,
+      (product) => product.discountId !== null && product.discountId !== '',
     );
     return promotions; // Retornar las promociones filtradas
   } catch (error) {
-    console.error('Error fetching promotions:', error);
+    console.error('Error fetching promotions:', error.message || error);
     return []; // Retornar un arreglo vacío en caso de error
   }
 };

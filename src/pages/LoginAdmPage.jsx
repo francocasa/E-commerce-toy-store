@@ -1,46 +1,52 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
-import { authenticateAdmin } from '../services/usersadmin'; // Importar desde el servicio
-import { useNavigate } from 'react-router-dom';
+import { authenticateAdmin } from '../services/admins'; // Importar desde el servicio
 import { useCounter } from '../components/counter/Context';
 
 function LoginAdmPage() {
-  const [username, setUsername] = useState(''); // Cambiado a username
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
-  const { setuserAdm } = useCounter();
+  const { setUserAdm } = useCounter(); // Cambiado para usar el contexto
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Lógica de autenticación para el administrador
-    const responseData = await authenticateAdmin(username, password);
-    console.log(responseData);
-    if (responseData && responseData.admin) {
-      const admin = responseData.admin;
-      const tokenId = responseData.token;
+    try {
+      const responseData = await authenticateAdmin(username, password);
+      console.log(responseData);
 
-      // Guardar el token en el localStorage
-      localStorage.setItem('adminToken', tokenId);
+      if (responseData && responseData.admin) {
+        const admin = responseData.admin;
+        const tokenId = responseData.token;
 
-      // Guardar el ID del admin en el localStorage
-      localStorage.setItem('AdminLogueado', JSON.stringify(admin)); // Guarda el objeto completo si es necesario
+        localStorage.setItem('adminToken', tokenId);
+        localStorage.setItem('AdminLogueado', JSON.stringify(admin));
 
-      // Si estás usando un contexto para el usuario admin
-      setuserAdm(admin);
+        // Guardar el administrador en el contexto
+        setUserAdm(admin);
 
-      Swal.fire({
-        title: 'Éxito!',
-        text: 'Has iniciado sesión como administrador.',
-        icon: 'success',
-        confirmButtonText: 'Aceptar',
-      }).then(() => {
-        navigate('/admin/dashboard'); // Cambia esta ruta según tu estructura
-      });
-    } else {
+        Swal.fire({
+          title: 'Éxito!',
+          text: 'Has iniciado sesión como administrador.',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+        }).then(() => {
+          window.location.reload(); // Refrescar la página
+          window.location.href = '/admin/dashboard';
+        });
+      } else {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Credenciales incorrectas. Por favor, intenta de nuevo.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
+      }
+    } catch (error) {
+      console.error('Error de autenticación:', error);
       Swal.fire({
         title: 'Error!',
-        text: 'Credenciales incorrectas. Por favor, intenta de nuevo.',
+        text: 'Hubo un problema con la autenticación.',
         icon: 'error',
         confirmButtonText: 'Aceptar',
       });
@@ -57,10 +63,10 @@ function LoginAdmPage() {
           Iniciar Sesión Administrador
         </h1>
         <input
-          type="text" // Cambiado a text para username
+          type="text"
           placeholder="Nombre de Usuario"
-          value={username} // Cambiado a username
-          onChange={(e) => setUsername(e.target.value)} // Cambiado a setUsername
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           className="border p-2 w-full mb-4 rounded"
           required
         />

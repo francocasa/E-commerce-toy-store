@@ -1,43 +1,80 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
-// 1. Crear el contexto
+// Crear el contexto
 const CounterContext = createContext();
 
-// 2. Crear un Provider que envuelva a los componentes
+// Crear un Provider que envuelva a los componentes
 export const CounterProvider = ({ children }) => {
-  // Estado para el contador y el valor de incremento/decremento
-
   const [user, setUser] = useState({});
-  const [userAdm, setuserAdm] = useState('');
-  const [token, setToken] = useState('');
+  const [userAdm, setUserAdm] = useState('');
   const [cartItems, setCartItems] = useState([]);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(
+    () => localStorage.getItem('AdminLogueado') !== null,
+  );
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(
+    () => localStorage.getItem('currentUserEmail') !== null,
+  );
 
-  // cart
+  const [adminToken, setAdminToken] = useState(
+    localStorage.getItem('adminToken') || '',
+  );
+
+  // Cargar el carrito desde el localStorage
   useEffect(() => {
     const storedCart = localStorage.getItem('Cart');
     if (storedCart) {
       const parsedCart = JSON.parse(storedCart);
-      const updatedCart = parsedCart.map((item) => ({
-        ...item,
-        id: Number(item.id), // Asegúrate de que id sea un número
-      }));
-      setCartItems(updatedCart);
+      setCartItems(
+        parsedCart.map((item) => ({ ...item, id: Number(item.id) })),
+      );
     }
   }, []);
-  // 4. Valor del contexto
-  const store = {
-    user,
-    userAdm,
-    cartItems,
-    token,
-    setUser,
-    setuserAdm,
-    setCartItems,
-    setToken,
+
+  // Funciones de login/logout
+  const loginAdmin = (token) => {
+    setAdminToken(token);
+    setIsAdminLoggedIn(true);
+    localStorage.setItem('AdminLogueado', 'true');
+    localStorage.setItem('adminToken', token);
   };
 
-  // 3. Utilizar el Contexto para crear el provider
+  const logoutAdmin = () => {
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('AdminLogueado');
+    setIsAdminLoggedIn(false);
+    setAdminToken('');
+  };
+
+  const loginUser = () => {
+    setIsUserLoggedIn(true);
+    localStorage.setItem('currentUserEmail', 'true');
+  };
+
+  const logoutUser = () => {
+    localStorage.removeItem('currentUserEmail');
+    setIsUserLoggedIn(false);
+  };
+
+  const store = useMemo(
+    () => ({
+      user,
+      userAdm,
+      cartItems,
+      isAdminLoggedIn,
+      isUserLoggedIn,
+      adminToken,
+      setUser,
+      setUserAdm,
+      setCartItems,
+      loginAdmin,
+      logoutAdmin,
+      loginUser,
+      logoutUser,
+    }),
+    [user, userAdm, cartItems, isAdminLoggedIn, isUserLoggedIn, adminToken],
+  );
+
   return (
     <CounterContext.Provider value={store}>{children}</CounterContext.Provider>
   );
@@ -46,11 +83,16 @@ export const CounterProvider = ({ children }) => {
 // CustomHook - Consumer
 export const useCounter = () => {
   const context = useContext(CounterContext);
-
+  if (!context) {
+    throw new Error('useCounter debe ser usado dentro de un CounterProvider');
+  }
   return context;
 };
 
 // Validación de PropTypes
 CounterProvider.propTypes = {
-  children: PropTypes.shape().isRequired,
+  children: PropTypes.node.isRequired,
 };
+
+// Exporta solo el CounterProvider
+export default CounterProvider;

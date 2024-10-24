@@ -1,36 +1,55 @@
 import { useEffect, useState } from 'react';
-import { PersonCircle } from 'react-bootstrap-icons'; // Asegúrate de tener esta librería
+import { PersonCircle } from 'react-bootstrap-icons';
+import { useCounter } from '../components/counter/Context'; // Importa el contexto
+import Swal from 'sweetalert2';
 
 function AdminDashboard() {
   const [admin, setAdmin] = useState(null);
+  const { headers, setUserAdm } = useCounter(); // Usa los headers y setUserAdm del contexto
 
   useEffect(() => {
-    const adminData = localStorage.getItem('AdminLogueado');
-    const token = localStorage.getItem('adminToken');
+    const fetchAdminData = async () => {
+      try {
+        const adminData = JSON.parse(localStorage.getItem('AdminLogueado'));
 
-    if (!token || !adminData) {
-      window.location.href = '/login'; // Redirigir si no hay un admin logueado
-      return;
-    }
+        // Verifica si hay un token y datos del admin
+        if (!localStorage.getItem('adminToken') || !adminData) {
+          window.location.href = '/login';
+          return;
+        }
 
-    setAdmin(JSON.parse(adminData)); // Parsear y establecer los datos del admin
-  }, []);
+        // Configura el contexto con los datos del admin
+        setUserAdm(adminData);
+        setAdmin(adminData); // Establecer los datos del admin
+      } catch (error) {
+        console.error('Error fetching admin data:', error);
+        Swal.fire({
+          title: 'Error!',
+          text: 'No se pudo cargar la información del administrador.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        }).then(() => {
+          window.location.href = '/login';
+        });
+      }
+    };
+
+    fetchAdminData();
+  }, [headers, setUserAdm]);
 
   const handleLogout = () => {
     localStorage.removeItem('AdminLogueado');
-    localStorage.removeItem('adminToken'); // Opcional
-    window.location.href = '/login'; // Cambia esto por la ruta adecuada
+    localStorage.removeItem('adminToken');
+    window.location.href = '/login';
   };
 
-  if (!admin) return null; // Muestra nada mientras se carga
+  if (!admin) return null; // Muestra nada mientras se carga la información
 
   return (
     <main className="my-8">
       <div className="container mx-auto p-8">
         <div className="bg-white shadow-lg rounded-lg p-6 flex items-center">
           <div className="flex-1 pr-8">
-            {' '}
-            {/* Padding a la derecha para espacio */}
             <h1 className="text-2xl font-bold mb-2">
               Bienvenido, {admin.fullName}
             </h1>
@@ -44,8 +63,6 @@ function AdminDashboard() {
             </button>
           </div>
           <div className="flex-shrink-0">
-            {' '}
-            {/* Evitar que se reduzca */}
             {admin.profileImage ? (
               <img
                 src={admin.profileImage}

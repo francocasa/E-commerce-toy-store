@@ -1,5 +1,7 @@
+// src/App.jsx
+
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { CounterProvider } from './components/counter/Context';
+import CounterProvider from './components/counter/Context';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import LoginAdmPage from './pages/LoginAdmPage';
@@ -28,63 +30,54 @@ import './index.css';
 
 function App() {
   return (
-    <>
-      <CounterProvider>
-        <Router>
-          <Header />
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/admin/dashboard" element={<DashboardAdmin />} />
-            <Route
-              path="/admin/dashboard/products"
-              element={<DashboardProducts />}
-            />
-            <Route
-              path="/admin/dashboard/categories"
-              element={<DashboardCategories />}
-            />
-            <Route
-              path="/admin/dashboard/reportes"
-              element={<DashboardReportes />}
-            />
-            <Route
-              path="/admin/dashboard/descuento"
-              element={<DashboardDescuentos />}
-            />{' '}
-            {/* Nueva ruta */}
-            <Route
-              path="/admin/dashboard/marca"
-              element={<DashboardMarcas />}
-            />{' '}
-            {/* Nueva ruta */}
-            <Route
-              path="/admin/dashboard/material"
-              element={<DashboardMateriales />}
-            />{' '}
-            {/* Nueva ruta */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/loginAdm" element={<LoginAdmPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/perfil" element={<ProfilePage />} />
-            <Route path="/products" element={<ProductsPage />} />
-            <Route path="/products/:cat" element={<ProductsPage />} />
-            <Route path="/categories" element={<CategoriesPage />} />
-            <Route path="/faq" element={<FaqPage />} />
-            <Route path="/aboutus" element={<AboutUs />} />
-            <Route path="/politica" element={<Politica />} />
-            <Route
-              path="/detailsproduct/:id"
-              element={<DetailsProductPage />}
-            />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/promotions" element={<PromotionsPage />} />
-            <Route path="/testimonios" element={<TestimoniosPage />} />
-            <Route path="/history/:id" element={<HistoryPage />} />
-          </Routes>
-          <Footer />
-        </Router>
-      </CounterProvider>
-    </>
+    <CounterProvider>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/loginAdm" element={<LoginAdmPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/perfil" element={<ProfilePage />} />
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/products/:cat" element={<ProductsPage />} />
+          <Route path="/categories" element={<CategoriesPage />} />
+          <Route path="/faq" element={<FaqPage />} />
+          <Route path="/aboutus" element={<AboutUs />} />
+          <Route path="/politica" element={<Politica />} />
+          <Route path="/detailsproduct/:id" element={<DetailsProductPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/promotions" element={<PromotionsPage />} />
+          <Route path="/testimonios" element={<TestimoniosPage />} />
+          <Route path="/history/:id" element={<HistoryPage />} />
+
+          {/* Rutas de administración */}
+          <Route path="/admin/dashboard" element={<DashboardAdmin />} />
+          <Route
+            path="/admin/dashboard/products"
+            element={<DashboardProducts />}
+          />
+          <Route
+            path="/admin/dashboard/categories"
+            element={<DashboardCategories />}
+          />
+          <Route
+            path="/admin/dashboard/reportes"
+            element={<DashboardReportes />}
+          />
+          <Route
+            path="/admin/dashboard/descuento"
+            element={<DashboardDescuentos />}
+          />
+          <Route path="/admin/dashboard/marca" element={<DashboardMarcas />} />
+          <Route
+            path="/admin/dashboard/material"
+            element={<DashboardMateriales />}
+          />
+        </Routes>
+        <Footer />
+      </Router>
+    </CounterProvider>
   );
 }
 

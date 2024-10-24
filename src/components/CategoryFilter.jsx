@@ -7,14 +7,14 @@ const CategoryFilter = ({
 }) => {
   return (
     <div className="mb-4">
-      <label className="mr-2" htmlFor="category-select">
+      <label className="mr-2 text-lg" htmlFor="category-select">
         Filtrar por categoría:
       </label>
       <select
         id="category-select"
-        value={selectedCategory}
+        value={selectedCategory || ''}
         onChange={(e) => setSelectedCategory(e.target.value)}
-        className="border p-2"
+        className="border p-2 rounded"
       >
         <option value="">Todas</option>
         {categories.map((category) => (
@@ -29,9 +29,14 @@ const CategoryFilter = ({
 
 // Validación de prop-types
 CategoryFilter.propTypes = {
-  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
+  categories: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
   selectedCategory: PropTypes.string.isRequired,
   setSelectedCategory: PropTypes.func.isRequired,
 };
 
-export default CategoryFilter; // Asegúrate de exportar el componente
+export default CategoryFilter;

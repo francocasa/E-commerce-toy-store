@@ -3,10 +3,10 @@ import { consultaProductos, consultaDescuentos } from '../services/products'; //
 import { ProductCard, CategoryFilter } from '../components';
 
 function PromotionsPage() {
-  const categoriesPromo = ['Navidad', '3x2'];
   const [selectedCategoryPromo, setSelectedCategoryPromo] = useState('');
   const [promotions, setPromotions] = useState([]); // Estado para las promociones
   const [discounts, setDiscounts] = useState([]); // Estado para los descuentos
+  const [categoriesPromo, setCategoriesPromo] = useState([]); // Estado para las categorías
   const [loading, setLoading] = useState(true); // Estado de carga
   const [error, setError] = useState(null); // Estado de error
 
@@ -23,8 +23,23 @@ function PromotionsPage() {
         const filteredPromotions = products.filter(
           (product) => product.discountId !== null, // Filtrar productos que tienen descuentos
         );
+
         setPromotions(filteredPromotions); // Guarda las promociones filtradas
         setDiscounts(discountsData); // Guarda los descuentos
+
+        // Extraer categorías únicas de los productos de los descuentos
+        const uniqueCategories = [
+          ...new Set(
+            discountsData.flatMap((discount) =>
+              discount.products.map((product) => product.categoryId),
+            ),
+          ),
+        ].map((categoryId) => ({
+          id: categoryId,
+          name: categoryId, // Aquí puedes usar un método para obtener el nombre si tienes un mapeo
+        }));
+
+        setCategoriesPromo(uniqueCategories);
       } catch (err) {
         setError('Error al cargar promociones');
       }
@@ -35,13 +50,10 @@ function PromotionsPage() {
   }, []);
 
   const filteredPromotions = promotions.filter((product) => {
-    if (selectedCategoryPromo === 'Todas') {
-      return product.discountId !== null; // Solo mostrar productos con discountId no nulo
+    if (selectedCategoryPromo === '') {
+      return product.discountId !== null; // Mostrar productos con discountId no nulo
     }
-    return (
-      selectedCategoryPromo === '' ||
-      product.discountId === (selectedCategoryPromo === 'Navidad' ? '2' : '1')
-    );
+    return product.discountId === selectedCategoryPromo;
   });
 
   if (loading) return <p>Cargando promociones...</p>;

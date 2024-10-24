@@ -5,9 +5,10 @@ import {
   eliminarMarca,
   consultaMarcas,
   consultaMarcaPorId,
-} from '../../services/brands'; // Asegúrate de tener esta función en el servicio
+} from '../../services/brands';
 import Swal from 'sweetalert2';
 import Modal from 'react-modal';
+import { useCounter } from '@/components/counter/Context'; // Importa el contexto
 
 Modal.setAppElement('#root');
 
@@ -19,17 +20,21 @@ function DashboardBrands() {
   });
   const [brands, setBrands] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const { adminToken } = useCounter(); // Accede al adminToken del contexto
+
+  const headers = {
+    Authorization: `Bearer ${adminToken}`,
+  };
 
   useEffect(() => {
     const fetchBrands = async () => {
-      const token = localStorage.getItem('adminToken');
-      if (!token) {
+      if (!adminToken) {
         window.location.href = '/login';
         return;
       }
 
       try {
-        const fetchedBrands = await consultaMarcas();
+        const fetchedBrands = await consultaMarcas(headers);
         setBrands(fetchedBrands);
       } catch (error) {
         Swal.fire('Error', 'No se pudieron cargar las marcas.', 'error');
@@ -37,10 +42,10 @@ function DashboardBrands() {
     };
 
     fetchBrands();
-  }, []);
+  }, [adminToken, headers]); // Añadir 'headers' aquí
 
   const handleEdit = async (brand) => {
-    const brandDetails = await consultaMarcaPorId(brand.id); // Asegúrate de tener esta función
+    const brandDetails = await consultaMarcaPorId(brand.id, headers); // Asegúrate de pasar headers
     if (brandDetails) {
       setNewBrand({
         id: brandDetails.id,
@@ -61,7 +66,7 @@ function DashboardBrands() {
 
     if (result.isConfirmed) {
       try {
-        await eliminarMarca(id);
+        await eliminarMarca(id, headers); // Asegúrate de pasar headers
         setBrands(brands.filter((brand) => brand.id !== id));
         Swal.fire('Eliminado!', 'La marca ha sido eliminada.', 'success');
       } catch (error) {
@@ -75,7 +80,7 @@ function DashboardBrands() {
 
     try {
       if (newBrand.id) {
-        const updatedBrand = await editarMarca(newBrand.id, brandData);
+        const updatedBrand = await editarMarca(newBrand.id, brandData, headers); // Asegúrate de pasar headers
         setBrands(
           brands.map((brand) =>
             brand.id === newBrand.id ? updatedBrand : brand,
@@ -83,7 +88,7 @@ function DashboardBrands() {
         );
         Swal.fire('Éxito', 'Marca actualizada correctamente.', 'success');
       } else {
-        const addedBrand = await agregarMarca(brandData);
+        const addedBrand = await agregarMarca(brandData, headers); // Asegúrate de pasar headers
         setBrands([...brands, addedBrand]);
         Swal.fire('Éxito', 'Marca agregada correctamente.', 'success');
       }

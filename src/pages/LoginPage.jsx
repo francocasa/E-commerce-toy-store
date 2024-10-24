@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { authenticateUser } from '../services/userprofile';
+import { authenticateUser } from '../services/users';
 import { useCounter } from '../components/counter/Context';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { setUser, setToken } = useCounter();
+  const { setUser, setToken, setHeaders } = useCounter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,28 +24,38 @@ function LoginPage() {
       return;
     }
 
-    // Lógica de autenticación
-    const responseData = await authenticateUser(email, password);
-    const user = responseData.user;
-    const tokenId = responseData.token;
-    setToken(tokenId);
+    try {
+      // Lógica de autenticación
+      const responseData = await authenticateUser(email, password);
+      const user = responseData.user;
+      const tokenId = responseData.token;
+      setToken(tokenId);
+      setHeaders({ Authorization: `Bearer ${tokenId}` });
 
-    if (user) {
-      localStorage.setItem('currentUserId', user.id); // Guarda el ID
-      localStorage.setItem('currentUserEmail', email);
-      Swal.fire({
-        title: 'Éxito!',
-        text: 'Inicio de sesión aceptado.',
-        icon: 'success',
-        confirmButtonText: 'Aceptar',
-      }).then(() => {
-        setUser(user);
-        navigate('/perfil');
-      });
-    } else {
+      if (user) {
+        localStorage.setItem('currentUserId', user.id); // Guarda el ID
+        localStorage.setItem('currentUserEmail', email);
+        Swal.fire({
+          title: 'Éxito!',
+          text: 'Inicio de sesión aceptado.',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+        }).then(() => {
+          setUser(user);
+          navigate('/perfil');
+        });
+      } else {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Usuario o contraseña incorrectos.',
+          icon: 'error',
+          confirmButtonText: 'Intentar de nuevo',
+        });
+      }
+    } catch (error) {
       Swal.fire({
         title: 'Error!',
-        text: 'Usuario o contraseña incorrectos.',
+        text: 'Ocurrió un problema durante el inicio de sesión.',
         icon: 'error',
         confirmButtonText: 'Intentar de nuevo',
       });

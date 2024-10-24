@@ -1,22 +1,23 @@
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import { updateUserProfile } from '../services/userprofile';
-import { useCounter } from '../components/counter/Context';
+import { updateUserProfile, updateUserImage } from '../services/users';
+import { useCounter } from '@/components/counter/Context'; // Importa el contexto
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function ProfilePage() {
   const [name, setName] = useState('');
   const [id, setId] = useState('');
-  const [photo, setPhoto] = useState('');
+  const [profileImage, setProfileImage] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  const { user, token } = useCounter();
+  const { user, headers, setHeaders } = useCounter();
 
   useEffect(() => {
     if (user) {
-      setName(user.fullName || ''); // Asegúrate de que coincida con el nuevo campo
+      setName(user.fullName || '');
       setId(user.id);
-      setPhoto(user.photo || '');
+      setProfileImage(user.profileImage || '');
       setAddress(user.address || '');
       setPhone(user.phone || '');
     }
@@ -27,12 +28,15 @@ function ProfilePage() {
   };
 
   const handleSave = async () => {
-    user.fullName = name; // Cambia según el nuevo campo
-    user.photo = photo;
-    user.address = address;
-    user.phone = phone;
+    const updatedUser = {
+      ...user,
+      fullName: name,
+      profileImage,
+      address,
+      phone,
+    };
     try {
-      await updateUserProfile(user, token); // Asegúrate de que esta función esté adaptada
+      await updateUserProfile(updatedUser, headers);
       Swal.fire({
         title: 'Éxito!',
         text: 'Datos actualizados correctamente.',
@@ -52,8 +56,8 @@ function ProfilePage() {
 
   const handleCancel = () => {
     setIsEditing(false);
-    setName(user.name);
-    setPhoto(user.photo);
+    setName(user.fullName);
+    setProfileImage(user.profileImage);
     setAddress(user.address);
     setPhone(user.phone);
   };
@@ -63,6 +67,7 @@ function ProfilePage() {
   };
 
   const handleLogout = () => {
+    setHeaders({});
     localStorage.removeItem('currentUserEmail');
     Swal.fire({
       title: 'Sesión Cerrada',
@@ -71,6 +76,29 @@ function ProfilePage() {
       confirmButtonText: 'Aceptar',
     });
     window.location.href = '/login';
+  };
+
+  const handlePhotoChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('image', file);
+      try {
+        const newImage = await updateUserImage(id, formData, headers);
+        setProfileImage(newImage);
+      } catch (error) {
+        Swal.fire({
+          title: 'Error!',
+          text: 'No se pudo actualizar la imagen.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
+      }
+    }
+  };
+
+  const handlePhotoClick = () => {
+    document.getElementById('photoInput').click();
   };
 
   return (
@@ -82,22 +110,34 @@ function ProfilePage() {
             <p className="mb-4">
               <strong>Email:</strong> {user.email}
             </p>
-
             <div className="mb-4 flex">
               <div
-                className="border border-gray-300 p-4 rounded flex items-center justify-center mr-4"
+                className="border border-gray-300 p-4 rounded flex items-center justify-center mr-4 relative cursor-pointer"
                 style={{ width: '100px', height: '100px' }}
+                onClick={handlePhotoClick}
               >
-                {photo ? (
+                {profileImage ? (
                   <img
-                    src={photo}
+                    crossOrigin="anonymous"
+                    src={`${BASE_URL}/${profileImage}`}
                     alt="Perfil"
                     className="w-full h-full object-cover rounded"
                   />
                 ) : (
                   <span className="text-gray-400">👤</span>
                 )}
+                <input
+                  id="photoInput"
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoChange}
+                  style={{ display: 'none' }}
+                />
+                <span className="absolute inset-0 bg-black bg-opacity-50 text-white text-center opacity-0 hover:opacity-100 transition-opacity">
+                  Cambiar Foto
+                </span>
               </div>
+
               <input
                 type="text"
                 value={name}
@@ -108,14 +148,6 @@ function ProfilePage() {
               />
             </div>
 
-            <input
-              type="text"
-              value={photo}
-              onChange={(e) => setPhoto(e.target.value)}
-              placeholder="URL de la foto"
-              className={`border p-2 w-full mb-2 rounded ${isEditing ? '' : 'bg-gray-200 cursor-not-allowed'}`}
-              disabled={!isEditing}
-            />
             <input
               type="text"
               value={address}
