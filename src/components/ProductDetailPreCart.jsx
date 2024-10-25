@@ -29,22 +29,24 @@ const ProductDetailPreCart = ({ product }) => {
     const existingProduct = existingCart.find((item) => item.id === product.id);
 
     if (existingProduct) {
-      // Si ya existe en el carrito
+      // Reemplazar la cantidad del producto
+      existingProduct.quantity = quantity;
       Swal.fire({
-        title: 'Producto ya en el carrito',
-        text: 'Ya colocaste este producto al carrito',
+        title: 'Cantidad actualizada',
+        text: 'Has actualizado la cantidad para la compra',
         icon: 'info',
       });
     } else {
       // Si se añade el producto
       existingCart.push({ ...product, quantity });
-      localStorage.setItem('Cart', JSON.stringify(existingCart));
       Swal.fire({
         title: 'Producto añadido',
         text: 'Se añadió el producto al carrito',
         icon: 'success',
       });
     }
+
+    localStorage.setItem('Cart', JSON.stringify(existingCart));
   };
 
   // Mensaje de promoción
@@ -52,13 +54,13 @@ const ProductDetailPreCart = ({ product }) => {
     if (product.categoryPromo === 'Navidad') {
       return 'Promoción 30% de descuento por Navidad';
     } else if (product.categoryPromo === '3x2') {
-      return 'Para compras múltiplos de 3, hay descuento de 33.33%';
+      return 'Para compras múltiples de 3, hay descuento de 33.33%';
     }
     return null;
   };
 
   return (
-    <div className="bg-gray-100 p-6 rounded-md shadow-md">
+    <div className="bg-gray-100 p-4 md:p-6 rounded-md shadow-md">
       <h2 className="text-lg font-semibold text-center mb-4">
         Detalles del Carrito
       </h2>

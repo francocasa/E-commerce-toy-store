@@ -1,0 +1,409 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "name": "Producto AAAA",
+      "description": "Juguete para varones",
+      "price": 60,
+      "stock": 100,
+      "categoryId": "1",
+      "brandId": "1",
+      "materialId": "1",
+      "discountId": null,
+      "image": [
+        {
+          "url": "/Products/juguete1.png"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Producto B",
+      "description": "Juguete educativo",
+      "price": 55,
+      "stock": 100,
+      "categoryId": "1",
+      "brandId": "2",
+      "materialId": "1",
+      "discountId": null,
+      "image": [
+        {
+          "url": "/Products/juguete2.png"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Producto C",
+      "description": "Juguete para construir",
+      "price": 60,
+      "stock": 100,
+      "categoryId": "1",
+      "brandId": "3",
+      "materialId": "1",
+      "discountId": null,
+      "image": [
+        {
+          "url": "/Products/juguete3.png"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Producto D",
+      "description": "Juguete interactivo",
+      "price": 55,
+      "stock": 100,
+      "categoryId": "1",
+      "brandId": "4",
+      "materialId": "1",
+      "discountId": null,
+      "image": [
+        {
+          "url": "/Products/juguete4.png"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "name": "Producto E",
+      "description": "Juguete clásico",
+      "price": 60,
+      "stock": 100,
+      "categoryId": "1",
+      "brandId": "5",
+      "materialId": "1",
+      "discountId": null,
+      "image": [
+        {
+          "url": "/Products/juguete5.png"
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "name": "Producto F",
+      "description": "Juguete para jugar al aire libre",
+      "price": 55,
+      "stock": 100,
+      "categoryId": "1",
+      "brandId": "6",
+      "materialId": "1",
+      "discountId": null,
+      "image": [
+        {
+          "url": "/Products/juguete6.png"
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "name": "Producto G",
+      "description": "Juguete para su niño",
+      "price": 20,
+      "stock": 100,
+      "categoryId": "1",
+      "brandId": "6",
+      "materialId": "1",
+      "discountId": "1",
+      "image": [
+        {
+          "url": "/Promociones/promo1.png"
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "name": "Producto H",
+      "description": "Juguete para su niño",
+      "price": 20,
+      "stock": 100,
+      "categoryId": "2",
+      "brandId": "7",
+      "materialId": "1",
+      "discountId": "2",
+      "image": [
+        {
+          "url": "/Promociones/promo2.png"
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "name": "Producto I",
+      "description": "Juguete para su niño",
+      "price": 20,
+      "stock": 100,
+      "categoryId": "2",
+      "brandId": "8",
+      "materialId": "1",
+      "discountId": "1",
+      "image": [
+        {
+          "url": "/Promociones/promo3.png"
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "name": "Producto J",
+      "description": "Juguete para su niño",
+      "price": 20,
+      "stock": 100,
+      "categoryId": "2",
+      "brandId": "9",
+      "materialId": "1",
+      "discountId": "2",
+      "image": [
+        {
+          "url": "/Promociones/promo4.png"
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "name": "Producto K",
+      "description": "Juguete para su niño",
+      "price": 20,
+      "stock": 100,
+      "categoryId": "2",
+      "brandId": "10",
+      "materialId": "1",
+      "discountId": "1",
+      "image": [
+        {
+          "url": "/Promociones/promo5.png"
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "name": "Producto L",
+      "description": "Juguete para su niño",
+      "price": 20,
+      "stock": 100,
+      "categoryId": "2",
+      "brandId": "11",
+      "materialId": "1",
+      "discountId": "2",
+      "image": [
+        {
+          "url": "/Promociones/promo6.png"
+        }
+      ]
+    },
+    {
+      "id": "uVPYvvl",
+      "name": "PRODUCTO VVV",
+      "description": "asdada",
+      "price": 12,
+      "stock": 100,
+      "categoryId": "1",
+      "brandId": "12",
+      "materialId": "1",
+      "discountId": null,
+      "image": [
+        {
+          "url": "xxx"
+        }
+      ]
+    },
+    {
+      "id": "6C3BGjF",
+      "name": "Mike",
+      "description": "MikeWusosky",
+      "price": 20,
+      "stock": 10,
+      "categoryId": "1",
+      "brandId": "1",
+      "materialId": "2",
+      "image": "",
+      "discountId": "null"
+    }
+  ],
+  "categories": [
+    {
+      "id": "1",
+      "title": "Educativo",
+      "image": "/Products/juguete2.png"
+    },
+    {
+      "id": "2",
+      "title": "Acción",
+      "image": "/Promociones/promo6.png"
+    }
+  ],
+  "brands": [
+    {
+      "id": "1",
+      "name": "Marca A",
+      "description": "Descripción de la marca A"
+    },
+    {
+      "id": "2",
+      "name": "Marca B",
+      "description": "Descripción de la marca B"
+    }
+  ],
+  "materials": [
+    {
+      "id": "1",
+      "name": "Madera",
+      "description": "Material de madera"
+    },
+    {
+      "id": "2",
+      "name": "Metal",
+      "description": "Material de metal"
+    }
+  ],
+  "discounts": [
+    {
+      "id": "1",
+      "description": "3X2",
+      "discount_amount": 0.33333
+    },
+    {
+      "id": "2",
+      "description": "Navidad",
+      "discount_amount": 0.3
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "fullName": "Juan Pérez Alvaaro",
+      "email": "habsro112@example.com",
+      "password": "1234",
+      "address": "Calle Falsa 123",
+      "phone": "123456789",
+      "orders": [
+        {
+          "orderId": "1",
+          "totalAmount": 320,
+          "orderDate": "2024-10-02",
+          "status": "completed",
+          "items": [
+            {
+              "productId": "1",
+              "quantity": 2,
+              "price": 120
+            },
+            {
+              "productId": "10",
+              "quantity": 10,
+              "price": 200
+            }
+          ]
+        },
+        {
+          "orderId": "2",
+          "totalAmount": 230,
+          "orderDate": "2024-10-04",
+          "status": "completed",
+          "items": [
+            {
+              "productId": "1",
+              "quantity": 3,
+              "price": 130
+            },
+            {
+              "productId": "10",
+              "quantity": 5,
+              "price": 100
+            }
+          ]
+        },
+        {
+          "orderId": "3",
+          "totalAmount": 130,
+          "orderDate": "2024-10-04",
+          "status": "completed",
+          "items": [
+            {
+              "productId": "3",
+              "quantity": 3,
+              "price": 130
+            }
+          ]
+        }
+      ],
+      "cart": {
+        "cartId": "1",
+        "items": [
+          {
+            "productId": "3",
+            "quantity": 1
+          }
+        ]
+      },
+      "photo": ""
+    },
+    {
+      "id": "2",
+      "fullName": "María López",
+      "email": "cliente2@example.com",
+      "password": "1234",
+      "address": "Avenida Siempre Viva 742aaaa",
+      "phone": "987654321",
+      "orders": [],
+      "cart": {
+        "cartId": "2",
+        "items": []
+      }
+    },
+    {
+      "id": "5QoE7Nk",
+      "fullName": "Usuario 3",
+      "email": "blabla@gmail.com",
+      "password": "Miguel24773!",
+      "address": "",
+      "phone": "",
+      "orders": [],
+      "cart": {
+        "cartId": "3",
+        "items": []
+      }
+    },
+    {
+      "id": "saeckjt5b",
+      "fullName": "Genial",
+      "email": "popis@gmail.com",
+      "password": "Mi24773!",
+      "address": "12313",
+      "phone": "asfasfa",
+      "orders": [],
+      "cart": {
+        "cartId": "4",
+        "items": []
+      }
+    },
+    {
+      "id": "vznqdjtds",
+      "fullName": "Usuario 5",
+      "email": "ada@gmail.com",
+      "password": "Miguel24773!",
+      "address": "",
+      "phone": "",
+      "orders": [],
+      "cart": {
+        "cartId": "5",
+        "items": []
+      }
+    }
+  ],
+  "users_admin": [
+    {
+      "id": "1",
+      "email": "mikelyto@gmail.com",
+      "password": "1234",
+      "name": "Mikelyto Pariona"
+    },
+    {
+      "id": "2",
+      "email": "miguel@gmail.com",
+      "password": "4481",
+      "name": "Miguel Chavez"
+    }
+  ]
+}

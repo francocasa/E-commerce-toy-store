@@ -1,27 +1,33 @@
-import { useRef } from 'react';
-import { dbProducts } from '../data/DbProducts'; // Asegúrate de que la ruta sea correcta
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { useRef, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { consultaPromociones } from '../services/products'; // Importa la función de consulta
 
 const PromotionSection = () => {
   const scrollRef = useRef(null); // Referencia al contenedor
   const navigate = useNavigate(); // Crea la instancia de navegación
+  const [promotions, setPromotions] = useState([]); // Estado para las promociones
+
+  useEffect(() => {
+    const fetchPromotions = async () => {
+      const data = await consultaPromociones(); // Usar la función del servicio
+      console.log('Promociones:', data); // Verificar la salida
+      setPromotions(data); // Guarda las promociones en el estado
+    };
+
+    fetchPromotions();
+  }, []);
 
   const scrollLeft = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -200, behavior: 'smooth' }); // Ajusta el valor de desplazamiento
+      scrollRef.current.scrollBy({ left: -200, behavior: 'smooth' });
     }
   };
 
   const scrollRight = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 200, behavior: 'smooth' }); // Ajusta el valor de desplazamiento
+      scrollRef.current.scrollBy({ left: 200, behavior: 'smooth' });
     }
   };
-
-  // Filtrar productos con promociones
-  const filteredPromotions = dbProducts.filter(
-    (product) => product.promocion === 'true',
-  );
 
   const handleViewPromotion = (id) => {
     navigate(`/detailsproduct/${id}`); // Redirige a la ruta deseada
@@ -38,26 +44,27 @@ const PromotionSection = () => {
       <div className="relative">
         <div
           ref={scrollRef}
-          className="flex space-x-6 overflow-x-scroll no-scrollbar"
+          className="flex space-x-4 overflow-x-scroll no-scrollbar p-2"
         >
           {/* Mapear las promociones */}
-          {filteredPromotions.map((promo) => (
+          {promotions.map((promo) => (
             <div
               key={promo.id}
-              className="min-w-[200px] bg-white shadow-md p-4 rounded-md"
+              className="min-w-[200px] sm:min-w-[250px] md:min-w-[300px] bg-white shadow-md p-4 rounded-md mx-auto"
             >
               <img
-                src={promo.image}
-                alt={promo.title}
-                className="w-full h-40 object-cover rounded-md"
+                src={promo.image[0]?.url} // Accede al primer elemento del array de imágenes
+                alt={promo.name}
+                className="w-auto h-40 object-cover rounded-md mx-auto"
               />
-              <h3 className="text-lg mt-2 font-medium">
-                {promo.categoryPromo}
+              <h3 className="text-lg mt-2 font-medium text-center">
+                {promo.name} {/* Mostrar el nombre del producto */}
               </h3>
-              <p className="text-gray-500">{promo.descriptionPromo}</p>
+              <p className="text-gray-500 text-center">{promo.description}</p>{' '}
+              {/* Mostrar la descripción */}
               <button
                 onClick={() => handleViewPromotion(promo.id)} // Cambia a un botón
-                className="text-blue-600 hover:underline"
+                className="text-blue-600 hover:underline block mx-auto"
               >
                 Ver promoción
               </button>

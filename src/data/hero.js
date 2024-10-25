@@ -24,7 +24,7 @@ const heroData = [
     title: 'Mira los testimonios',
     description: 'Varios ya compraron',
     buttonText: 'Ver Testimonios',
-    buttonLink: '/TestimoniosPage',
+    buttonLink: '/Testimonios',
     backgroundImage: FondoHero3,
   },
 ];

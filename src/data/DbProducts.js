@@ -128,7 +128,7 @@ export const dbProducts = [
     material: 'madera',
     category: ['Acción'],
     promocion: 'true',
-    descriptionPromo: 'Compra 3 y paga 2 en productos de control y consola',
+    descriptionPromo: 'Compra 3 y paga 2',
     categoryPromo: '3x2',
   },
   {
@@ -154,7 +154,7 @@ export const dbProducts = [
     material: 'madera',
     category: ['Acción'],
     promocion: 'true',
-    descriptionPromo: 'Compra 3 y paga 2 en juguetes de control',
+    descriptionPromo: 'Compra 3 y paga 2',
     categoryPromo: '3x2',
   },
   {

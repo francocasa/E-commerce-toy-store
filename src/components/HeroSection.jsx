@@ -1,7 +1,34 @@
 import { useState } from 'react';
-import heroData from '../data/hero';
 
 const HeroSection = () => {
+  // Datos estáticos
+  const heroData = [
+    {
+      id: 1,
+      title: 'Promociones que te esperan',
+      description: 'Productos seleccionados con 33% de descuento',
+      buttonText: 'Ver Ofertas',
+      buttonLink: '/promotions',
+      backgroundImage: '/FondoHero/FondoHero.png',
+    },
+    {
+      id: 2,
+      title: 'Mira nuestros nuevos productos',
+      description: 'Lo nuevo ha llegado',
+      buttonText: 'Ver Productos',
+      buttonLink: '/products',
+      backgroundImage: '/FondoHero/FondoHero2.png',
+    },
+    {
+      id: 3,
+      title: 'Mira los testimonios',
+      description: 'Varios ya compraron',
+      buttonText: 'Ver Testimonios',
+      buttonLink: '/Testimonios',
+      backgroundImage: '/FondoHero/FondoHero3.png',
+    },
+  ];
+
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const handleNext = () => {
@@ -14,17 +41,21 @@ const HeroSection = () => {
 
   return (
     <section
-      className="relative h-96 bg-cover bg-center flex flex-col justify-end items-start text-white"
+      className="relative h-96 bg-cover bg-center flex flex-col justify-end items-start text-white p-4 sm:p-6 lg:p-8"
       style={{
         backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)), url(${heroData[currentSlide].backgroundImage})`,
       }}
     >
-      <div className="text-left ml-5 mb-5">
-        <h1 className="text-4xl font-bold">{heroData[currentSlide].title}</h1>
-        <p className="text-lg mt-4">{heroData[currentSlide].description}</p>
+      <div className="text-left ml-0 sm:ml-5 mb-5">
+        <h1 className="text-2xl sm:text-4xl font-bold">
+          {heroData[currentSlide].title}
+        </h1>
+        <p className="text-sm sm:text-lg mt-4">
+          {heroData[currentSlide].description}
+        </p>
         <a
           href={heroData[currentSlide].buttonLink}
-          className="mt-6 bg-blue-600 py-2 px-6 rounded-md text-white hover:bg-blue-700 transition-all inline-block"
+          className="mt-6 bg-blue-600 py-2 px-4 sm:px-6 rounded-md text-white hover:bg-blue-700 transition-all inline-block"
         >
           {heroData[currentSlide].buttonText}
         </a>

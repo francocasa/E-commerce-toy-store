@@ -1,72 +1,81 @@
+import { Link } from 'react-router-dom';
+import { FaWhatsapp } from 'react-icons/fa';
+
 export default function Footer() {
   return (
-    <footer className="bg-blue-50 py-12 text-gray-800">
-      <div className="w-3/4 mx-auto flex justify-center gap-6">
-        <div className="flex w-1/2">
-          <div className="w-1/2">
-            <img src="/logo-juguetitos.png" alt="Toys Logo" className="w-3/5" />
+    <footer className="bg-blue-50 py-6 px-4 text-gray-800 relative">
+      <div className="container mx-auto flex flex-col md:flex-row justify-between gap-6 lg:py-4 lg:p-4 divide-y-2 md:divide-y-0">
+        {' '}
+        {/* Agregado p-4 para márgenes */}
+        <div className="flex w-full md:w-1/2 gap-3">
+          <div className="px-3 w-1/2">
+            <img
+              src="/logo-juguetitos.png"
+              alt="Toys Logo"
+              className="md:w-40 lg:w-48 md:block md:mx-auto"
+            />
           </div>
-
-          <ul className="list-none space-y-4">
+          <ul className="list-none space-y-1 md:space-y-4">
             <li>
-              <a href="#">Quiénes somos</a>
+              <Link
+                to={`/aboutus`}
+                className="cursor-pointer hover:text-gray-500 text-base"
+              >
+                Quiénes somos
+              </Link>
             </li>
             <li>
-              <a href="#">Política de privacidad</a>
+              <Link
+                to={`/politica`}
+                className="cursor-pointer hover:text-gray-500 text-base"
+              >
+                Política de privacidad
+              </Link>
             </li>
             <li>
-              <a href="#">Nuestras tiendas</a>
-            </li>
-            <li>
-              <a href="#">Anuncie aquí</a>
+              <Link
+                to={`/faq`}
+                className="cursor-pointer hover:text-gray-500 text-base"
+              >
+                FAQ
+              </Link>
             </li>
           </ul>
         </div>
-
-        <div className="w-1/2">
-          <p className="font-bold mb-1">Hable con nosotros</p>
-
+        <div className="px-3 w-full md:w-1/2">
+          <p className="font-bold mt-3 mb-1 lg:mb-3 md:mt-0">
+            Hable con nosotros
+          </p>
           <form>
-            <label
-              htmlFor="nombre"
-              className="mb-3 pt-4 px-4 relative block overflow-hidden border-b border-gray-300 bg-white shadow-sm focus-within:border-blue-600"
-            >
-              <input
-                type="text"
-                id="nombre"
-                placeholder="Nombre"
-                className="peer h-8 w-full border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
-              />
-
-              <span className="px-4 absolute start-0 top-2 -translate-y-1/2 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-2 peer-focus:text-xs peer-focus:pt-4">
-                Nombre
-              </span>
-            </label>
-
-            <label
-              htmlFor="mensaje"
-              className="pt-4 px-4 h-24 relative block overflow-hidden border-b border-gray-300 bg-white shadow-sm focus-within:border-blue-600"
-            >
-              <input
-                type="text"
-                id="mensaje"
-                placeholder="Escribe tu mensaje"
-                className="peer h-8 w-full border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
-              />
-
-              <span className="px-4 absolute start-0 top-2 -translate-y-1/2 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/4 peer-placeholder-shown:text-sm peer-focus:top-2 peer-focus:text-xs peer-focus:pt-4">
-                Escribe tu mensaje
-              </span>
-            </label>
-
+            <input
+              type="text"
+              placeholder="Nombre"
+              className="border p-1 w-full mb-2 text-sm lg:text-base lg:mb-3 lg:p-2"
+            />
+            <textarea
+              rows={3}
+              placeholder="Escribe tu mensaje..."
+              className="border p-1 w-full mb-2 text-sm lg:text-base lg:mb-3 lg:p-2"
+            ></textarea>
             <input
               type="submit"
               value="Enviar mensaje"
-              className="bg-blue-500 text-white py-3 px-5 mt-2"
+              className="py-2 px-3 text-sm text-white border-2 border-blue-500 bg-blue-500 rounded-md font-bold hover:bg-blue-400 hover:border-blue-400 cursor-pointer transition-colors lg:text-base lg:px-4"
             />
           </form>
         </div>
       </div>
+
+      {/* Icono de WhatsApp flotante */}
+      <a
+        href="https://wa.me/51940467555"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-5 right-5 bg-green-500 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-shadow"
+        style={{ zIndex: 1000 }}
+      >
+        <FaWhatsapp size={42} />
+      </a>
     </footer>
   );
 }

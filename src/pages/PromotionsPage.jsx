@@ -1,43 +1,74 @@
-import { useState } from 'react';
-import { dbProducts } from '../data/DbProducts';
-import { ProductCard, CategoryFilter } from '../components'; // Asegúrate de importar CategoryFilter
+import { useState, useEffect } from 'react';
+import { consultaProductos, consultaDescuentos } from '../services/products'; // Importa las funciones de consulta
+import { ProductCard, CategoryFilter } from '../components';
 
 function PromotionsPage() {
   const categoriesPromo = ['Navidad', '3x2'];
   const [selectedCategoryPromo, setSelectedCategoryPromo] = useState('');
+  const [promotions, setPromotions] = useState([]); // Estado para las promociones
+  const [discounts, setDiscounts] = useState([]); // Estado para los descuentos
+  const [loading, setLoading] = useState(true); // Estado de carga
+  const [error, setError] = useState(null); // Estado de error
 
-  const filteredPromotions = dbProducts.filter(
-    (product) =>
-      product.promocion === 'true' &&
-      (selectedCategoryPromo === '' ||
-        product.categoryPromo === selectedCategoryPromo),
-  );
+  useEffect(() => {
+    const fetchPromotions = async () => {
+      setLoading(true);
+      try {
+        const products = await consultaProductos(); // Obtiene los productos
+        const discountsData = await consultaDescuentos(); // Obtiene los descuentos
+
+        console.log('Productos:', products); // Ver la respuesta de productos
+        console.log('Descuentos:', discountsData); // Ver la respuesta de descuentos
+
+        const filteredPromotions = products.filter(
+          (product) => product.discountId !== null, // Filtrar productos que tienen descuentos
+        );
+        setPromotions(filteredPromotions); // Guarda las promociones filtradas
+        setDiscounts(discountsData); // Guarda los descuentos
+      } catch (err) {
+        setError('Error al cargar promociones');
+      }
+      setLoading(false);
+    };
+
+    fetchPromotions();
+  }, []);
+
+  const filteredPromotions = promotions.filter((product) => {
+    if (selectedCategoryPromo === 'Todas') {
+      return product.discountId !== null; // Solo mostrar productos con discountId no nulo
+    }
+    return (
+      selectedCategoryPromo === '' ||
+      product.discountId === (selectedCategoryPromo === 'Navidad' ? '2' : '1')
+    );
+  });
+
+  if (loading) return <p>Cargando promociones...</p>;
+  if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <main className="my-8">
-      <h2 className="text-2xl font-bold mb-4 ml-4">Promociones</h2>
+    <main className="container mx-auto my-8">
+      <section className="mx-9">
+        <h2 className="text-2xl font-bold mb-4">Promociones</h2>
 
-      <div className="ml-4">
-        <CategoryFilter
-          categories={categoriesPromo}
-          selectedCategory={selectedCategoryPromo}
-          setSelectedCategory={setSelectedCategoryPromo}
-        />
-      </div>
+        <div className="mb-8">
+          <CategoryFilter
+            categories={categoriesPromo}
+            selectedCategory={selectedCategoryPromo}
+            setSelectedCategory={setSelectedCategoryPromo}
+          />
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {filteredPromotions.map((product) => (
-          <div
-            key={product.id}
-            className="border p-4 rounded-lg max-w-sm mx-auto"
-          >
-            <h3 className="text-lg font-semibold mb-2 text-center">
-              {product.categoryPromo}
-            </h3>
-            <ProductCard product={product} />
-          </div>
-        ))}
-      </div>
+        <div className="flex flex-wrap gap-3 justify-center">
+          {filteredPromotions.map((product) => (
+            <div className="w-4/5 max-w-80" key={product.id}>
+              <ProductCard product={product} discounts={discounts} />{' '}
+              {/* Pasar los descuentos aquí */}
+            </div>
+          ))}
+        </div>
+      </section>
     </main>
   );
 }

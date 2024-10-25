@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+#root {
+  padding-top: 70px;
+}
+
 main {
   flex: 1;
 }
