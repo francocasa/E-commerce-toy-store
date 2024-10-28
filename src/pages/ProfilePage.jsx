@@ -1,27 +1,46 @@
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import { updateUserProfile, updateUserImage } from '../services/users';
-import { useCounter } from '@/components/counter/Context'; // Importa el contexto
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import {
+  updateUserProfile,
+  getUserById,
+  getUserIdByEmail,
+} from '../services/users'; // Asegúrate de que estas funciones estén correctamente importadas
+import { useCounter } from '../components/counter/Context';
 
 function ProfilePage() {
-  const [name, setName] = useState('');
+  const [fullName, setFullName] = useState('');
   const [id, setId] = useState('');
   const [profileImage, setProfileImage] = useState('');
-  const [address, setAddress] = useState('');
-  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState(''); // Agrega dirección si es parte del perfil
+  const [phone, setPhone] = useState(''); // Agrega teléfono si es parte del perfil
   const [isEditing, setIsEditing] = useState(false);
-  const { user, headers, setHeaders } = useCounter();
+  const { token } = useCounter();
 
   useEffect(() => {
-    if (user) {
-      setName(user.fullName || '');
-      setId(user.id);
-      setProfileImage(user.profileImage || '');
-      setAddress(user.address || '');
-      setPhone(user.phone || '');
+    const email = localStorage.getItem('currentUserEmail');
+
+    if (email) {
+      const fetchUserDetails = async () => {
+        try {
+          const userId = await getUserIdByEmail(email);
+          if (userId) {
+            const user = await getUserById(userId);
+            if (user) {
+              setFullName(user.fullName || '');
+              setId(user.id);
+              setProfileImage(user.profileImage || '');
+              setAddress(user.address || ''); // Ajusta según tus datos
+              setPhone(user.phone || ''); // Ajusta según tus datos
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching user details:', error);
+        }
+      };
+
+      fetchUserDetails();
     }
-  }, [user]);
+  }, []);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -29,14 +48,14 @@ function ProfilePage() {
 
   const handleSave = async () => {
     const updatedUser = {
-      ...user,
-      fullName: name,
+      id,
+      fullName,
       profileImage,
       address,
       phone,
     };
     try {
-      await updateUserProfile(updatedUser, headers);
+      await updateUserProfile(updatedUser, token);
       Swal.fire({
         title: 'Éxito!',
         text: 'Datos actualizados correctamente.',
@@ -56,10 +75,10 @@ function ProfilePage() {
 
   const handleCancel = () => {
     setIsEditing(false);
-    setName(user.fullName);
-    setProfileImage(user.profileImage);
-    setAddress(user.address);
-    setPhone(user.phone);
+    setFullName(fullName); // Restore original values
+    setProfileImage(profileImage);
+    setAddress(address);
+    setPhone(phone);
   };
 
   const handleHistory = () => {
@@ -67,8 +86,8 @@ function ProfilePage() {
   };
 
   const handleLogout = () => {
-    setHeaders({});
     localStorage.removeItem('currentUserEmail');
+    localStorage.removeItem('currentUserId'); // También elimina el ID del localStorage
     Swal.fire({
       title: 'Sesión Cerrada',
       text: 'Has cerrado sesión.',
@@ -78,76 +97,49 @@ function ProfilePage() {
     window.location.href = '/login';
   };
 
-  const handlePhotoChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append('image', file);
-      try {
-        const newImage = await updateUserImage(id, formData, headers);
-        setProfileImage(newImage);
-      } catch (error) {
-        Swal.fire({
-          title: 'Error!',
-          text: 'No se pudo actualizar la imagen.',
-          icon: 'error',
-          confirmButtonText: 'Aceptar',
-        });
-      }
-    }
-  };
-
-  const handlePhotoClick = () => {
-    document.getElementById('photoInput').click();
-  };
-
   return (
     <main className="my-8">
       <div className="container mx-auto">
-        {user ? (
+        {id ? (
           <div className="bg-white p-6 rounded shadow-md">
             <h1 className="text-2xl font-bold mb-4">Perfil de Usuario</h1>
             <p className="mb-4">
-              <strong>Email:</strong> {user.email}
+              <strong>Email:</strong> {localStorage.getItem('currentUserEmail')}
             </p>
+
             <div className="mb-4 flex">
               <div
-                className="border border-gray-300 p-4 rounded flex items-center justify-center mr-4 relative cursor-pointer"
+                className="border border-gray-300 p-4 rounded flex items-center justify-center mr-4"
                 style={{ width: '100px', height: '100px' }}
-                onClick={handlePhotoClick}
               >
                 {profileImage ? (
                   <img
-                    crossOrigin="anonymous"
-                    src={`${BASE_URL}/${profileImage}`}
+                    src={profileImage}
                     alt="Perfil"
                     className="w-full h-full object-cover rounded"
                   />
                 ) : (
                   <span className="text-gray-400">👤</span>
                 )}
-                <input
-                  id="photoInput"
-                  type="file"
-                  accept="image/*"
-                  onChange={handlePhotoChange}
-                  style={{ display: 'none' }}
-                />
-                <span className="absolute inset-0 bg-black bg-opacity-50 text-white text-center opacity-0 hover:opacity-100 transition-opacity">
-                  Cambiar Foto
-                </span>
               </div>
-
               <input
                 type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
                 placeholder="Nombre de perfil"
                 className={`border p-2 w-full mb-2 rounded ${isEditing ? '' : 'bg-gray-200 cursor-not-allowed'}`}
                 disabled={!isEditing}
               />
             </div>
 
+            <input
+              type="text"
+              value={profileImage}
+              onChange={(e) => setProfileImage(e.target.value)}
+              placeholder="URL de la foto"
+              className={`border p-2 w-full mb-2 rounded ${isEditing ? '' : 'bg-gray-200 cursor-not-allowed'}`}
+              disabled={!isEditing}
+            />
             <input
               type="text"
               value={address}

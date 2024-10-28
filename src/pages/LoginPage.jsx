@@ -8,7 +8,7 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { setUser, setToken, setHeaders } = useCounter();
+  const { setUser, setToken } = useCounter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,38 +24,28 @@ function LoginPage() {
       return;
     }
 
-    try {
-      // Lógica de autenticación
-      const responseData = await authenticateUser(email, password);
-      const user = responseData.user;
-      const tokenId = responseData.token;
-      setToken(tokenId);
-      setHeaders({ Authorization: `Bearer ${tokenId}` });
+    // Lógica de autenticación
+    const responseData = await authenticateUser(email, password);
+    const user = responseData.user;
+    const tokenId = responseData.token;
+    setToken(tokenId);
 
-      if (user) {
-        localStorage.setItem('currentUserId', user.id); // Guarda el ID
-        localStorage.setItem('currentUserEmail', email);
-        Swal.fire({
-          title: 'Éxito!',
-          text: 'Inicio de sesión aceptado.',
-          icon: 'success',
-          confirmButtonText: 'Aceptar',
-        }).then(() => {
-          setUser(user);
-          navigate('/perfil');
-        });
-      } else {
-        Swal.fire({
-          title: 'Error!',
-          text: 'Usuario o contraseña incorrectos.',
-          icon: 'error',
-          confirmButtonText: 'Intentar de nuevo',
-        });
-      }
-    } catch (error) {
+    if (user) {
+      localStorage.setItem('currentUserId', user.id); // Guarda el ID
+      localStorage.setItem('currentUserEmail', email);
+      Swal.fire({
+        title: 'Éxito!',
+        text: 'Inicio de sesión aceptado.',
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+      }).then(() => {
+        setUser(user);
+        navigate('/perfil');
+      });
+    } else {
       Swal.fire({
         title: 'Error!',
-        text: 'Ocurrió un problema durante el inicio de sesión.',
+        text: 'Usuario o contraseña incorrectos.',
         icon: 'error',
         confirmButtonText: 'Intentar de nuevo',
       });

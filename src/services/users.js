@@ -62,6 +62,16 @@ export const getUserIdByEmail = async (email) => {
   }
 };
 
+export const getUserById = async (id) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/users/${id}`);
+    return response.data; // Devuelve el usuario completo
+  } catch (error) {
+    console.error('Error fetching user by ID:', error);
+    throw error; // Lanza el error para manejarlo donde llames a esta función
+  }
+};
+
 // Crear un nuevo usuario
 export const createUser = async (user) => {
   try {

@@ -39,10 +39,10 @@ function ProductsPage() {
         if (data) {
           setCategories(data);
         } else {
-          setError('Error al cargar los productos');
+          setError('Error al cargar las categorias');
         }
       } catch (err) {
-        setError('Error al cargar los productos');
+        setError('Error al cargar las categorias');
       } finally {
         setLoading(false); // Finaliza carga
       }

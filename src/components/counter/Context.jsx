@@ -8,6 +8,7 @@ const CounterContext = createContext();
 export const CounterProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const [userAdm, setUserAdm] = useState('');
+  const [token, setToken] = useState('');
   const [cartItems, setCartItems] = useState([]);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(
     () => localStorage.getItem('AdminLogueado') !== null,
@@ -46,9 +47,12 @@ export const CounterProvider = ({ children }) => {
     setAdminToken('');
   };
 
-  const loginUser = () => {
+  const loginUser = (email, id) => {
+    const user = { email, id };
+    setUser(user);
     setIsUserLoggedIn(true);
-    localStorage.setItem('currentUserEmail', 'true');
+    localStorage.setItem('currentUserEmail', email);
+    localStorage.setItem('currentUserId', id); // Asegúrate de guardar el ID también
   };
 
   const logoutUser = () => {
@@ -71,6 +75,7 @@ export const CounterProvider = ({ children }) => {
       logoutAdmin,
       loginUser,
       logoutUser,
+      setToken,
     }),
     [user, userAdm, cartItems, isAdminLoggedIn, isUserLoggedIn, adminToken],
   );

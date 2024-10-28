@@ -1,22 +1,19 @@
 import PropTypes from 'prop-types';
 import VerMas from './VerMas';
 import { useEffect, useState } from 'react';
-
 const IMAGES_URL = import.meta.env.VITE_IMAGES_URL; // Obtener la URL base desde el .env
 
 function ProductCard({ product, discounts }) {
   const [price, setPrice] = useState(product.price);
   const [promo, setPromo] = useState('');
-
   useEffect(() => {
     let updatedPrice = product.price;
     let discountPromo = '';
 
-    // Buscar el descuento basado en discountId
+    // Aplicar descuento basado en discountId
     const discount = discounts.find((d) => d.id === product.discountId);
-    if (discount && typeof discount.discount_amount === 'number') {
-      // Verificar que discount_amount es un número
-      updatedPrice *= 1 - discount.discount_amount; // Aplicar descuento
+    if (discount) {
+      updatedPrice *= 1 - discount.discount; // Aplicar descuento
       discountPromo = discount.description; // Usar la descripción del descuento
     }
 
@@ -27,8 +24,8 @@ function ProductCard({ product, discounts }) {
   // Manejo de la imagen
   const imageUrl =
     Array.isArray(product.images) && product.images.length > 0
-      ? `${IMAGES_URL}/${product.images[0].url}`
-      : 'ruta/por/defecto/o/placeholder.jpg'; // Imagen por defecto
+      ? IMAGES_URL + '/' + product.images[0].url
+      : '';
 
   return (
     <div className="border px-4 py-6 rounded-lg shadow-lg w-full mx-auto">
@@ -77,13 +74,13 @@ ProductCard.propTypes = {
       }),
     ).isRequired,
     price: PropTypes.number.isRequired,
-    discountId: PropTypes.string, // Puede ser opcional
+    discountId: PropTypes.string,
   }).isRequired,
   discounts: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       description: PropTypes.string.isRequired,
-      discount_amount: PropTypes.number, // Puede ser opcional
+      discount: PropTypes.number.isRequired,
     }),
   ).isRequired,
 };

@@ -6,12 +6,17 @@ import {
 } from 'react-bootstrap-icons';
 
 export default function CartItem({ item, onUpdateQuantity, onRemove }) {
-  const { id, title, price, image, quantity } = item;
+  const { id, finalPrice, title, price, image, quantity } = item;
 
   return (
     <article className="flex flex-row gap-5 px-3 py-4 relative md:py-5">
       <div className="h-24 overflow-hidden aspect-square flex justify-center items-center md:h-32">
-        <img className="h-auto max-h-full" src={image} alt={title} />
+        <img
+          className="h-auto max-h-full"
+          crossOrigin="anonymous"
+          src={image}
+          alt={title}
+        />
       </div>
       <div className="flex-grow flex flex-col md:flex-row justify-between">
         <div className="flex flex-col justify-between flex-grow">
@@ -20,12 +25,17 @@ export default function CartItem({ item, onUpdateQuantity, onRemove }) {
               {title}
             </h2>
             <p className="text-slate-700">
-              Precio: <span className="font-medium">${price.toFixed(2)}</span>
+              Precio inicial:{' '}
+              <span className="font-medium">${price.toFixed(2)}</span>
+            </p>
+            <p className="text-slate-700">
+              Precio final:{' '}
+              <span className="font-medium">${finalPrice.toFixed(2)}</span>
             </p>
             <p className="text-slate-800">
               Subtotal{' '}
               <span className="font-bold">
-                ${(price * quantity).toFixed(2)}
+                ${(finalPrice * quantity).toFixed(2)}
               </span>
             </p>
           </div>
@@ -57,6 +67,7 @@ CartItem.propTypes = {
   item: PropTypes.shape({
     id: PropTypes.number.isRequired, // Asegúrate de que sea un número
     title: PropTypes.string.isRequired,
+    finalPrice: PropTypes.number.isRequired,
     price: PropTypes.number.isRequired,
     image: PropTypes.string.isRequired,
     quantity: PropTypes.number.isRequired,

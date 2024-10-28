@@ -1,11 +1,16 @@
 import PropTypes from 'prop-types';
-//import { useCounter } from './counter/Context';
+import { useCounter } from './counter/Context';
 //import Swal from 'sweetalert2';
 
 export default function CartSummary({ subtotal, discounts }) {
+  const { user } = useCounter();
   //const { CartItems, setCartItems } = useCounter();
   const payment = () => {
-    console.log('pagado');
+    if (user && user.email) {
+      alert('Pagado');
+    } else {
+      alert('Debes iniciar sesión para realizar el pago.');
+    }
   };
 
   return (
