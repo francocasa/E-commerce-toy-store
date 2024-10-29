@@ -2,87 +2,144 @@ import axios from 'axios';
 
 const BASE_URL = import.meta.env.VITE_API_URL; // Obtener la URL base desde el .env
 
-export const consultaDatos = async () => {
-  const URL = `${BASE_URL}/categories`; // Construir la URL para las categorías
-  try {
-    const response = await axios.get(URL); // Usar Axios para realizar la solicitud
-    return response.data; // Axios ya convierte la respuesta a JSON
-  } catch (error) {
-    console.error('Error fetching categories:', error);
-    return []; // Retornar un arreglo vacío en caso de error
-  }
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('adminToken');
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`, // Agregar el token a los headers
+      'Content-Type': 'application/json',
+    },
+  };
 };
 
+// Función para consultar todas las categorías
 export const consultaCategories = async () => {
-  const URL = `${BASE_URL}/categories`; // Construir la URL para las categorías
+  const URL = `${BASE_URL}/categories`;
   try {
-    const response = await axios.get(URL); // Usar Axios para realizar la solicitud
-    return response.data; // Axios ya convierte la respuesta a JSON
+    const response = await axios.get(URL, getAuthHeaders());
+    return response.data;
   } catch (error) {
-    console.error('Error fetching categories:', error);
-    return []; // Retornar un arreglo vacío en caso de error
+    console.error(
+      'Error fetching categories:',
+      error.response?.data || error.message,
+    );
+    return [];
   }
 };
 
-// Función para consultar un categoria por ID
+// Función para consultar una categoría por ID
 export const consultaCategoriaPorId = async (id) => {
   const URL = `${BASE_URL}/categories/${id}`;
   try {
-    const response = await axios.get(URL);
-    return response.data; // Retornar los datos obtenidos
+    const response = await axios.get(URL, getAuthHeaders());
+    return response.data;
   } catch (error) {
-    console.error('Error fetching category:', error);
-    return null; // Retornar null en caso de error
+    console.error(
+      'Error fetching category:',
+      error.response?.data || error.message,
+    );
+    return null;
   }
 };
 
-// Función para agregar una nueva categoria
+// Función para consultar datos (si lo necesitas para otra página)
+export const consultaDatos = async () => {
+  const URL = `${BASE_URL}/categories`;
+  try {
+    const response = await axios.get(URL, getAuthHeaders());
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Error fetching data:',
+      error.response?.data || error.message,
+    );
+    return [];
+  }
+};
+
+// Función para agregar una nueva categoría
 export const agregarCategoria = async (categories) => {
   const URL = `${BASE_URL}/categories`;
   try {
-    const response = await axios.post(
-      URL,
-      {
-        ...categories,
-        image: categories.image[0].url, // Asegúrate de que la imagen esté en el formato correcto
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    );
-    return response.data; // Retornar la categoria agregado
+    const formData = new FormData();
+    formData.append('name', categories.name);
+    formData.append('description', categories.description);
+    formData.append('image', categories.image); // Asegúrate de que esto sea un archivo o una URL válida
+
+    const response = await axios.post(URL, formData, {
+      ...getAuthHeaders(),
+      'Content-Type': 'multipart/form-data', // Importante para subir archivos
+    });
+
+    return response.data;
   } catch (error) {
-    console.error('Error adding categories:', error);
-    return null; // Retornar null en caso de error
+    console.error(
+      'Error adding category:',
+      error.response?.data || error.message,
+    );
+    return null;
   }
 };
 
-// Función para editar un categoria existente
+// Función para editar una categoría existente
 export const editarCategoria = async (id, categoria) => {
   const URL = `${BASE_URL}/categories/${id}`;
   try {
-    const response = await axios.put(URL, categoria, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    const formData = new FormData();
+    formData.append('name', categoria.name);
+    formData.append('description', categoria.description);
+    if (categoria.image) {
+      formData.append('image', categoria.image); // Solo añadir si hay una nueva imagen
+    }
+
+    const response = await axios.put(URL, formData, {
+      ...getAuthHeaders(),
+      'Content-Type': 'multipart/form-data',
     });
-    return response.data; // Retornar el categoria editado
+
+    return response.data;
   } catch (error) {
-    console.error('Error editing categories:', error);
-    return null; // Retornar null en caso de error
+    console.error(
+      'Error editing category:',
+      error.response?.data || error.message,
+    );
+    return null;
   }
 };
 
-// Función para eliminar un categoria
+export const actualizarImagenCategoria = async (id, imageFile) => {
+  const URL = `${BASE_URL}/categories/${id}/image`;
+  const formData = new FormData();
+  formData.append('image', imageFile); // Asegúrate de que esto sea un objeto File
+
+  try {
+    const response = await axios.patch(URL, formData, {
+      headers: {
+        ...getAuthHeaders().headers,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data; // Retorna la respuesta deseada
+  } catch (error) {
+    console.error(
+      'Error updating category image:',
+      error.response?.data || error.message,
+    );
+    throw error;
+  }
+};
+
+// Función para eliminar una categoría
 export const eliminarCategoria = async (id) => {
   const URL = `${BASE_URL}/categories/${id}`;
   try {
-    await axios.delete(URL);
+    await axios.delete(URL, getAuthHeaders());
     return true; // Retornar true si se eliminó correctamente
   } catch (error) {
-    console.error('Error deleting category:', error);
+    console.error(
+      'Error deleting category:',
+      error.response?.data || error.message,
+    );
     return false; // Retornar false en caso de error
   }
 };

@@ -3,36 +3,14 @@ import { CartItem, CartSummary } from '../components';
 import { useCounter } from '../components/counter/Context';
 
 function CartPage() {
-  // const [cartItems, setCartItems] = useState([]);
   const { cartItems, setCartItems } = useCounter();
-
-  // useEffect(() => {
-  //   const storedCart = localStorage.getItem('Cart');
-  //   if (storedCart) {
-  //     const parsedCart = JSON.parse(storedCart);
-  //     const updatedCart = parsedCart.map((item) => ({
-  //       ...item,
-  //       id: Number(item.id), // Asegúrate de que id sea un número
-  //     }));
-  //     setCartItems(updatedCart);
-  //   }
-  // }, []);
 
   const calculateTotal = (product) => {
     let price = product.price;
 
-    // Aplicar descuentos
-    if (product.categoryPromo === 'Navidad') {
-      price *= 0.7;
-    }
-    if (product.categoryPromo === '3x2' && product.quantity % 3 === 0) {
-      price *= 0.66667;
-    }
-
     return price * product.quantity;
   };
 
-  console.log(cartItems);
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0,
@@ -41,15 +19,8 @@ function CartPage() {
   const discounts = cartItems.reduce((acc, item) => {
     let discount = 0;
 
-    // Cambia la lógica de discount a usar categoryId
-    if (item.categoryId === '2') {
-      // "Navidad"
-      discount += item.price * item.quantity * 0.3;
-    }
-    if (item.categoryId === '1' && item.quantity % 3 === 0) {
-      // "3x2"
-      discount += item.price * (item.quantity / 3);
-    }
+    discount += item.quantity * item.discount;
+
     return acc + discount;
   }, 0);
 

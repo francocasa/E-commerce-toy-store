@@ -8,6 +8,7 @@ import {
 } from '../services/products';
 import { AddToCart, ProductsSection } from '../components';
 import { useEffect, useState } from 'react';
+const IMAGES_URL = import.meta.env.VITE_IMAGES_URL; // Obtener la URL base desde el .env
 
 function DetailsProductPage() {
   const { id } = useParams();
@@ -64,21 +65,13 @@ function DetailsProductPage() {
     return <p className="text-center text-red-500">Producto no encontrado</p>;
 
   const imageUrl =
-    Array.isArray(product.image) && product.image.length > 0
-      ? product.image[0].url
+    Array.isArray(product.images) && product.images.length > 0
+      ? IMAGES_URL + '/' + product.images[0].url
       : '';
   const brand = brands.find((b) => b.id === product.brandId);
   const material = materials.find((m) => m.id === product.materialId);
   const category = categories.find((c) => c.id === product.categoryId);
   const discount = discounts.find((d) => d.id === product.discountId);
-
-  // Mensaje específico basado en el tipo de descuento
-  const discountMessage =
-    discount?.id === '1'
-      ? 'Lleva 03 juguetes por precio de 02'
-      : discount?.id === '2'
-        ? 'Por temporada navideña'
-        : `${(discount?.discount_amount * 100).toFixed(0)}% de descuento`;
 
   return (
     <main className="container mx-auto p-5 md:mt-8 lg:mt-10">
@@ -86,6 +79,7 @@ function DetailsProductPage() {
         <div className="flex justify-center items-center">
           {imageUrl ? (
             <img
+              crossOrigin="anonymous"
               src={imageUrl}
               alt={product.name}
               className="w-full h-64 object-contain md:h-72 lg:h-80"
@@ -98,7 +92,21 @@ function DetailsProductPage() {
         <div className="px-8 space-y-4 w-fit md:max-w-96">
           <div className="text-md">
             <h1 className="font-bold text-2xl">{product.name}</h1>
-            <p className="font-medium text-xl">${product.price.toFixed(2)}</p>
+
+            {discount === '' ? (
+              <p className="font-medium text-xl">${product.price.toFixed(2)}</p>
+            ) : (
+              <div className="text-gray-600 mb-3 flex gap-3 items-center h-7">
+                <p className="font-medium text-xl text-gray-400 line-through ">
+                  ${product.price.toFixed(2)}
+                </p>
+                <p className="font-medium text-xl">
+                  $
+                  {(product.price * (1 - product.discount.discount)).toFixed(2)}
+                </p>
+              </div>
+            )}
+
             <p className="my-3">{product.description}</p>
             <p className="mb-1">
               <strong>Marca:</strong> {brand ? brand.name : 'No disponible'}
@@ -118,11 +126,11 @@ function DetailsProductPage() {
             {product.discountId && discount ? (
               <div className="mt-4 border-t pt-4">
                 <h2 className="text-xl font-bold mb-2">PROMOCIÓN</h2>
-                <h3 className="text-lg font-bold mb-2">{discountMessage}</h3>
+                <h3 className="text-lg font-bold mb-2">
+                  {product.discount.description}
+                </h3>
                 <p className="text-md mb-2">
-                  {discount.id === '2'
-                    ? `Descuento del ${(discount.discount_amount * 100).toFixed(0)}%`
-                    : ''}
+                  {`Descuento del ${(product.discount.discount * 100).toFixed(0)}%`}
                 </p>
               </div>
             ) : null}

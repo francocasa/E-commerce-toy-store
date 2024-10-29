@@ -5,6 +5,7 @@ const CategoryFilter = ({
   selectedCategory,
   setSelectedCategory,
 }) => {
+  console.log(categories);
   return (
     <div className="mb-4">
       <label className="mr-2" htmlFor="category-select">
@@ -19,7 +20,7 @@ const CategoryFilter = ({
         <option value="">Todas</option>
         {categories.map((category) => (
           <option key={category.id} value={category.id}>
-            {category.name}
+            {category.description}
           </option>
         ))}
       </select>

@@ -3,7 +3,6 @@ import { consultaProductos, consultaDescuentos } from '../services/products'; //
 import { ProductCard, CategoryFilter } from '../components';
 
 function PromotionsPage() {
-  const categoriesPromo = ['Navidad', '3x2'];
   const [selectedCategoryPromo, setSelectedCategoryPromo] = useState('');
   const [promotions, setPromotions] = useState([]); // Estado para las promociones
   const [discounts, setDiscounts] = useState([]); // Estado para los descuentos
@@ -11,27 +10,43 @@ function PromotionsPage() {
   const [error, setError] = useState(null); // Estado de error
 
   useEffect(() => {
-    const fetchPromotions = async () => {
+    const fetchDiscounts = async () => {
       setLoading(true);
       try {
-        const products = await consultaProductos(); // Obtiene los productos
-        const discountsData = await consultaDescuentos(); // Obtiene los descuentos
-
-        console.log('Productos:', products); // Ver la respuesta de productos
-        console.log('Descuentos:', discountsData); // Ver la respuesta de descuentos
-
-        const filteredPromotions = products.filter(
-          (product) => product.discountId !== null, // Filtrar productos que tienen descuentos
-        );
-        setPromotions(filteredPromotions); // Guarda las promociones filtradas
-        setDiscounts(discountsData); // Guarda los descuentos
+        const data = await consultaDescuentos(); // Usa el servicio
+        if (data) {
+          setDiscounts(data);
+        } else {
+          setError('Error al cargar los descuentos');
+        }
       } catch (err) {
-        setError('Error al cargar promociones');
+        setError('Error al cargar los productos');
+      } finally {
+        setLoading(false); // Finaliza carga
       }
-      setLoading(false);
     };
 
-    fetchPromotions();
+    const fetchProductos = async () => {
+      setLoading(true);
+      try {
+        const data = await consultaProductos(); // Usa el servicio
+        if (data) {
+          const filteredPromotions = data.filter(
+            (product) => product.discountId !== null, // Filtrar productos que tienen descuentos
+          );
+          setPromotions(filteredPromotions); // Guarda las promociones filtradas
+        } else {
+          setError('Error al cargar los productos');
+        }
+      } catch (err) {
+        setError('Error al cargar los productos');
+      } finally {
+        setLoading(false); // Finaliza carga
+      }
+    };
+
+    fetchDiscounts();
+    fetchProductos();
   }, []);
 
   const filteredPromotions = promotions.filter((product) => {
@@ -54,7 +69,7 @@ function PromotionsPage() {
 
         <div className="mb-8">
           <CategoryFilter
-            categories={categoriesPromo}
+            categories={discounts}
             selectedCategory={selectedCategoryPromo}
             setSelectedCategory={setSelectedCategoryPromo}
           />

@@ -28,7 +28,7 @@ export const consultaProductoPorId = async (id) => {
 
 // Función para consultar todas las marcas
 export const consultaMarcas = async () => {
-  const URL = `${BASE_URL}/categories`; // Ajusta la ruta según tu API
+  const URL = `${BASE_URL}/brands`; // Ajusta la ruta según tu API
   try {
     const response = await axios.get(URL);
     return response.data; // Retornar los datos obtenidos
@@ -64,16 +64,16 @@ export const consultaCategories = async () => {
 
 // Función para consultar promociones
 export const consultaPromociones = async () => {
-  const URL = `${BASE_URL}/products`; // Asegúrate de que esta ruta sea correcta
+  const URL = `${BASE_URL}/discounts`; // Asegúrate de que esta ruta sea correcta
   try {
     const response = await axios.get(URL);
-    // Filtrar productos con discountId no nulo
+    // Filtrar productos con discountId no nulo y no vacío
     const promotions = response.data.filter(
-      (product) => product.discountId !== null,
+      (product) => product.discountId !== null && product.discountId !== '',
     );
     return promotions; // Retornar las promociones filtradas
   } catch (error) {
-    console.error('Error fetching promotions:', error);
+    console.error('Error fetching promotions:', error.message || error);
     return []; // Retornar un arreglo vacío en caso de error
   }
 };
@@ -93,19 +93,15 @@ export const consultaDescuentos = async () => {
 // Función para agregar un nuevo producto
 export const agregarProducto = async (producto) => {
   const URL = `${BASE_URL}/products`;
+  const token = localStorage.getItem('adminToken'); // Obtener el token
+
   try {
-    const response = await axios.post(
-      URL,
-      {
-        ...producto,
-        image: producto.image[0].url, // Asegúrate de que la imagen esté en el formato correcto
+    const response = await axios.post(URL, producto, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`, // Agregar el token
       },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    );
+    });
     return response.data; // Retornar el producto agregado
   } catch (error) {
     console.error('Error adding product:', error);
@@ -116,16 +112,19 @@ export const agregarProducto = async (producto) => {
 // Función para editar un producto existente
 export const editarProducto = async (id, producto) => {
   const URL = `${BASE_URL}/products/${id}`;
+  const token = localStorage.getItem('adminToken');
+
   try {
     const response = await axios.put(URL, producto, {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
     });
-    return response.data; // Retornar el producto editado
+    return response.data;
   } catch (error) {
-    console.error('Error editing product:', error);
-    return null; // Retornar null en caso de error
+    console.error('Error editing product:', error.response.data); // Imprime el error detallado
+    return null;
   }
 };
 

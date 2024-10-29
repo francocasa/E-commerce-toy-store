@@ -1,8 +1,9 @@
 import { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { consultaPromociones } from '../services/products'; // Importa la función de consulta
 
-const PromotionSection = () => {
+const PromotionSection = ({ selectedCategory }) => {
   const scrollRef = useRef(null); // Referencia al contenedor
   const navigate = useNavigate(); // Crea la instancia de navegación
   const [promotions, setPromotions] = useState([]); // Estado para las promociones
@@ -10,12 +11,21 @@ const PromotionSection = () => {
   useEffect(() => {
     const fetchPromotions = async () => {
       const data = await consultaPromociones(); // Usar la función del servicio
-      console.log('Promociones:', data); // Verificar la salida
-      setPromotions(data); // Guarda las promociones en el estado
+      console.log('Descuentos:', data); // Verificar la salida
+      setPromotions(data || []); // Guarda las promociones en el estado
     };
 
     fetchPromotions();
   }, []);
+
+  // Filtra las promociones según la categoría seleccionada
+  const filteredPromotions = selectedCategory
+    ? promotions.filter((promo) =>
+        promo.products.some(
+          (product) => product.categoryId === selectedCategory,
+        ),
+      )
+    : promotions;
 
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -46,30 +56,27 @@ const PromotionSection = () => {
           ref={scrollRef}
           className="flex space-x-4 overflow-x-scroll no-scrollbar p-2"
         >
-          {/* Mapear las promociones */}
-          {promotions.map((promo) => (
-            <div
-              key={promo.id}
-              className="min-w-[200px] sm:min-w-[250px] md:min-w-[300px] bg-white shadow-md p-4 rounded-md mx-auto"
-            >
-              <img
-                src={promo.image[0]?.url} // Accede al primer elemento del array de imágenes
-                alt={promo.name}
-                className="w-auto h-40 object-cover rounded-md mx-auto"
-              />
-              <h3 className="text-lg mt-2 font-medium text-center">
-                {promo.name} {/* Mostrar el nombre del producto */}
-              </h3>
-              <p className="text-gray-500 text-center">{promo.description}</p>{' '}
-              {/* Mostrar la descripción */}
-              <button
-                onClick={() => handleViewPromotion(promo.id)} // Cambia a un botón
-                className="text-blue-600 hover:underline block mx-auto"
+          {filteredPromotions.length > 0 ? (
+            filteredPromotions.map((promo) => (
+              <div
+                key={promo.id}
+                className="min-w-[200px] sm:min-w-[250px] md:min-w-[300px] bg-white shadow-md p-4 rounded-md mx-auto"
               >
-                Ver promoción
-              </button>
-            </div>
-          ))}
+                <h3 className="text-lg mt-2 font-medium text-center">
+                  {promo.description} - {Math.round((1 - promo.discount) * 100)}
+                  %
+                </h3>
+                <button
+                  onClick={() => handleViewPromotion(promo.id)}
+                  className="text-blue-600 hover:underline block mx-auto mt-2"
+                >
+                  Ver promoción
+                </button>
+              </div>
+            ))
+          ) : (
+            <p className="text-center">No hay promociones disponibles.</p>
+          )}
         </div>
 
         {/* Controles para desplazamiento */}
@@ -88,6 +95,11 @@ const PromotionSection = () => {
       </div>
     </section>
   );
+};
+
+// Validación de prop-types
+PromotionSection.propTypes = {
+  selectedCategory: PropTypes.string.isRequired,
 };
 
 export default PromotionSection;

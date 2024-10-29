@@ -5,6 +5,7 @@ import {
   eliminarCategoria,
   consultaCategoriaPorId,
   consultaCategories,
+  actualizarImagenCategoria,
 } from '../../services/categories';
 import Swal from 'sweetalert2';
 import Modal from 'react-modal';
@@ -14,24 +15,29 @@ Modal.setAppElement('#root');
 function DashboardCategories() {
   const [newCategory, setNewCategory] = useState({
     id: '',
-    title: '',
-    image: '',
+    name: '',
+    description: '',
+    image: '', // Cambiado a cadena vacía
   });
   const [categories, setCategories] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   useEffect(() => {
-    const fetchProductsAndBrands = async () => {
-      const fetchedCategories = await consultaCategories();
+    const fetchCategories = async () => {
+      const token = localStorage.getItem('adminToken');
+      if (!token) {
+        window.location.href = '/login';
+        return;
+      }
 
+      const fetchedCategories = await consultaCategories();
       setCategories(fetchedCategories);
     };
 
-    fetchProductsAndBrands();
+    fetchCategories();
   }, []);
 
   const handleDelete = async (id) => {
-    console.log('ingreso1');
     const result = await Swal.fire({
       title: '¿Confirma eliminar?',
       text: '¡Esta acción no se puede deshacer!',
@@ -45,13 +51,11 @@ function DashboardCategories() {
 
     if (result.isConfirmed) {
       const success = await eliminarCategoria(id);
-      console.log(success);
-      let t = true;
-      if (t) {
+      if (success) {
         setCategories(categories.filter((category) => category.id !== id));
-        Swal.fire('Eliminado!', 'La categoria ha sido eliminado.', 'success');
+        Swal.fire('Eliminado!', 'La categoría ha sido eliminada.', 'success');
       } else {
-        Swal.fire('Error', 'No se pudo eliminar la categoria.', 'error');
+        Swal.fire('Error', 'No se pudo eliminar la categoría.', 'error');
       }
     }
   };
@@ -59,58 +63,112 @@ function DashboardCategories() {
   const handleEdit = async (category) => {
     const categoryDetails = await consultaCategoriaPorId(category.id);
     if (categoryDetails) {
-      setNewCategory(categoryDetails);
+      setNewCategory({
+        id: categoryDetails.id,
+        name: categoryDetails.name,
+        description: categoryDetails.description || '',
+        image: categoryDetails.image || '',
+      });
     }
     setModalIsOpen(true);
   };
 
   const handleAddOrEditCategory = async () => {
-    const categoryData = {
-      ...newCategory,
-    };
+    const categoryData = { ...newCategory };
 
-    if (newCategory.id) {
-      const updatedCategory = await editarCategoria(
-        newCategory.id,
-        categoryData,
-      );
-      if (updatedCategory) {
-        setCategories(
-          categories.map((category) =>
-            category.id === newCategory.id ? updatedCategory : category,
-          ),
+    try {
+      if (newCategory.id) {
+        // Edición de categoría
+        const updatedCategory = await editarCategoria(
+          newCategory.id,
+          categoryData,
         );
-        Swal.fire('Éxito', 'Categoria editado correctamente.', 'success');
+        if (updatedCategory) {
+          setCategories(
+            categories.map((category) =>
+              category.id === newCategory.id ? updatedCategory : category,
+            ),
+          );
+          Swal.fire('Éxito', 'Categoría editada correctamente.', 'success');
+
+          // Actualizar la imagen si se proporciona
+          if (newCategory.image) {
+            const updatedImage = await actualizarImagenCategoria(
+              newCategory.id,
+              newCategory.image,
+            );
+            if (updatedImage) {
+              setCategories(
+                categories.map((category) =>
+                  category.id === newCategory.id
+                    ? { ...category, image: updatedImage.image }
+                    : category,
+                ),
+              );
+              Swal.fire(
+                'Éxito',
+                'Imagen actualizada correctamente.',
+                'success',
+              );
+            }
+          }
+        }
+      } else {
+        // Adición de categoría
+        const addedCategory = await agregarCategoria(categoryData);
+        if (addedCategory) {
+          setCategories([...categories, addedCategory]);
+          Swal.fire('Éxito', 'Categoría agregada correctamente.', 'success');
+
+          // Actualizar la imagen si se proporciona
+          if (newCategory.image) {
+            const updatedImage = await actualizarImagenCategoria(
+              addedCategory.id,
+              newCategory.image,
+            );
+            if (updatedImage) {
+              setCategories(
+                categories.map((category) =>
+                  category.id === addedCategory.id
+                    ? { ...category, image: updatedImage.image }
+                    : category,
+                ),
+              );
+              Swal.fire(
+                'Éxito',
+                'Imagen actualizada correctamente.',
+                'success',
+              );
+            }
+          }
+        }
       }
-    } else {
-      const addedCategory = await agregarCategoria(categoryData);
-      if (addedCategory) {
-        setCategories([...categories, addedCategory]);
-        Swal.fire('Éxito', 'Categoria agregado correctamente.', 'success');
-      }
+    } catch (error) {
+      console.error('Error en la operación:', error);
+      Swal.fire(
+        'Error',
+        'Ocurrió un problema al agregar/editar la categoría.',
+        'error',
+      );
     }
 
     handleCloseModal();
   };
 
   const handleCloseModal = () => {
-    setNewCategory({
-      id: '',
-      title: '',
-      image: '',
-    });
+    setNewCategory({ id: '', name: '', description: '', image: '' });
     setModalIsOpen(false);
   };
 
   return (
     <main className="container max-w-6xl mx-auto p-4 sm:p-6 md:p-8 lg:p-10">
-      <h2 className="text-2xl font-bold mb-4 ml-4">Categorias</h2>
+      <h2 className="text-2xl font-bold mb-4 ml-4">Categorías</h2>
 
       <button
         onClick={() => setModalIsOpen(true)}
         className="bg-blue-500 text-white py-2 px-4 rounded shadow mb-4"
       >
-        Agregar Nueva Categoria
+        Agregar Nueva Categoría
       </button>
 
       <table className="min-w-full border">
@@ -118,7 +176,7 @@ function DashboardCategories() {
           <tr>
             <th className="border p-2">Item</th>
             <th className="border p-2">Nombre</th>
-            <th className="border p-2">Imagen</th>
+            <th className="border p-2">Descripción</th>
             <th className="border p-2">Acciones</th>
           </tr>
         </thead>
@@ -126,8 +184,10 @@ function DashboardCategories() {
           {categories.map((category, index) => (
             <tr key={category.id}>
               <td className="border p-2">{index + 1}</td>
-              <td className="border p-2">{category.title}</td>
-              <td className="border p-2">{category.image}</td>
+              <td className="border p-2">{category.name}</td>
+              <td className="border p-2">
+                {category.description || 'Sin descripción'}
+              </td>
               <td className="border p-2">
                 <button
                   onClick={() => handleEdit(category)}
@@ -146,30 +206,38 @@ function DashboardCategories() {
           ))}
         </tbody>
       </table>
+
       <Modal isOpen={modalIsOpen} onRequestClose={handleCloseModal}>
         <h3 className="text-xl mb-2 mt-10">
-          {newCategory.id ? 'Editar Categoria' : 'Agregar Nueva Categoria'}
+          {newCategory.id ? 'Editar Categoría' : 'Agregar Nueva Categoría'}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input
             type="text"
-            placeholder="Nombre de la categoria"
-            value={newCategory.title}
+            placeholder="Nombre de la categoría"
+            value={newCategory.name}
             onChange={(e) =>
-              setNewCategory({ ...newCategory, title: e.target.value })
+              setNewCategory({ ...newCategory, name: e.target.value })
             }
             className="border p-2 rounded"
           />
           <input
             type="text"
-            placeholder="URL de la imagen"
-            value={newCategory.image || ''} // Manejar caso vacío
+            placeholder="Descripción de la categoría"
+            value={newCategory.description}
             onChange={(e) =>
-              setNewCategory({
-                ...newCategory,
-                image: e.target.value,
-              })
+              setNewCategory({ ...newCategory, description: e.target.value })
             }
+            className="border p-2 rounded"
+          />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              if (e.target.files.length > 0) {
+                setNewCategory({ ...newCategory, image: e.target.files[0] }); // Guardar el archivo
+              }
+            }}
             className="border p-2 rounded"
           />
         </div>
@@ -178,7 +246,7 @@ function DashboardCategories() {
             onClick={handleAddOrEditCategory}
             className="bg-blue-500 text-white py-2 px-4 rounded"
           >
-            {newCategory.id ? 'Actualizar Categoria' : 'Agregar Categoria'}
+            {newCategory.id ? 'Actualizar Categoría' : 'Agregar Categoría'}
           </button>
           <button
             onClick={handleCloseModal}
