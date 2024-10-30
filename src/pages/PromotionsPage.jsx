@@ -55,7 +55,8 @@ function PromotionsPage() {
     }
     return (
       selectedCategoryPromo === '' ||
-      product.discountId === (selectedCategoryPromo === 'Navidad' ? '2' : '1')
+      // product.discountId === (selectedCategoryPromo === 'Navidad' ? '2' : '1')
+      product.discountId === selectedCategoryPromo
     );
   });
 
