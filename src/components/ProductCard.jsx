@@ -13,6 +13,8 @@ function ProductCard({ product, discounts }) {
     // Aplicar descuento basado en discountId
     const discount = discounts.find((d) => d.id === product.discountId);
     if (discount) {
+      console.log('pro');
+      console.log(discount);
       updatedPrice *= 1 - discount.discount; // Aplicar descuento
       discountPromo = discount.description; // Usar la descripción del descuento
     }
