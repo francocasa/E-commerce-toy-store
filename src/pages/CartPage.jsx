@@ -3,7 +3,7 @@ import { CartItem, CartSummary } from '../components';
 import { useCounter } from '../components/counter/Context';
 
 function CartPage() {
-  const { cartItems, updateCart } = useCounter();
+  const { cartItems, updateCartItem, deleteCartItem } = useCounter();
 
   const calculateTotal = (product) => {
     let price = product.price;
@@ -29,16 +29,16 @@ function CartPage() {
   const updateQuantity = (id, quantity) => {
     const updatedCart = cartItems.map((item) => {
       if (item.id === id) {
+        updateCartItem(item, quantity);
         return { ...item, quantity: Math.max(1, quantity) };
       }
       return item;
     });
-    updateCart(updatedCart);
   };
 
   const removeItem = (id) => {
     const updatedCart = cartItems.filter((item) => item.id !== id);
-    updateCart(updatedCart);
+    deleteCartItem(updatedCart);
   };
 
   return (

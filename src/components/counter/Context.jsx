@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
+import { addCartItemDB, updateCartItem } from '../../services/cart';
 
 // Crear el contexto
 const CounterContext = createContext();
@@ -7,6 +8,7 @@ const CounterContext = createContext();
 // Crear un Provider que envuelva a los componentes
 export const CounterProvider = ({ children }) => {
   const [user, setUser] = useState({});
+  const [userCart, setUserCart] = useState({});
   const [userAdm, setUserAdm] = useState('');
   const [token, setToken] = useState('');
   const [cartItems, setCartItems] = useState([]);
@@ -60,7 +62,45 @@ export const CounterProvider = ({ children }) => {
     setIsUserLoggedIn(false);
   };
 
-  const updateCart = (updatedCart) => {
+  const updateCartItem = async (item, quantity) => {
+    try {
+      let response;
+      response = await updateCartItemDB(item, quantity, token);
+      updateLocalCart(item);
+    } catch (error) {
+      console.error('Error al actualizar un item:', error);
+      Swal.fire(
+        'Error',
+        error.response?.data?.details[0]?.message ||
+          'Ocurrió un error inesperado.',
+        'error',
+      );
+    }
+  };
+
+  const deleteCartItem = (updatedCart) => {
+    updateLocalCart(updatedCart);
+  };
+
+  const addCartItem = async (item) => {
+    try {
+      let response;
+      response = await addCartItemDB(userCart, item[item.length - 1], token);
+      item[item.length - 1].idItemCart = response.id;
+      updateLocalCart(item);
+    } catch (error) {
+      console.error('Error al agregar un item:', error);
+      Swal.fire(
+        'Error',
+        error.response?.data?.details[0]?.message ||
+          'Ocurrió un error inesperado.',
+        'error',
+      );
+    }
+  };
+
+  // falta arreglar
+  const updateLocalCart = (updatedCart) => {
     setCartItems(updatedCart);
     localStorage.setItem('Cart', JSON.stringify(updatedCart));
   };
@@ -81,7 +121,11 @@ export const CounterProvider = ({ children }) => {
       loginUser,
       logoutUser,
       setToken,
-      updateCart,
+      updateCartItem,
+      deleteCartItem,
+      addCartItem,
+      updateLocalCart,
+      setUserCart,
     }),
     [user, userAdm, cartItems, isAdminLoggedIn, isUserLoggedIn, adminToken],
   );

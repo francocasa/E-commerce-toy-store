@@ -5,8 +5,6 @@ const CategoryFilter = ({
   selectedCategory,
   setSelectedCategory,
 }) => {
-  console.log(categories);
-  console.log(selectedCategory);
   return (
     <div className="mb-4">
       <label className="mr-2" htmlFor="category-select">

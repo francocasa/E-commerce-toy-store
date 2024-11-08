@@ -7,7 +7,7 @@ const IMAGES_URL = import.meta.env.VITE_IMAGES_URL; // Obtener la URL base desde
 
 export default function AddToCart({ product }) {
   const [quantity, setQuantity] = useState(1);
-  const { setCartItems } = useCounter();
+  const { updateCartItem, addCartItem } = useCounter();
   const imageUrl =
     Array.isArray(product.images) && product.images.length > 0
       ? IMAGES_URL + '/' + product.images[0].url
@@ -16,7 +16,6 @@ export default function AddToCart({ product }) {
   const addToCart = () => {
     const existingCart = JSON.parse(localStorage.getItem('Cart')) || [];
     const existingProduct = existingCart.find((item) => item.id === product.id); // Comparar por id como string
-    console.log('1');
     if (existingProduct) {
       // Aumentar la cantidad del producto existente
       existingProduct.quantity += quantity;
@@ -25,6 +24,7 @@ export default function AddToCart({ product }) {
         text: 'Has actualizado la cantidad para la compra',
         icon: 'info',
       });
+      updateCartItem(existingCart);
     } else {
       let finalPrice = product.price;
       let discount = 0;
@@ -49,9 +49,8 @@ export default function AddToCart({ product }) {
         text: 'Se añadió el producto al carrito',
         icon: 'success',
       });
+      addCartItem(existingCart);
     }
-    setCartItems(existingCart);
-    localStorage.setItem('Cart', JSON.stringify(existingCart));
   };
 
   return (
