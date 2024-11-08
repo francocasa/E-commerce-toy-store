@@ -60,6 +60,11 @@ export const CounterProvider = ({ children }) => {
     setIsUserLoggedIn(false);
   };
 
+  const updateCart = (updatedCart) => {
+    setCartItems(updatedCart);
+    localStorage.setItem('Cart', JSON.stringify(updatedCart));
+  };
+
   const store = useMemo(
     () => ({
       user,
@@ -76,6 +81,7 @@ export const CounterProvider = ({ children }) => {
       loginUser,
       logoutUser,
       setToken,
+      updateCart,
     }),
     [user, userAdm, cartItems, isAdminLoggedIn, isUserLoggedIn, adminToken],
   );

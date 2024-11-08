@@ -3,7 +3,7 @@ import { CartItem, CartSummary } from '../components';
 import { useCounter } from '../components/counter/Context';
 
 function CartPage() {
-  const { cartItems, setCartItems } = useCounter();
+  const { cartItems, updateCart } = useCounter();
 
   const calculateTotal = (product) => {
     let price = product.price;
@@ -33,14 +33,12 @@ function CartPage() {
       }
       return item;
     });
-    setCartItems(updatedCart);
-    localStorage.setItem('Cart', JSON.stringify(updatedCart));
+    updateCart(updatedCart);
   };
 
   const removeItem = (id) => {
     const updatedCart = cartItems.filter((item) => item.id !== id);
-    setCartItems(updatedCart);
-    localStorage.setItem('Cart', JSON.stringify(updatedCart));
+    updateCart(updatedCart);
   };
 
   return (
