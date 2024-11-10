@@ -54,7 +54,11 @@ function DashboardBrands() {
       setDisabledBrands(fetchedDisabledBrands);
       setModalDisabledIsOpen(true);
     } catch (error) {
-      Swal.fire('Error', 'No se pudieron cargar las marcas deshabilitadas.', 'error');
+      Swal.fire(
+        'Error',
+        'No se pudieron cargar las marcas deshabilitadas.',
+        'error',
+      );
     }
   };
 
@@ -70,7 +74,13 @@ function DashboardBrands() {
       try {
         await habilitarMarca(id, headers); // Habilitar la marca
         setDisabledBrands(disabledBrands.filter((brand) => brand.id !== id)); // Eliminarla de la lista de deshabilitadas
-        setBrands([...brands, { ...disabledBrands.find((brand) => brand.id === id), isDeleted: false }]); // Agregarla a la lista de activas
+        setBrands([
+          ...brands,
+          {
+            ...disabledBrands.find((brand) => brand.id === id),
+            isDeleted: false,
+          },
+        ]); // Agregarla a la lista de activas
         Swal.fire('Habilitada!', 'La marca ha sido habilitada.', 'success');
       } catch (error) {
         Swal.fire('Error', 'No se pudo habilitar la marca.', 'error');
@@ -84,6 +94,10 @@ function DashboardBrands() {
       text: '¡Esta acción la hará invisible en el listado!',
       icon: 'warning',
       showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Deshabilitar',
+      cancelButtonText: 'Cancelar',
     });
 
     if (result.isConfirmed) {
@@ -165,26 +179,30 @@ function DashboardBrands() {
           </tr>
         </thead>
         <tbody>
-          {brands.map((brand) => (
-            <tr key={brand.id}>
-              <td className="border p-2">{brand.name}</td>
-              <td className="border p-2">{brand.description || 'Sin descripción'}</td>
-              <td className="border p-2">
-                <button
-                  onClick={() => handleEdit(brand)}
-                  className="bg-yellow-500 text-white py-1 px-2 rounded mr-2"
-                >
-                  Modificar
-                </button>
-                <button
-                  onClick={() => handleDeactivate(brand.id)} // Función de desactivación
-                  className="bg-red-500 text-white py-1 px-2 rounded"
-                >
-                  Deshabilitar
-                </button>
-              </td>
-            </tr>
-          ))}
+          {brands
+            .sort((a, b) => a.name.localeCompare(b.name)) // Ordena por el atributo "name" de A a Z
+            .map((brand) => (
+              <tr key={brand.id}>
+                <td className="border p-2">{brand.name}</td>
+                <td className="border p-2">
+                  {brand.description || 'Sin descripción'}
+                </td>
+                <td className="border p-2">
+                  <button
+                    onClick={() => handleEdit(brand)}
+                    className="bg-yellow-500 text-white py-1 px-2 rounded mr-2"
+                  >
+                    Modificar
+                  </button>
+                  <button
+                    onClick={() => handleDeactivate(brand.id)} // Función de desactivación
+                    className="bg-red-500 text-white py-1 px-2 rounded"
+                  >
+                    Deshabilitar
+                  </button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
 
@@ -204,7 +222,9 @@ function DashboardBrands() {
             type="text"
             placeholder="Descripción"
             value={newBrand.description}
-            onChange={(e) => setNewBrand({ ...newBrand, description: e.target.value })}
+            onChange={(e) =>
+              setNewBrand({ ...newBrand, description: e.target.value })
+            }
             className="border p-2 rounded"
           />
         </div>
@@ -224,32 +244,34 @@ function DashboardBrands() {
         </div>
       </Modal>
 
-      <Modal isOpen={modalDisabledIsOpen} onRequestClose={() => setModalDisabledIsOpen(false)}>
-  <h3 className="text-xl mb-2 mt-10">Marcas Deshabilitadas</h3>
-  <div className="grid grid-cols-1 gap-4">
-    {disabledBrands.map((brand) => (
-      <div key={brand.id} className="flex justify-between">
-        <span>{brand.name}</span>
-        <button
-          onClick={() => handleEnable(brand.id)} // Función para habilitar marca
-          className="bg-green-500 text-white py-1 px-2 rounded"
-        >
-          Habilitar
-        </button>
-      </div>
-    ))}
-  </div>
-  {/* Botón Cerrar */}
-  <div className="mt-4">
-    <button
-      onClick={() => setModalDisabledIsOpen(false)} // Cerrar el modal
-      className="bg-gray-500 text-white py-2 px-4 rounded"
-    >
-      Cerrar
-    </button>
-  </div>
-</Modal>
-
+      <Modal
+        isOpen={modalDisabledIsOpen}
+        onRequestClose={() => setModalDisabledIsOpen(false)}
+      >
+        <h3 className="text-xl mb-2 mt-10">Marcas Deshabilitadas</h3>
+        <div className="grid grid-cols-1 gap-4">
+          {disabledBrands.map((brand) => (
+            <div key={brand.id} className="flex justify-between">
+              <span>{brand.name}</span>
+              <button
+                onClick={() => handleEnable(brand.id)} // Función para habilitar marca
+                className="bg-green-500 text-white py-1 px-2 rounded"
+              >
+                Habilitar
+              </button>
+            </div>
+          ))}
+        </div>
+        {/* Botón Cerrar */}
+        <div className="mt-4">
+          <button
+            onClick={() => setModalDisabledIsOpen(false)} // Cerrar el modal
+            className="bg-gray-500 text-white py-2 px-4 rounded"
+          >
+            Cerrar
+          </button>
+        </div>
+      </Modal>
     </main>
   );
 }

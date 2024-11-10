@@ -58,9 +58,9 @@ export const agregarMarca = async (marca) => {
         Authorization: `Bearer ${token}`, // Agregar el token
       },
     });
-    return response.data; // Retornar la marca agregada
+    return response.data; // Retornar el material agregado
   } catch (error) {
-    console.error('Error adding brand:', error);
+    console.error('Error adding brands:', error);
     return null; // Retornar null en caso de error
   }
 };

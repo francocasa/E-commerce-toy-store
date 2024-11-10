@@ -3,7 +3,10 @@ import {
   agregarDescuento,
   modificarDescuento,
   eliminarDescuento,
-  consultaDescuentos,
+  consultaDescuentosHabilitados,
+  consultaDescuentosInhabilitados,
+  habilitarDescuento,
+  inhabilitarDescuento,
 } from '../../services/discounts';
 import Swal from 'sweetalert2';
 import Modal from 'react-modal';
@@ -11,28 +14,50 @@ import Modal from 'react-modal';
 Modal.setAppElement('#root');
 
 function DashboardDiscounts() {
-  const [discounts, setDiscounts] = useState([]);
+  const [discounts, setDiscounts] = useState([]); // Descuentos habilitados
+  const [disabledDiscounts, setDisabledDiscounts] = useState([]); // Descuentos inhabilitados
   const [newDiscount, setNewDiscount] = useState({
     id: '',
     description: '',
-    discount: 0,
+    discount: 0, // Valor del descuento en porcentaje
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [enableModalIsOpen, setEnableModalIsOpen] = useState(false); // Modal para habilitar descuentos
 
   useEffect(() => {
     const fetchDiscounts = async () => {
-      const fetchedDiscounts = await consultaDescuentos();
+      const fetchedDiscounts = await consultaDescuentosHabilitados();
       setDiscounts(fetchedDiscounts);
+      const fetchedDisabledDiscounts = await consultaDescuentosInhabilitados();
+      setDisabledDiscounts(fetchedDisabledDiscounts);
     };
 
     fetchDiscounts();
   }, []);
 
   const handleAddOrEditDiscount = async () => {
-    const adjustedDiscount = newDiscount.discount / 100; // Ajustar a formato decimal
-    const discountToSubmit = { ...newDiscount, discount: adjustedDiscount };
+    const discountValue = Number(newDiscount.discount); // Convierte a número
 
+    if (isNaN(discountValue)) {
+      Swal.fire(
+        'Error',
+        'El valor del descuento debe ser un número válido.',
+        'error',
+      );
+      return;
+    }
+
+    // Ajustar el descuento como número (porcentaje)
+    const adjustedDiscount = discountValue / 100; // Convertir porcentaje a decimal
+
+    const discountToSubmit = {
+      ...newDiscount,
+      discount: adjustedDiscount,
+    };
+
+    // Comprobar si tiene ID para editar o crear
     if (newDiscount.id) {
+      // Modificar descuento
       const updatedDiscount = await modificarDescuento(
         newDiscount.id,
         discountToSubmit,
@@ -44,6 +69,7 @@ function DashboardDiscounts() {
       );
       Swal.fire('Éxito', 'Descuento actualizado correctamente.', 'success');
     } else {
+      // Agregar nuevo descuento
       const addedDiscount = await agregarDescuento(discountToSubmit);
       setDiscounts([...discounts, addedDiscount]);
       Swal.fire('Éxito', 'Descuento agregado correctamente.', 'success');
@@ -53,45 +79,82 @@ function DashboardDiscounts() {
   };
 
   const handleEdit = (discount) => {
-    setNewDiscount({ ...discount, discount: discount.discount * 100 }); // Convertir a porcentaje
+    setNewDiscount({ ...discount, discount: discount.discount * 100 }); // Convertir el decimal a porcentaje para editar
     setModalIsOpen(true);
   };
 
-  const handleDelete = async (id) => {
+  const handleDisable = async (id) => {
     const result = await Swal.fire({
-      title: '¿Confirma eliminar?',
-      text: '¡Esta acción no se puede deshacer!',
+      title: '¿Confirma deshabilitar?',
+      text: '¡Esta acción la hará invisible en el listado!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Eliminar',
+      confirmButtonText: 'Deshabilitar',
       cancelButtonText: 'Cancelar',
     });
 
     if (result.isConfirmed) {
-      await eliminarDescuento(id);
+      await inhabilitarDescuento(id);
       setDiscounts(discounts.filter((discount) => discount.id !== id));
-      Swal.fire('Eliminado!', 'El descuento ha sido eliminado.', 'success');
+      Swal.fire(
+        'Deshabilitado!',
+        'El descuento ha sido deshabilitado.',
+        'success',
+      );
+    }
+  };
+
+  const handleEnableDiscount = async (id) => {
+    const result = await Swal.fire({
+      title: '¿Confirma habilitar?',
+      text: '¡Esta acción reactivará el descuento!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#28a745',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Habilitar',
+      cancelButtonText: 'Cancelar',
+    });
+
+    if (result.isConfirmed) {
+      const reactivatedDiscount = await habilitarDescuento(id);
+      setDiscounts([...discounts, reactivatedDiscount]);
+      setDisabledDiscounts(
+        disabledDiscounts.filter((discount) => discount.id !== id),
+      );
+      Swal.fire('Habilitado!', 'El descuento ha sido habilitado.', 'success');
     }
   };
 
   const handleCloseModal = () => {
-    setNewDiscount({ id: '', description: '', discount: 0 });
+    setNewDiscount({ id: '', description: '', discount: 0 }); // Resetear formulario
     setModalIsOpen(false);
   };
 
   return (
     <main className="container max-w-6xl mx-auto p-4 sm:p-6 md:p-8 lg:p-10">
       <h2 className="text-2xl font-bold mb-4">Descuentos</h2>
-      <button
-        onClick={() => setModalIsOpen(true)}
-        className="bg-blue-500 text-white py-2 px-4 rounded shadow mb-4"
-      >
-        Agregar Nuevo Descuento
-      </button>
 
-      <table className="min-w-full border">
+      {/* Botones para agregar descuento y habilitar descuentos */}
+      <div className="flex mb-4">
+        <button
+          onClick={() => setModalIsOpen(true)}
+          className="bg-blue-500 text-white py-2 px-4 rounded shadow mr-4"
+        >
+          Agregar Nuevo Descuento
+        </button>
+        <button
+          onClick={() => setEnableModalIsOpen(true)}
+          className="bg-green-500 text-white py-2 px-4 rounded shadow"
+        >
+          Habilitar Descuentos
+        </button>
+      </div>
+
+      {/* Tabla de descuentos habilitados */}
+      <table className="min-w-full border mb-6">
         <thead>
           <tr>
             <th className="border p-2">Descripción</th>
@@ -100,31 +163,66 @@ function DashboardDiscounts() {
           </tr>
         </thead>
         <tbody>
-          {discounts.map((discount) => (
-            <tr key={discount.id}>
-              <td className="border p-2">{discount.description}</td>
-              <td className="border p-2">
-                {(discount.discount * 100).toFixed(2)}%
-              </td>
-              <td className="border p-2">
-                <button
-                  onClick={() => handleEdit(discount)}
-                  className="bg-yellow-500 text-white py-1 px-2 rounded"
-                >
-                  Modificar
-                </button>
-                <button
-                  onClick={() => handleDelete(discount.id)}
-                  className="bg-red-500 text-white py-1 px-2 rounded ml-2"
-                >
-                  Eliminar
-                </button>
-              </td>
-            </tr>
-          ))}
+          {discounts
+            .filter((discount) => discount && discount.description) // Aseguramos que no sea null ni undefined
+            .sort((a, b) => a.description.localeCompare(b.description)) // Ordenamos por descripción
+            .map((discount) => (
+              <tr key={discount.id}>
+                <td className="border p-2">{discount.description}</td>
+                <td className="border p-2">
+                  {(discount.discount * 100).toFixed(2)}%
+                </td>
+                <td className="border p-2">
+                  <button
+                    onClick={() => handleEdit(discount)}
+                    className="bg-yellow-500 text-white py-1 px-2 rounded"
+                  >
+                    Modificar
+                  </button>
+                  {/* Botón para deshabilitar */}
+                  <button
+                    onClick={() => handleDisable(discount.id)}
+                    className="bg-red-500 text-white py-1 px-2 rounded ml-2"
+                  >
+                    Deshabilitar
+                  </button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
 
+      {/* Modal de habilitar descuentos */}
+      <Modal
+        isOpen={enableModalIsOpen}
+        onRequestClose={() => setEnableModalIsOpen(false)}
+      >
+        <h3 className="text-xl mb-2 mt-10">Descuentos Inhabilitados</h3>
+        <ul>
+          {disabledDiscounts.map((discount) => (
+            <li
+              key={discount.id}
+              className="mb-2 flex justify-between items-center"
+            >
+              <span>{discount.description}</span>
+              <button
+                onClick={() => handleEnableDiscount(discount.id)}
+                className="bg-green-500 text-white py-1 px-2 rounded"
+              >
+                Habilitar
+              </button>
+            </li>
+          ))}
+        </ul>
+        <button
+          onClick={() => setEnableModalIsOpen(false)}
+          className="bg-gray-500 text-white py-2 px-4 rounded mt-4"
+        >
+          Cerrar
+        </button>
+      </Modal>
+
+      {/* Modal para agregar/editar descuento */}
       <Modal isOpen={modalIsOpen} onRequestClose={handleCloseModal}>
         <h3 className="text-xl mb-2 mt-10">
           {newDiscount.id ? 'Editar Descuento' : 'Agregar Nuevo Descuento'}
@@ -143,10 +241,10 @@ function DashboardDiscounts() {
             <input
               type="number"
               placeholder="Descuento (%)"
-              value={newDiscount.discount || ''} // Asegúrate de que sea una cadena vacía si no hay valor
+              value={newDiscount.discount || ''}
               onChange={(e) =>
                 setNewDiscount({ ...newDiscount, discount: e.target.value })
-              } // Mantén el valor como cadena
+              }
               className="border p-2 rounded w-1/2"
               min="0"
             />

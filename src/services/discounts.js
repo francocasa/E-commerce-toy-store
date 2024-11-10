@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const BASE_URL = import.meta.env.VITE_API_URL; // Obtener la URL base desde el .env
 
@@ -102,19 +103,57 @@ export const consultaDescuentos = async () => {
 
 // Función para agregar un nuevo descuento
 export const agregarDescuento = async (descuento) => {
-  const URL = `${BASE_URL}/discounts`;
-  const token = localStorage.getItem('adminToken'); // Obtener el token
+  const URL = `${BASE_URL}/discounts`; // URL de la API para agregar descuentos
+  const token = localStorage.getItem('adminToken'); // Obtener el token de autenticación desde localStorage
+
+  // Verificar que el token esté presente
+  if (!token) {
+    Swal.fire(
+      'Error',
+      'No se ha encontrado el token de autenticación.',
+      'error',
+    );
+    return null;
+  }
+
+  // Extraer los campos que necesitas
+  const { description, discount } = descuento; // Solo description y discount son necesarios
+
+  // Crear el objeto a enviar al backend
+  const discountToSubmit = {
+    description, // Descripción del descuento
+    discount, // El valor del descuento (en formato decimal, por ejemplo 0.3 para 30%)
+  };
+
+  // Hacer log del cuerpo del request
+  console.log('Cuerpo del request:', discountToSubmit);
 
   try {
-    const response = await axios.post(URL, descuento, {
+    const response = await axios.post(URL, discountToSubmit, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`, // Agregar el token
+        Authorization: `Bearer ${token}`, // Agregar el token en el encabezado de la petición
       },
     });
-    return response.data; // Retornar el descuento agregado
+
+    // Verificar si la respuesta fue exitosa (código HTTP 201)
+    if (response.status === 201) {
+      if (response.data && response.data.id) {
+        return response.data; // Retornar el descuento agregado
+      } else {
+        throw new Error('La respuesta no contiene datos válidos');
+      }
+    } else {
+      throw new Error('Error en la creación del descuento');
+    }
   } catch (error) {
-    console.error('Error adding discount:', error);
+    console.error('Error agregando el descuento:', error);
+    // Mostrar un mensaje de error al usuario
+    Swal.fire(
+      'Error',
+      'No se pudo agregar el descuento. Intenta nuevamente.',
+      'error',
+    );
     return null; // Retornar null en caso de error
   }
 };

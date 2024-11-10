@@ -22,11 +22,9 @@ function ProductCard({ product, discounts }) {
     setPrice(updatedPrice);
     setPromo(discountPromo);
   }, [product, discounts]);
-
-  // Manejo de la imagen
   const imageUrl =
     Array.isArray(product.images) && product.images.length > 0
-      ? IMAGES_URL + '/' + product.images[0].url
+      ? `${import.meta.env.VITE_IMAGES_URL}${product.images[0].url}` // Usar la variable de entorno VITE_IMAGES_URL
       : '';
 
   return (
