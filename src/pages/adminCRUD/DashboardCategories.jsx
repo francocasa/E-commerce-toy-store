@@ -6,9 +6,13 @@ import {
   consultaCategoriaPorId,
   consultaCategories,
   actualizarImagenCategoria,
+  desactivarCategoria, // Importar la función desactivarCategoria
+  consultaCategoriasInhabilitadas, // Importar la función consultaCategoriasInhabilitadas
+  habilitarCategoria, // Importar la función habilitarCategoria
 } from '../../services/categories';
 import Swal from 'sweetalert2';
 import Modal from 'react-modal';
+const apiUrl = import.meta.env.VITE_IMAGES_URL;
 
 Modal.setAppElement('#root');
 
@@ -20,7 +24,9 @@ function DashboardCategories() {
     image: '', // Cambiado a cadena vacía
   });
   const [categories, setCategories] = useState([]);
+  const [inactiveCategories, setInactiveCategories] = useState([]); // Nueva variable para categorías inhabilitadas
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalEnableIsOpen, setModalEnableIsOpen] = useState(false); // Modal para habilitar categorías
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -37,25 +43,65 @@ function DashboardCategories() {
     fetchCategories();
   }, []);
 
-  const handleDelete = async (id) => {
+  // Cargar categorías inhabilitadas cuando se abre el modal de habilitación
+  const fetchInactiveCategories = async () => {
+    const fetchedInactiveCategories = await consultaCategoriasInhabilitadas();
+    setInactiveCategories(fetchedInactiveCategories);
+  };
+
+  // Función para desactivar una categoría
+  const handleDeactivate = async (id) => {
     const result = await Swal.fire({
-      title: '¿Confirma eliminar?',
-      text: '¡Esta acción no se puede deshacer!',
+      title: '¿Confirma deshabilitar?',
+      text: '¡Esta acción la hará invisible en el listado!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Eliminar',
+      confirmButtonText: 'Deshabilitar',
       cancelButtonText: 'Cancelar',
     });
 
     if (result.isConfirmed) {
-      const success = await eliminarCategoria(id);
+      const success = await desactivarCategoria(id);
       if (success) {
         setCategories(categories.filter((category) => category.id !== id));
-        Swal.fire('Eliminado!', 'La categoría ha sido eliminada.', 'success');
+        Swal.fire(
+          'Desactivada!',
+          'La categoría ha sido desactivada.',
+          'success',
+        );
       } else {
-        Swal.fire('Error', 'No se pudo eliminar la categoría.', 'error');
+        Swal.fire('Error', 'No se pudo desactivar la categoría.', 'error');
+      }
+    }
+  };
+
+  // Función para habilitar una categoría
+  const handleEnable = async (id) => {
+    const result = await Swal.fire({
+      title: '¿Confirma habilitar?',
+      text: 'Esta acción reactivará la categoría.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#28a745',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Habilitar',
+      cancelButtonText: 'Cancelar',
+    });
+
+    if (result.isConfirmed) {
+      const success = await habilitarCategoria(id);
+      if (success) {
+        setInactiveCategories(
+          inactiveCategories.filter((category) => category.id !== id),
+        );
+        // También la agregamos a la lista de categorías activas
+        const reactivatedCategory = await consultaCategoriaPorId(id);
+        setCategories([...categories, reactivatedCategory]);
+        Swal.fire('Habilitada!', 'La categoría ha sido habilitada.', 'success');
+      } else {
+        Swal.fire('Error', 'No se pudo habilitar la categoría.', 'error');
       }
     }
   };
@@ -105,11 +151,6 @@ function DashboardCategories() {
                     : category,
                 ),
               );
-              Swal.fire(
-                'Éxito',
-                'Imagen actualizada correctamente.',
-                'success',
-              );
             }
           }
         }
@@ -117,8 +158,11 @@ function DashboardCategories() {
         // Adición de categoría
         const addedCategory = await agregarCategoria(categoryData);
         if (addedCategory) {
-          setCategories([...categories, addedCategory]);
+          // Vuelve a consultar todas las categorías después de agregar una nueva
+          const fetchedCategories = await consultaCategories();
+          setCategories(fetchedCategories); // Actualiza el estado con las categorías más recientes
           Swal.fire('Éxito', 'Categoría agregada correctamente.', 'success');
+          window.location.reload();
 
           // Actualizar la imagen si se proporciona
           if (newCategory.image) {
@@ -133,11 +177,6 @@ function DashboardCategories() {
                     ? { ...category, image: updatedImage.image }
                     : category,
                 ),
-              );
-              Swal.fire(
-                'Éxito',
-                'Imagen actualizada correctamente.',
-                'success',
               );
             }
           }
@@ -160,6 +199,10 @@ function DashboardCategories() {
     setModalIsOpen(false);
   };
 
+  const handleCloseEnableModal = () => {
+    setModalEnableIsOpen(false);
+  };
+
   return (
     <main className="container max-w-6xl mx-auto p-4 sm:p-6 md:p-8 lg:p-10">
       <h2 className="text-2xl font-bold mb-4 ml-4">Categorías</h2>
@@ -169,6 +212,16 @@ function DashboardCategories() {
         className="bg-blue-500 text-white py-2 px-4 rounded shadow mb-4"
       >
         Agregar Nueva Categoría
+      </button>
+
+      <button
+        onClick={() => {
+          fetchInactiveCategories();
+          setModalEnableIsOpen(true);
+        }}
+        className="bg-green-500 text-white py-2 px-4 rounded shadow ml-2 mb-4"
+      >
+        Habilitar Categorías
       </button>
 
       <table className="min-w-full border">
@@ -181,32 +234,59 @@ function DashboardCategories() {
           </tr>
         </thead>
         <tbody>
-          {categories.map((category, index) => (
-            <tr key={category.id}>
-              <td className="border p-2">{index + 1}</td>
-              <td className="border p-2">{category.name}</td>
-              <td className="border p-2">
-                {category.description || 'Sin descripción'}
-              </td>
-              <td className="border p-2">
-                <button
-                  onClick={() => handleEdit(category)}
-                  className="bg-yellow-500 text-white py-1 px-2 rounded"
-                >
-                  Modificar
-                </button>
-                <button
-                  onClick={() => handleDelete(category.id)}
-                  className="bg-red-500 text-white py-1 px-2 rounded ml-2"
-                >
-                  Eliminar
-                </button>
-              </td>
-            </tr>
-          ))}
+          {categories
+            .sort((a, b) => a.name.localeCompare(b.name)) // Ordena por el atributo "name" de A a Z
+            .map((category, index) => (
+              <tr key={category.id}>
+                <td className="border p-2">{index + 1}</td>
+                <td className="border p-2">{category.name}</td>
+                <td className="border p-2">
+                  {category.description || 'Sin descripción'}
+                </td>
+                <td className="border p-2">
+                  <button
+                    onClick={() => handleEdit(category)}
+                    className="bg-yellow-500 text-white py-1 px-2 rounded"
+                  >
+                    Modificar
+                  </button>
+                  <button
+                    onClick={() => handleDeactivate(category.id)}
+                    className="bg-red-500 text-white py-1 px-2 rounded ml-2"
+                  >
+                    Deshabilitar
+                  </button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
 
+      {/* Modal para habilitar categorías */}
+      <Modal isOpen={modalEnableIsOpen} onRequestClose={handleCloseEnableModal}>
+        <h3 className="text-xl mb-2 mt-10">Categorías Inhabilitadas</h3>
+        <ul className="space-y-4">
+          {inactiveCategories.map((category) => (
+            <li key={category.id} className="flex justify-between">
+              <span>{category.name}</span>
+              <button
+                onClick={() => handleEnable(category.id)}
+                className="bg-green-500 text-white py-1 px-2 rounded"
+              >
+                Habilitar
+              </button>
+            </li>
+          ))}
+        </ul>
+        <button
+          onClick={handleCloseEnableModal}
+          className="mt-4 bg-gray-500 text-white py-2 px-4 rounded"
+        >
+          Cerrar
+        </button>
+      </Modal>
+
+      {/* Modal de Agregar/Editar Categoría */}
       <Modal isOpen={modalIsOpen} onRequestClose={handleCloseModal}>
         <h3 className="text-xl mb-2 mt-10">
           {newCategory.id ? 'Editar Categoría' : 'Agregar Nueva Categoría'}
@@ -230,16 +310,42 @@ function DashboardCategories() {
             }
             className="border p-2 rounded"
           />
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              if (e.target.files.length > 0) {
-                setNewCategory({ ...newCategory, image: e.target.files[0] }); // Guardar el archivo
-              }
-            }}
-            className="border p-2 rounded"
-          />
+
+          {/* Campo para mostrar la imagen existente o cargar una nueva */}
+          <div className="col-span-2">
+            {newCategory.image ? (
+              <div>
+                <p className="text-sm mb-2">Imagen actual:</p>
+
+                <img
+                  src={
+                    typeof newCategory.image === 'string' &&
+                    newCategory.image.includes('uploads') // Verificamos si es una cadena y contiene 'uploads'
+                      ? `${apiUrl}${newCategory.image}` // Concatenamos la URL base con la ruta de la imagen
+                      : newCategory.image instanceof File // Verificamos si es un objeto de tipo File (cuando se carga una nueva imagen)
+                        ? URL.createObjectURL(newCategory.image) // Usamos una URL temporal para el archivo cargado
+                        : 'ruta/a/imagen/por/defecto.jpg' // Agrega una imagen por defecto en caso de que no haya imagen
+                  }
+                  alt="Imagen de categoría"
+                  className="w-32 h-32 object-cover mb-2"
+                />
+              </div>
+            ) : (
+              <p className="text-sm mb-2">No hay imagen actual.</p>
+            )}
+
+            {/* Campo para subir nueva imagen */}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                if (e.target.files.length > 0) {
+                  setNewCategory({ ...newCategory, image: e.target.files[0] });
+                }
+              }}
+              className="border p-2 rounded"
+            />
+          </div>
         </div>
         <div className="mt-4">
           <button

@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import {
   agregarMarca,
   editarMarca,
-  eliminarMarca,
+  desactivarMarca, // Función para desactivar marca
   consultaMarcas,
   consultaMarcaPorId,
+  consultaMarcasInhabilitadas,
+  habilitarMarca, // Función para habilitar marca
 } from '../../services/brands';
 import Swal from 'sweetalert2';
 import Modal from 'react-modal';
@@ -19,7 +21,9 @@ function DashboardBrands() {
     description: '',
   });
   const [brands, setBrands] = useState([]);
+  const [disabledBrands, setDisabledBrands] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalDisabledIsOpen, setModalDisabledIsOpen] = useState(false);
   const { adminToken } = useCounter(); // Accede al adminToken del contexto
 
   const headers = {
@@ -42,10 +46,73 @@ function DashboardBrands() {
     };
 
     fetchBrands();
-  }, [adminToken, headers]); // Añadir 'headers' aquí
+  }, [adminToken]);
+
+  const handleOpenDisabledModal = async () => {
+    try {
+      const fetchedDisabledBrands = await consultaMarcasInhabilitadas(headers);
+      setDisabledBrands(fetchedDisabledBrands);
+      setModalDisabledIsOpen(true);
+    } catch (error) {
+      Swal.fire(
+        'Error',
+        'No se pudieron cargar las marcas deshabilitadas.',
+        'error',
+      );
+    }
+  };
+
+  const handleEnable = async (id) => {
+    const result = await Swal.fire({
+      title: '¿Confirma habilitar esta marca?',
+      text: '¡Esta acción la hará visible nuevamente!',
+      icon: 'warning',
+      showCancelButton: true,
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await habilitarMarca(id, headers); // Habilitar la marca
+        setDisabledBrands(disabledBrands.filter((brand) => brand.id !== id)); // Eliminarla de la lista de deshabilitadas
+        setBrands([
+          ...brands,
+          {
+            ...disabledBrands.find((brand) => brand.id === id),
+            isDeleted: false,
+          },
+        ]); // Agregarla a la lista de activas
+        Swal.fire('Habilitada!', 'La marca ha sido habilitada.', 'success');
+      } catch (error) {
+        Swal.fire('Error', 'No se pudo habilitar la marca.', 'error');
+      }
+    }
+  };
+
+  const handleDeactivate = async (id) => {
+    const result = await Swal.fire({
+      title: '¿Confirma deshabilitar esta marca?',
+      text: '¡Esta acción la hará invisible en el listado!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Deshabilitar',
+      cancelButtonText: 'Cancelar',
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await desactivarMarca(id, headers); // Desactivar la marca
+        setBrands(brands.filter((brand) => brand.id !== id)); // Eliminarla de la lista de marcas activas
+        Swal.fire('Desactivada!', 'La marca ha sido desactivada.', 'success');
+      } catch (error) {
+        Swal.fire('Error', 'No se pudo desactivar la marca.', 'error');
+      }
+    }
+  };
 
   const handleEdit = async (brand) => {
-    const brandDetails = await consultaMarcaPorId(brand.id, headers); // Asegúrate de pasar headers
+    const brandDetails = await consultaMarcaPorId(brand.id, headers);
     if (brandDetails) {
       setNewBrand({
         id: brandDetails.id,
@@ -56,31 +123,12 @@ function DashboardBrands() {
     }
   };
 
-  const handleDelete = async (id) => {
-    const result = await Swal.fire({
-      title: '¿Confirma eliminar?',
-      text: '¡Esta acción no se puede deshacer!',
-      icon: 'warning',
-      showCancelButton: true,
-    });
-
-    if (result.isConfirmed) {
-      try {
-        await eliminarMarca(id, headers); // Asegúrate de pasar headers
-        setBrands(brands.filter((brand) => brand.id !== id));
-        Swal.fire('Eliminado!', 'La marca ha sido eliminada.', 'success');
-      } catch (error) {
-        Swal.fire('Error', 'No se pudo eliminar la marca.', 'error');
-      }
-    }
-  };
-
   const handleAddOrEditBrand = async () => {
     const brandData = { ...newBrand };
 
     try {
       if (newBrand.id) {
-        const updatedBrand = await editarMarca(newBrand.id, brandData, headers); // Asegúrate de pasar headers
+        const updatedBrand = await editarMarca(newBrand.id, brandData, headers);
         setBrands(
           brands.map((brand) =>
             brand.id === newBrand.id ? updatedBrand : brand,
@@ -88,7 +136,7 @@ function DashboardBrands() {
         );
         Swal.fire('Éxito', 'Marca actualizada correctamente.', 'success');
       } else {
-        const addedBrand = await agregarMarca(brandData, headers); // Asegúrate de pasar headers
+        const addedBrand = await agregarMarca(brandData, headers);
         setBrands([...brands, addedBrand]);
         Swal.fire('Éxito', 'Marca agregada correctamente.', 'success');
       }
@@ -115,6 +163,13 @@ function DashboardBrands() {
         Agregar Nueva Marca
       </button>
 
+      <button
+        onClick={handleOpenDisabledModal}
+        className="bg-green-500 text-white py-2 px-4 rounded shadow ml-4 mb-4"
+      >
+        Habilitar Marcas
+      </button>
+
       <table className="min-w-full border">
         <thead>
           <tr>
@@ -124,28 +179,30 @@ function DashboardBrands() {
           </tr>
         </thead>
         <tbody>
-          {brands.map((brand) => (
-            <tr key={brand.id}>
-              <td className="border p-2">{brand.name}</td>
-              <td className="border p-2">
-                {brand.description || 'Sin descripción'}
-              </td>
-              <td className="border p-2">
-                <button
-                  onClick={() => handleEdit(brand)}
-                  className="bg-yellow-500 text-white py-1 px-2 rounded mr-2"
-                >
-                  Modificar
-                </button>
-                <button
-                  onClick={() => handleDelete(brand.id)}
-                  className="bg-red-500 text-white py-1 px-2 rounded"
-                >
-                  Eliminar
-                </button>
-              </td>
-            </tr>
-          ))}
+          {brands
+            .sort((a, b) => a.name.localeCompare(b.name)) // Ordena por el atributo "name" de A a Z
+            .map((brand) => (
+              <tr key={brand.id}>
+                <td className="border p-2">{brand.name}</td>
+                <td className="border p-2">
+                  {brand.description || 'Sin descripción'}
+                </td>
+                <td className="border p-2">
+                  <button
+                    onClick={() => handleEdit(brand)}
+                    className="bg-yellow-500 text-white py-1 px-2 rounded mr-2"
+                  >
+                    Modificar
+                  </button>
+                  <button
+                    onClick={() => handleDeactivate(brand.id)} // Función de desactivación
+                    className="bg-red-500 text-white py-1 px-2 rounded"
+                  >
+                    Deshabilitar
+                  </button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
 
@@ -183,6 +240,35 @@ function DashboardBrands() {
             className="ml-2 bg-gray-500 text-white py-2 px-4 rounded"
           >
             Cancelar
+          </button>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={modalDisabledIsOpen}
+        onRequestClose={() => setModalDisabledIsOpen(false)}
+      >
+        <h3 className="text-xl mb-2 mt-10">Marcas Deshabilitadas</h3>
+        <div className="grid grid-cols-1 gap-4">
+          {disabledBrands.map((brand) => (
+            <div key={brand.id} className="flex justify-between">
+              <span>{brand.name}</span>
+              <button
+                onClick={() => handleEnable(brand.id)} // Función para habilitar marca
+                className="bg-green-500 text-white py-1 px-2 rounded"
+              >
+                Habilitar
+              </button>
+            </div>
+          ))}
+        </div>
+        {/* Botón Cerrar */}
+        <div className="mt-4">
+          <button
+            onClick={() => setModalDisabledIsOpen(false)} // Cerrar el modal
+            className="bg-gray-500 text-white py-2 px-4 rounded"
+          >
+            Cerrar
           </button>
         </div>
       </Modal>

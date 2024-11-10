@@ -124,12 +124,14 @@ const Header = () => {
                   </div>
                 </li>
                 <li>
-                  <Link
-                    to="/admin/dashboard/reportes"
-                    className="block py-2 px-3 text-gray-900 rounded hover:bg-blue-100 transition-colors"
-                  >
-                    Reporte Ventas
-                  </Link>
+                  {/*
+  <Link
+    to="/admin/dashboard/reportes"
+    className="block py-2 px-3 text-gray-900 rounded hover:bg-blue-100 transition-colors"
+  >
+    Reporte Ventas
+  </Link>
+*/}
                 </li>
                 <li>
                   <button
