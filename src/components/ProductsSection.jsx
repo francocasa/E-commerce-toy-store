@@ -6,21 +6,51 @@ const ProductsSection = () => {
   const [products, setProducts] = useState([]); // Estado para almacenar los productos
   const [discounts, setDiscounts] = useState([]); // Estado para almacenar los descuentos
   const scrollRef = useRef(null); // Referencia al contenedor
+  const [loading, setLoading] = useState(true); // Estado de carga
+  const [error, setError] = useState(null); // Estado de error
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const data = await consultaProductos(); // Usar la función del servicio
-      setProducts(data); // Guarda los productos en el estado
-    };
-
     const fetchDiscounts = async () => {
-      const data = await consultaDescuentos(); // Usar la función del servicio para descuentos
-      setDiscounts(data); // Guarda los descuentos en el estado
+      setLoading(true);
+      try {
+        const data = await consultaDescuentos(); // Usa el servicio
+        if (data) {
+          setDiscounts(data);
+        } else {
+          setError('Error al cargar los descuentos');
+        }
+      } catch (err) {
+        setError('Error al cargar los productos');
+      } finally {
+        setLoading(false); // Finaliza carga
+      }
     };
 
-    fetchProducts();
+    const fetchProductos = async () => {
+      setLoading(true);
+      try {
+        const data = await consultaProductos(); // Usa el servicio
+        if (data) {
+          const filteredPromotions = data.filter(
+            (product) => product.discountId !== null, // Filtrar productos que tienen descuentos
+          );
+          setProducts(filteredPromotions); // Guarda las promociones filtradas
+        } else {
+          setError('Error al cargar los productos');
+        }
+      } catch (err) {
+        setError('Error al cargar los productos');
+      } finally {
+        setLoading(false); // Finaliza carga
+      }
+    };
+
     fetchDiscounts();
+    fetchProductos();
   }, []);
+
+  if (loading) return <p>Cargando promociones...</p>;
+  if (error) return <p className="text-center text-red-500">{error}</p>;
 
   const scrollLeft = () => {
     if (scrollRef.current) {

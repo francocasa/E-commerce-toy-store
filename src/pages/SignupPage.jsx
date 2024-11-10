@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createUser, getUserIdByEmail } from '../services/userprofile';
+import { createUser, getUserIdByEmail } from '../services/users';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 

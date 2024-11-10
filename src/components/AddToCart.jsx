@@ -3,10 +3,15 @@ import PropTypes from 'prop-types';
 import Swal from 'sweetalert2';
 import { DashSquareFill, PlusSquareFill } from 'react-bootstrap-icons';
 import { useCounter } from './counter/Context';
+const IMAGES_URL = import.meta.env.VITE_IMAGES_URL; // Obtener la URL base desde el .env
 
 export default function AddToCart({ product }) {
   const [quantity, setQuantity] = useState(1);
   const { setCartItems } = useCounter();
+  const imageUrl =
+    Array.isArray(product.images) && product.images.length > 0
+      ? IMAGES_URL + '/' + product.images[0].url
+      : '';
 
   const addToCart = () => {
     const existingCart = JSON.parse(localStorage.getItem('Cart')) || [];
@@ -20,16 +25,22 @@ export default function AddToCart({ product }) {
         text: 'Has actualizado la cantidad para la compra',
         icon: 'info',
       });
-      console.log('existe');
     } else {
-      // Si se añade el producto
-      console.log('nuevo');
-      console.log(product);
+      let finalPrice = product.price;
+      let discount = 0;
+      if (product.discountId) {
+        discount = (product.price * product.discount.discount).toFixed(2);
+        finalPrice = (product.price * (1 - product.discount.discount)).toFixed(
+          2,
+        );
+      }
       existingCart.push({
         id: product.id, // Se mantiene como string
         title: product.name, // Cambiado de title a name
         price: product.price,
-        image: 'product.image[0].url', // Asegúrate de obtener la URL de la imagen
+        finalPrice: parseFloat(finalPrice),
+        discount: discount,
+        image: imageUrl, // Asegúrate de obtener la URL de la imagen
         quantity,
         categoryId: product.categoryId, // Añadir categoryId aquí
       });
@@ -72,7 +83,7 @@ AddToCart.propTypes = {
     id: PropTypes.string.isRequired, // Se mantiene como string
     name: PropTypes.string.isRequired, // Cambiado de title a name
     price: PropTypes.number.isRequired,
-    image: PropTypes.arrayOf(
+    images: PropTypes.arrayOf(
       PropTypes.shape({
         url: PropTypes.string.isRequired,
       }),
@@ -82,5 +93,8 @@ AddToCart.propTypes = {
     materialId: PropTypes.string,
     categoryId: PropTypes.string.isRequired, // Asegúrate de que categoryId sea requerido
     discountId: PropTypes.string,
+    discount: PropTypes.shape({
+      discount: PropTypes.number.isRequired,
+    }), // Se añade el shape de discount
   }).isRequired,
 };

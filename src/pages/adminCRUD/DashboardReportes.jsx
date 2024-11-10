@@ -1,36 +1,37 @@
 import { useEffect, useState } from 'react';
-import { fetchAdminData, getLoggedAdmin } from '../services/usersadmin'; // Asegúrate de que la ruta sea correcta
+import { fetchAdminData } from '../../services/admins'; // Ajusta según tu ruta
 
 function DashboardReportes() {
   const [admin, setAdmin] = useState(null);
-  const [loading, setLoading] = useState(true); // Para manejar el estado de carga
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAdminStatus = async () => {
-      const loggedAdmin = getLoggedAdmin();
-      if (loggedAdmin) {
-        // Cargar datos del admin si está logueado
-        const adminData = await fetchAdminData();
-        const foundAdmin = adminData.find(
-          (admin) => admin.id === loggedAdmin.id,
-        );
-
-        if (foundAdmin) {
-          setAdmin(foundAdmin);
-        }
+      const token = localStorage.getItem('adminToken'); // Cambia esto si el nombre del token es diferente
+      if (!token) {
+        window.location.href = '/login'; // Redirigir si no hay un admin logueado
+        return;
       }
-      setLoading(false); // Cambiar el estado de carga una vez verificado
+
+      try {
+        const adminData = await fetchAdminData(); // Obtén datos del admin
+        setAdmin(adminData); // Suponiendo que fetchAdminData devuelve el objeto del admin
+      } catch (error) {
+        console.error('Error fetching admin data:', error);
+      }
+
+      setLoading(false);
     };
 
     checkAdminStatus();
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('AdminLogueado');
+    localStorage.removeItem('adminToken'); // Limpiar el token
     window.location.href = '/login'; // Cambia esto por la ruta adecuada
   };
 
-  if (loading) return <p>Cargando...</p>; // Mostrar un mensaje de carga
+  if (loading) return <p>Cargando...</p>;
 
   if (!admin) {
     window.location.href = '/login'; // Redirigir si no hay un admin logueado

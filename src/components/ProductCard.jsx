@@ -13,18 +13,18 @@ function ProductCard({ product, discounts }) {
     // Aplicar descuento basado en discountId
     const discount = discounts.find((d) => d.id === product.discountId);
     if (discount) {
-      updatedPrice *= 1 - discount.discount_amount; // Aplicar descuento
+      console.log('pro');
+      console.log(discount);
+      updatedPrice *= 1 - discount.discount; // Aplicar descuento
       discountPromo = discount.description; // Usar la descripción del descuento
     }
 
     setPrice(updatedPrice);
     setPromo(discountPromo);
   }, [product, discounts]);
-
-  // Manejo de la imagen
   const imageUrl =
     Array.isArray(product.images) && product.images.length > 0
-      ? IMAGES_URL + '/' + product.images[0].url
+      ? `${import.meta.env.VITE_IMAGES_URL}${product.images[0].url}` // Usar la variable de entorno VITE_IMAGES_URL
       : '';
 
   return (
@@ -80,7 +80,7 @@ ProductCard.propTypes = {
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       description: PropTypes.string.isRequired,
-      discount_amount: PropTypes.number.isRequired,
+      discount: PropTypes.number.isRequired,
     }),
   ).isRequired,
 };
