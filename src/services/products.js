@@ -1,13 +1,69 @@
 import axios from 'axios';
 
 const BASE_URL = import.meta.env.VITE_API_URL; // Obtener la URL base desde el .env
+// Función para consultar los productos inhabilitados
+export const consultaProductosInhabilitados = async () => {
+  const URL = `${BASE_URL}/products`;
+  try {
+    const response = await axios.get(URL);
+    // Filtrar solo los productos inhabilitados (isDeleted: true)
+    return response.data.filter((product) => product.isDeleted);
+  } catch (error) {
+    console.error('Error fetching disabled products:', error);
+    return []; // Retornar un arreglo vacío en caso de error
+  }
+};
+
+// Función para habilitar un producto
+export const habilitarProducto = async (id) => {
+  const URL = `${BASE_URL}/products/${id}/activate`; // Endpoint para activar el producto
+  const token = localStorage.getItem('adminToken'); // Obtener el token de autenticación
+
+  try {
+    const response = await axios.patch(
+      URL,
+      { isDeleted: false }, // Cambiar el valor de isDeleted a false
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data; // Retornar el producto habilitado
+  } catch (error) {
+    console.error('Error enabling product:', error);
+    return null;
+  }
+};
+// Función para deshabilitar un producto
+export const deshabilitarProducto = async (id) => {
+  const URL = `${BASE_URL}/products/${id}/deactivate`; // Endpoint para desactivar el producto
+  const token = localStorage.getItem('adminToken'); // Obtener el token
+
+  try {
+    const response = await axios.patch(
+      URL,
+      { isDeleted: true }, // Cambiar el valor de isDeleted a true
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data; // Retornar el producto deshabilitado
+  } catch (error) {
+    console.error('Error disabling product:', error);
+    return null;
+  }
+};
 
 // Función para consultar todos los productos
 export const consultaProductos = async () => {
   const URL = `${BASE_URL}/products`;
   try {
     const response = await axios.get(URL);
-    return response.data; // Retornar los datos obtenidos
+    // Filtrar solo los productos habilitados (isDeleted: false)
+    return response.data.filter((product) => !product.isDeleted);
   } catch (error) {
     console.error('Error fetching products:', error);
     return []; // Retornar un arreglo vacío en caso de error
@@ -80,9 +136,10 @@ export const consultaPromociones = async () => {
 
 // Función para consultar descuentos
 export const consultaDescuentos = async () => {
-  const URL = `${BASE_URL}/discounts`; // Construir la URL para los descuentos
+  const URL = `${BASE_URL}/discounts`; // Asegúrate de que BASE_URL esté correctamente configurada
   try {
     const response = await axios.get(URL);
+    console.log('Descuentos obtenidos:', response.data); // Agrega un log para verificar la respuesta
     return response.data; // Retornar los datos obtenidos
   } catch (error) {
     console.error('Error fetching discounts:', error);
@@ -132,9 +189,7 @@ export const editarProducto = async (id, producto) => {
 export const eliminarProducto = async (id) => {
   const URL = `${BASE_URL}/products/${id}`;
   try {
-    await axios.delete(URL).then((response) => {
-      console.log(response);
-    });
+    await axios.delete(URL).then((response) => {});
     return true; // Retornar true si se eliminó correctamente
   } catch (error) {
     console.error('Error deleting product:', error);
