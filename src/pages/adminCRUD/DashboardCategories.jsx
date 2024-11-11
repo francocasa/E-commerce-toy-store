@@ -9,6 +9,7 @@ import {
   desactivarCategoria, // Importar la función desactivarCategoria
   consultaCategoriasInhabilitadas, // Importar la función consultaCategoriasInhabilitadas
   habilitarCategoria, // Importar la función habilitarCategoria
+  checkIfNameExists,
 } from '../../services/categories';
 import Swal from 'sweetalert2';
 import Modal from 'react-modal';
@@ -32,7 +33,7 @@ function DashboardCategories() {
     const fetchCategories = async () => {
       const token = localStorage.getItem('adminToken');
       if (!token) {
-        window.location.href = '/login';
+        window.location.href = '/loginAdm';
         return;
       }
 
@@ -63,16 +64,39 @@ function DashboardCategories() {
     });
 
     if (result.isConfirmed) {
-      const success = await desactivarCategoria(id);
-      if (success) {
-        setCategories(categories.filter((category) => category.id !== id));
-        Swal.fire(
-          'Desactivada!',
-          'La categoría ha sido desactivada.',
-          'success',
-        );
-      } else {
-        Swal.fire('Error', 'No se pudo desactivar la categoría.', 'error');
+      try {
+        const success = await desactivarCategoria(id);
+        if (success) {
+          // Actualizar el estado local eliminando la categoría desactivada
+          setCategories(categories.filter((category) => category.id !== id));
+          Swal.fire(
+            'Desactivada!',
+            'La categoría ha sido desactivada.',
+            'success',
+          );
+        } else {
+          Swal.fire('Error', 'No se pudo desactivar la categoría.', 'error');
+        }
+      } catch (error) {
+        // Manejo de error si el token ha expirado (código 403)
+        if (error.response && error.response.status === 403) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Token Expirado',
+            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+          }).then(() => {
+            localStorage.removeItem('adminToken'); // Eliminar el token expirado
+            window.location.href = '/loginAdm'; // Redirigir al login
+          });
+        } else {
+          // Manejo de otros errores
+          console.error('Error al desactivar la categoría:', error);
+          Swal.fire(
+            'Error',
+            'Ocurrió un problema al desactivar la categoría.',
+            'error',
+          );
+        }
       }
     }
   };
@@ -91,17 +115,48 @@ function DashboardCategories() {
     });
 
     if (result.isConfirmed) {
-      const success = await habilitarCategoria(id);
-      if (success) {
-        setInactiveCategories(
-          inactiveCategories.filter((category) => category.id !== id),
-        );
-        // También la agregamos a la lista de categorías activas
-        const reactivatedCategory = await consultaCategoriaPorId(id);
-        setCategories([...categories, reactivatedCategory]);
-        Swal.fire('Habilitada!', 'La categoría ha sido habilitada.', 'success');
-      } else {
-        Swal.fire('Error', 'No se pudo habilitar la categoría.', 'error');
+      try {
+        const success = await habilitarCategoria(id);
+
+        if (success) {
+          // Eliminar la categoría de la lista de inactivas
+          setInactiveCategories(
+            inactiveCategories.filter((category) => category.id !== id),
+          );
+
+          // Consultar la categoría reactivada y agregarla a las categorías activas
+          const reactivatedCategory = await consultaCategoriaPorId(id);
+          setCategories([...categories, reactivatedCategory]);
+
+          // Notificación de éxito
+          Swal.fire(
+            'Habilitada!',
+            'La categoría ha sido habilitada.',
+            'success',
+          );
+        } else {
+          Swal.fire('Error', 'No se pudo habilitar la categoría.', 'error');
+        }
+      } catch (error) {
+        // Manejo del error si el token ha expirado (código 403)
+        if (error.response && error.response.status === 403) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Token Expirado',
+            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+          }).then(() => {
+            localStorage.removeItem('adminToken'); // Eliminar el token expirado
+            window.location.href = '/loginAdm'; // Redirigir al login de administrador
+          });
+        } else {
+          // Manejo de otros errores
+          console.error('Error al habilitar la categoría:', error);
+          Swal.fire(
+            'Error',
+            'Hubo un error al habilitar la categoría.',
+            'error',
+          );
+        }
       }
     }
   };
@@ -120,6 +175,24 @@ function DashboardCategories() {
   };
 
   const handleAddOrEditCategory = async () => {
+    // Verificar si el nombre ya existe solo si el nombre ha cambiado (y no si solo se está modificando la imagen)
+    const isNameChanged =
+      newCategory.name !==
+      (newCategory.id
+        ? categories.find((c) => c.id === newCategory.id).name
+        : '');
+    if (isNameChanged) {
+      const isDuplicate = await checkIfNameExists(newCategory.name);
+      if (isDuplicate) {
+        Swal.fire(
+          'Error',
+          'Ya existe una categoría con ese nombre, puede estar habilitada o deshabilitada',
+          'error',
+        );
+        return; // Detener el proceso si ya existe
+      }
+    }
+
     const categoryData = { ...newCategory };
 
     try {
@@ -130,6 +203,7 @@ function DashboardCategories() {
           categoryData,
         );
         if (updatedCategory) {
+          // Actualizar la categoría en el estado sin recargar la página
           setCategories(
             categories.map((category) =>
               category.id === newCategory.id ? updatedCategory : category,
@@ -137,8 +211,9 @@ function DashboardCategories() {
           );
           Swal.fire('Éxito', 'Categoría editada correctamente.', 'success');
 
-          // Actualizar la imagen si se proporciona
-          if (newCategory.image) {
+          // Actualizar la imagen si se proporciona una nueva
+          if (newCategory.image instanceof File) {
+            // Verificamos si es una nueva imagen
             const updatedImage = await actualizarImagenCategoria(
               newCategory.id,
               newCategory.image,
@@ -158,14 +233,12 @@ function DashboardCategories() {
         // Adición de categoría
         const addedCategory = await agregarCategoria(categoryData);
         if (addedCategory) {
-          // Vuelve a consultar todas las categorías después de agregar una nueva
-          const fetchedCategories = await consultaCategories();
-          setCategories(fetchedCategories); // Actualiza el estado con las categorías más recientes
+          // Actualizar el estado con la nueva categoría sin recargar la página
+          setCategories((prevCategories) => [...prevCategories, addedCategory]);
           Swal.fire('Éxito', 'Categoría agregada correctamente.', 'success');
-          window.location.reload();
 
           // Actualizar la imagen si se proporciona
-          if (newCategory.image) {
+          if (newCategory.image instanceof File) {
             const updatedImage = await actualizarImagenCategoria(
               addedCategory.id,
               newCategory.image,
@@ -183,12 +256,25 @@ function DashboardCategories() {
         }
       }
     } catch (error) {
-      console.error('Error en la operación:', error);
-      Swal.fire(
-        'Error',
-        'Ocurrió un problema al agregar/editar la categoría.',
-        'error',
-      );
+      // Manejo de error si el token ha expirado
+      if (error.response && error.response.status === 403) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Token Expirado',
+          text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+        }).then(() => {
+          localStorage.removeItem('adminToken'); // Eliminar el token expirado
+          window.location.href = '/loginAdm'; // Redirigir al login
+        });
+      } else {
+        // Manejo de otros posibles errores
+        console.error('Error en la operación:', error);
+        Swal.fire(
+          'Error',
+          'Ocurrió un problema al agregar/editar la categoría.',
+          'error',
+        );
+      }
     }
 
     handleCloseModal();
@@ -266,17 +352,19 @@ function DashboardCategories() {
       <Modal isOpen={modalEnableIsOpen} onRequestClose={handleCloseEnableModal}>
         <h3 className="text-xl mb-2 mt-10">Categorías Inhabilitadas</h3>
         <ul className="space-y-4">
-          {inactiveCategories.map((category) => (
-            <li key={category.id} className="flex justify-between">
-              <span>{category.name}</span>
-              <button
-                onClick={() => handleEnable(category.id)}
-                className="bg-green-500 text-white py-1 px-2 rounded"
-              >
-                Habilitar
-              </button>
-            </li>
-          ))}
+          {inactiveCategories
+            .sort((a, b) => a.name.localeCompare(b.name)) // Ordena por el atributo "name" de A a Z
+            .map((category) => (
+              <li key={category.id} className="flex justify-between">
+                <span>{category.name}</span>
+                <button
+                  onClick={() => handleEnable(category.id)}
+                  className="bg-green-500 text-white py-1 px-2 rounded"
+                >
+                  Habilitar
+                </button>
+              </li>
+            ))}
         </ul>
         <button
           onClick={handleCloseEnableModal}

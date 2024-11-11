@@ -65,6 +65,25 @@ export const agregarMarca = async (marca) => {
   }
 };
 
+export const isNameDuplicated = (
+  name,
+  brands,
+  disabledBrands,
+  excludeId = null,
+) => {
+  // Revisamos si el nombre existe en las marcas activas o deshabilitadas, excepto si es la misma marca que se está editando.
+  const duplicatedInActive = brands.some(
+    (brand) =>
+      brand.name.toLowerCase() === name.toLowerCase() && brand.id !== excludeId,
+  );
+  const duplicatedInDisabled = disabledBrands.some(
+    (brand) =>
+      brand.name.toLowerCase() === name.toLowerCase() && brand.id !== excludeId,
+  );
+
+  return duplicatedInActive || duplicatedInDisabled;
+};
+
 export const desactivarMarca = async (id) => {
   const URL = `${BASE_URL}/brands/${id}/deactivate`; // Endpoint para desactivar la marca
   const token = localStorage.getItem('adminToken'); // Obtener el token

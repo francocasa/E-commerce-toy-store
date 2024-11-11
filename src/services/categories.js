@@ -45,6 +45,20 @@ export const consultaCategories = async () => {
   }
 };
 
+export const checkIfNameExists = async (name) => {
+  try {
+    // Hacer una consulta a la API para verificar si la descripción ya existe
+    const response = await consultaCategories(); // O podrías hacer la consulta a un endpoint específico que te devuelva todos los descuentos
+    const existingCategory = response.find(
+      (category) => category.name.toLowerCase() === name.toLowerCase(),
+    );
+    return existingCategory ? true : false;
+  } catch (error) {
+    console.error('Error al verificar la descripción:', error);
+    return false; // Si hay un error en la consulta, retornar false
+  }
+};
+
 export const habilitarCategoria = async (id) => {
   const URL = `${BASE_URL}/categories/${id}/activate`; // Endpoint para habilitar la categoría
   const token = localStorage.getItem('adminToken'); // Obtener el token desde localStorage (o desde donde lo tengas almacenado)

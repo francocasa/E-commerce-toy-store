@@ -5,6 +5,7 @@ import {
   desactivarMarca, // Función para desactivar marca
   consultaMarcas,
   consultaMarcaPorId,
+  isNameDuplicated,
   consultaMarcasInhabilitadas,
   habilitarMarca, // Función para habilitar marca
 } from '../../services/brands';
@@ -33,7 +34,7 @@ function DashboardBrands() {
   useEffect(() => {
     const fetchBrands = async () => {
       if (!adminToken) {
-        window.location.href = '/login';
+        window.location.href = '/loginAdm';
         return;
       }
 
@@ -68,6 +69,10 @@ function DashboardBrands() {
       text: '¡Esta acción la hará visible nuevamente!',
       icon: 'warning',
       showCancelButton: true,
+      confirmButtonColor: '#28a745', // Color verde para confirmación
+      cancelButtonColor: '#3085d6', // Color azul para cancelar
+      confirmButtonText: 'Habilitar',
+      cancelButtonText: 'Cancelar',
     });
 
     if (result.isConfirmed) {
@@ -83,7 +88,21 @@ function DashboardBrands() {
         ]); // Agregarla a la lista de activas
         Swal.fire('Habilitada!', 'La marca ha sido habilitada.', 'success');
       } catch (error) {
-        Swal.fire('Error', 'No se pudo habilitar la marca.', 'error');
+        // Manejo de errores por expiración de token (código 403)
+        if (error.response && error.response.status === 403) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Token Expirado',
+            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+          }).then(() => {
+            localStorage.removeItem('adminToken'); // Eliminar el token expirado
+            window.location.href = '/loginAdm'; // Redirigir al login de administrador
+          });
+        } else {
+          // Manejo de otros errores
+          console.error('Error al habilitar la marca:', error);
+          Swal.fire('Error', 'No se pudo habilitar la marca.', 'error');
+        }
       }
     }
   };
@@ -106,7 +125,21 @@ function DashboardBrands() {
         setBrands(brands.filter((brand) => brand.id !== id)); // Eliminarla de la lista de marcas activas
         Swal.fire('Desactivada!', 'La marca ha sido desactivada.', 'success');
       } catch (error) {
-        Swal.fire('Error', 'No se pudo desactivar la marca.', 'error');
+        // Manejo de errores por expiración de token (código 403)
+        if (error.response && error.response.status === 403) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Token Expirado',
+            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+          }).then(() => {
+            localStorage.removeItem('adminToken'); // Eliminar el token expirado
+            window.location.href = '/loginAdm'; // Redirigir al login de administrador
+          });
+        } else {
+          // Manejo de otros errores
+          console.error('Error al desactivar la marca:', error);
+          Swal.fire('Error', 'No se pudo desactivar la marca.', 'error');
+        }
       }
     }
   };
@@ -126,8 +159,15 @@ function DashboardBrands() {
   const handleAddOrEditBrand = async () => {
     const brandData = { ...newBrand };
 
+    // Validar si el nombre de la marca ya existe
+    if (isNameDuplicated(newBrand.name, brands, disabledBrands, newBrand.id)) {
+      Swal.fire('Error', 'Ya existe una marca con el mismo nombre.', 'error');
+      return;
+    }
+
     try {
       if (newBrand.id) {
+        // Si estamos editando una marca, solo procedemos si el nombre cambió
         const updatedBrand = await editarMarca(newBrand.id, brandData, headers);
         setBrands(
           brands.map((brand) =>
@@ -136,12 +176,27 @@ function DashboardBrands() {
         );
         Swal.fire('Éxito', 'Marca actualizada correctamente.', 'success');
       } else {
+        // Si es una nueva marca, la agregamos a la lista
         const addedBrand = await agregarMarca(brandData, headers);
         setBrands([...brands, addedBrand]);
         Swal.fire('Éxito', 'Marca agregada correctamente.', 'success');
       }
     } catch (error) {
-      Swal.fire('Error', 'No se pudo agregar/editar la marca.', 'error');
+      // Manejo de errores por expiración de token (código 403)
+      if (error.response && error.response.status === 403) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Token Expirado',
+          text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+        }).then(() => {
+          localStorage.removeItem('adminToken'); // Eliminar el token expirado
+          window.location.href = '/loginAdm'; // Redirigir al login de administrador
+        });
+      } else {
+        // Manejo de otros errores
+        console.error('Error al agregar/editar la marca:', error);
+        Swal.fire('Error', 'No se pudo agregar/editar la marca.', 'error');
+      }
     }
 
     handleCloseModal();
@@ -250,17 +305,19 @@ function DashboardBrands() {
       >
         <h3 className="text-xl mb-2 mt-10">Marcas Deshabilitadas</h3>
         <div className="grid grid-cols-1 gap-4">
-          {disabledBrands.map((brand) => (
-            <div key={brand.id} className="flex justify-between">
-              <span>{brand.name}</span>
-              <button
-                onClick={() => handleEnable(brand.id)} // Función para habilitar marca
-                className="bg-green-500 text-white py-1 px-2 rounded"
-              >
-                Habilitar
-              </button>
-            </div>
-          ))}
+          {disabledBrands
+            .sort((a, b) => a.name.localeCompare(b.name)) // Ordena por el atributo "name" de A a Z
+            .map((brand) => (
+              <div key={brand.id} className="flex justify-between">
+                <span>{brand.name}</span>
+                <button
+                  onClick={() => handleEnable(brand.id)} // Función para habilitar marca
+                  className="bg-green-500 text-white py-1 px-2 rounded"
+                >
+                  Habilitar
+                </button>
+              </div>
+            ))}
         </div>
         {/* Botón Cerrar */}
         <div className="mt-4">

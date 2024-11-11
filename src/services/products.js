@@ -2,6 +2,18 @@ import axios from 'axios';
 
 const BASE_URL = import.meta.env.VITE_API_URL; // Obtener la URL base desde el .env
 // Función para consultar los productos inhabilitados
+
+export const isProductNameDuplicated = (name, products, excludeId = null) => {
+  // Comprobamos si el nombre existe en los productos activos, excluyendo el ID si se está editando un producto.
+  const duplicated = products.some(
+    (product) =>
+      product.name.toLowerCase() === name.toLowerCase() &&
+      product.id !== excludeId,
+  );
+
+  return duplicated;
+};
+
 export const consultaProductosInhabilitados = async () => {
   const URL = `${BASE_URL}/products`;
   try {

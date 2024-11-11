@@ -3,6 +3,7 @@ import {
   consultaProductos,
   agregarProducto,
   editarProducto,
+  isProductNameDuplicated,
   eliminarProducto,
   consultaProductoPorId,
   consultaMarcas,
@@ -135,8 +136,25 @@ function DashboardProducts() {
           );
         }
       } catch (error) {
-        console.error('Error al habilitar el producto:', error);
-        Swal.fire('Error', 'Hubo un error al habilitar el producto.', 'error');
+        // Manejo del error si el token ha expirado (código 403)
+        if (error.response && error.response.status === 403) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Token Expirado',
+            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+          }).then(() => {
+            localStorage.removeItem('adminToken'); // Eliminar el token expirado
+            window.location.href = '/loginAdm'; // Redirigir al login de administrador
+          });
+        } else {
+          // Manejo de otros errores
+          console.error('Error al habilitar el producto:', error);
+          Swal.fire(
+            'Error',
+            'Hubo un error al habilitar el producto.',
+            'error',
+          );
+        }
       }
     }
   };
@@ -154,16 +172,37 @@ function DashboardProducts() {
     });
 
     if (result.isConfirmed) {
-      const success = await deshabilitarProducto(id);
-      if (success) {
-        setProducts(products.filter((product) => product.id !== id));
-        Swal.fire(
-          'Deshabilitado!',
-          'El producto ha sido deshabilitado.',
-          'success',
-        );
-      } else {
-        Swal.fire('Error', 'No se pudo deshabilitar el producto.', 'error');
+      try {
+        const success = await deshabilitarProducto(id);
+        if (success) {
+          setProducts(products.filter((product) => product.id !== id));
+          Swal.fire(
+            'Deshabilitado!',
+            'El producto ha sido deshabilitado.',
+            'success',
+          );
+        } else {
+          Swal.fire('Error', 'No se pudo deshabilitar el producto.', 'error');
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 403) {
+          // Si el error es 403 (token expirado)
+          Swal.fire({
+            icon: 'warning',
+            title: 'Token Expirado',
+            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+          }).then(() => {
+            localStorage.removeItem('adminToken');
+            window.location.href = '/loginAdm'; // Redirige al login
+          });
+        } else {
+          // Manejar otros posibles errores
+          console.error(
+            'Error al deshabilitar el producto:',
+            error.response || error,
+          );
+          Swal.fire('Error', 'Ocurrió un error inesperado.', 'error');
+        }
       }
     }
   };
@@ -179,6 +218,13 @@ function DashboardProducts() {
       });
     }
     setModalIsOpen(true);
+  };
+
+  const handleDeleteImage = (imageId) => {
+    setNewProduct({
+      ...newProduct,
+      deleteImages: [...newProduct.deleteImages, imageId], // Agregar la imagen a la lista de imágenes a eliminar
+    });
   };
 
   const handleAddOrEditProduct = async (e) => {
@@ -201,6 +247,22 @@ function DashboardProducts() {
       return;
     }
 
+    // Validación de nombre duplicado (solo si no se está editando el nombre)
+    const isDuplicated = isProductNameDuplicated(
+      newProduct.name,
+      products,
+      newProduct.id,
+    );
+    if (isDuplicated) {
+      Swal.fire(
+        'Error',
+        'Ya existe un producto con ese nombre. Por favor, elija otro.',
+        'error',
+      );
+      return;
+    }
+
+    // Preparar los datos del producto
     const productData = {
       name: newProduct.name,
       description: newProduct.description,
@@ -213,23 +275,57 @@ function DashboardProducts() {
     };
 
     // Obtener el token desde localStorage
-    const token = localStorage.getItem('adminToken'); // Asegúrate de usar la clave correcta
-
-    // Verificar si el token existe
+    const token = localStorage.getItem('adminToken');
     if (!token) {
       Swal.fire(
         'Error',
         'No se encontró el token de autenticación. Por favor, inicia sesión.',
         'error',
       );
-      window.location.href = '/login'; // Redirige al login si no hay token
+      window.location.href = '/loginAdm'; // Redirige al login si no hay token
       return;
     }
 
     try {
       let response;
+
+      // Primero, editar o agregar el producto (dependiendo de si tiene un id)
       if (newProduct.id) {
-        // Edición de producto
+        // Si estamos editando un producto, eliminamos la imagen antigua solo si hay una nueva imagen
+        if (newProduct.newImages.length > 0) {
+          // Asumiendo que newProduct.images contiene una lista de imágenes antiguas
+          if (newProduct.images.length > 0) {
+            // Solo eliminamos la imagen existente si hay una imagen nueva
+            const imageId = newProduct.images[0].id; // Solo eliminamos la primera imagen
+
+            // Eliminar la imagen anterior automáticamente
+            const handleDeleteOldImage = async (imageId, token) => {
+              const deleteUrl = `${import.meta.env.VITE_API_URL}/images/${imageId}`;
+              try {
+                await axios.delete(deleteUrl, {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                });
+                console.log('Imagen eliminada:', imageId);
+              } catch (deleteError) {
+                console.error(
+                  'Error al eliminar la imagen:',
+                  deleteError.response || deleteError,
+                );
+                Swal.fire(
+                  'Error',
+                  'Hubo un error al eliminar la imagen.',
+                  'error',
+                );
+              }
+            };
+
+            await handleDeleteOldImage(imageId, token); // Llamamos la función de eliminación
+          }
+        }
+
+        // Ahora, proceder con la edición del producto
         response = await editarProducto(newProduct.id, productData);
         if (response) {
           setProducts(
@@ -248,7 +344,7 @@ function DashboardProducts() {
         }
       }
 
-      // Subir nuevas imágenes (POST)
+      // Después de editar, subir las nuevas imágenes si existen
       if (newProduct.newImages.length > 0) {
         for (let i = 0; i < newProduct.newImages.length; i++) {
           const formData = new FormData();
@@ -260,99 +356,39 @@ function DashboardProducts() {
             const uploadResponse = await axios.post(uploadUrl, formData, {
               headers: {
                 'Content-Type': 'multipart/form-data',
-                Authorization: `Bearer ${token}`, // Incluir el token correctamente
+                Authorization: `Bearer ${token}`,
               },
             });
-            console.log(
-              'Respuesta de la carga de imagen:',
-              uploadResponse.data,
-            );
+            console.log('Imagen subida con éxito:', uploadResponse.data);
           } catch (uploadError) {
             console.error(
               'Error al cargar la imagen:',
               uploadError.response || uploadError,
             );
-            // Verificar si el error es por autenticación
-            if (uploadError.response && uploadError.response.status === 401) {
-              Swal.fire(
-                'Error',
-                'El token ha expirado. Por favor, inicia sesión nuevamente.',
-                'error',
-              );
-              window.location.href = '/login'; // Redirigir al login
-            } else {
-              Swal.fire(
-                'Error',
-                'Hubo un error al subir la imagen. Revisa los permisos o la configuración del servidor.',
-                'error',
-              );
-            }
+            Swal.fire('Error', 'Hubo un error al subir la imagen.', 'error');
           }
         }
       }
 
-      // Eliminar imágenes antiguas (DELETE)
-      if (newProduct.deleteImages.length > 0) {
-        for (let i = 0; i < newProduct.deleteImages.length; i++) {
-          const imageId = newProduct.deleteImages[i];
-
-          try {
-            const deleteUrl = `${import.meta.env.VITE_API_URL}/images/${imageId}`;
-
-            // Incluir el token en las cabeceras de la solicitud DELETE
-            await axios.delete(deleteUrl, {
-              headers: {
-                Authorization: `Bearer ${token}`, // Incluir el token correctamente
-              },
-            });
-            console.log('Imagen eliminada:', imageId);
-          } catch (deleteError) {
-            console.error(
-              'Error al eliminar la imagen:',
-              deleteError.response || deleteError,
-            );
-            // Verificar si el error es por autenticación
-            if (deleteError.response && deleteError.response.status === 401) {
-              Swal.fire(
-                'Error',
-                'El token ha expirado. Por favor, inicia sesión nuevamente.',
-                'error',
-              );
-              window.location.href = '/login'; // Redirigir al login
-            } else {
-              Swal.fire(
-                'Error',
-                'Hubo un error al eliminar la imagen. Revisa los permisos o la configuración del servidor.',
-                'error',
-              );
-            }
-          }
-        }
-        Swal.fire('Éxito', 'Imágenes eliminadas correctamente.', 'success');
-      }
-
-      // Cerrar el modal
-      handleCloseModal();
+      handleCloseModal(); // Cerrar el modal
     } catch (error) {
+      // Manejar otros errores generales
       console.error(
         'Error al agregar o editar el producto:',
         error.response || error,
       );
-      // Manejar el error de autenticación si ocurre (como token expirado)
-      if (error.response && error.response.status === 401) {
-        Swal.fire(
-          'Error',
-          'El token ha expirado. Por favor, inicia sesión nuevamente.',
-          'error',
-        );
-        window.location.href = '/login'; // Redirigir al login
+      if (error.response && error.response.status === 403) {
+        // Si el error es 403 (token expirado)
+        Swal.fire({
+          icon: 'warning',
+          title: 'Token Expirado',
+          text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+        }).then(() => {
+          localStorage.removeItem('adminToken');
+          window.location.href = '/loginAdm'; // Redirige al login
+        });
       } else {
-        Swal.fire(
-          'Error',
-          error.response?.data?.details[0]?.message ||
-            'Ocurrió un error inesperado.',
-          'error',
-        );
+        Swal.fire('Error', 'Ocurrió un error inesperado.', 'error');
       }
     }
   };
@@ -379,13 +415,6 @@ function DashboardProducts() {
     setNewProduct({
       ...newProduct,
       newImages: Array.from(e.target.files),
-    });
-  };
-
-  const handleDeleteImage = (imageId) => {
-    setNewProduct({
-      ...newProduct,
-      deleteImages: [...newProduct.deleteImages, imageId],
     });
   };
 
@@ -599,6 +628,25 @@ function DashboardProducts() {
           </div>
 
           <div className="mb-4">
+            {newProduct.images.length > 0 && (
+              <div className="mt-2">
+                <h4>Imagen actual:</h4>
+                <ul>
+                  {newProduct.images.map((image, index) => {
+                    const imageUrl = `${import.meta.env.VITE_IMAGES_URL}${image.url}`;
+                    return (
+                      <li key={index}>
+                        <img
+                          src={imageUrl}
+                          alt={`Imagen ${index + 1}`}
+                          className="w-32 h-32 object-cover mb-2" // Aquí ajustamos el ancho y el alto
+                        />
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
             <label htmlFor="images" className="block">
               Imágenes
             </label>
@@ -610,25 +658,6 @@ function DashboardProducts() {
               onChange={handleImageChange}
               className="border p-2 w-full"
             />
-            {newProduct.images.length > 0 && (
-              <div className="mt-2">
-                <h4>Imágenes seleccionadas:</h4>
-                <ul>
-                  {newProduct.images.map((image, index) => (
-                    <li key={index}>
-                      {image.name}
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteImage(image.id)}
-                        className="text-red-500 ml-2"
-                      >
-                        Eliminar
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
           </div>
           <div className="mb-4 flex justify-between">
             <button
@@ -663,20 +692,22 @@ function DashboardProducts() {
             </tr>
           </thead>
           <tbody>
-            {productosInhabilitados.map((product, index) => (
-              <tr key={product.id}>
-                <td className="border p-2">{index + 1}</td>
-                <td className="border p-2">{product.name}</td>
-                <td className="border p-2">
-                  <button
-                    onClick={() => handleHabilitar(product.id)}
-                    className="bg-green-500 text-white py-1 px-2 rounded"
-                  >
-                    Habilitar
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {productosInhabilitados
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((product, index) => (
+                <tr key={product.id}>
+                  <td className="border p-2">{index + 1}</td>
+                  <td className="border p-2">{product.name}</td>
+                  <td className="border p-2">
+                    <button
+                      onClick={() => handleHabilitar(product.id)}
+                      className="bg-green-500 text-white py-1 px-2 rounded"
+                    >
+                      Habilitar
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
         <button

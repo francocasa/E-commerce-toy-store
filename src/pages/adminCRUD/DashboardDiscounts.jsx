@@ -7,6 +7,7 @@ import {
   consultaDescuentosInhabilitados,
   habilitarDescuento,
   inhabilitarDescuento,
+  checkIfDescriptionExists,
 } from '../../services/discounts';
 import Swal from 'sweetalert2';
 import Modal from 'react-modal';
@@ -26,16 +27,71 @@ function DashboardDiscounts() {
 
   useEffect(() => {
     const fetchDiscounts = async () => {
-      const fetchedDiscounts = await consultaDescuentosHabilitados();
-      setDiscounts(fetchedDiscounts);
-      const fetchedDisabledDiscounts = await consultaDescuentosInhabilitados();
-      setDisabledDiscounts(fetchedDisabledDiscounts);
+      const token = localStorage.getItem('adminToken');
+
+      if (!token) {
+        // Si no hay token, redirigir al login
+        window.location.href = '/loginAdm';
+        return;
+      }
+
+      try {
+        // Si el token está presente, realizar las consultas
+        const fetchedDiscounts = await consultaDescuentosHabilitados();
+        setDiscounts(fetchedDiscounts);
+
+        const fetchedDisabledDiscounts =
+          await consultaDescuentosInhabilitados();
+        setDisabledDiscounts(fetchedDisabledDiscounts);
+      } catch (error) {
+        // Manejo de errores, por ejemplo si la API falla
+        console.error('Error al cargar los descuentos:', error);
+        Swal.fire(
+          'Error',
+          'Hubo un problema al cargar los descuentos.',
+          'error',
+        );
+      }
     };
 
     fetchDiscounts();
   }, []);
 
   const handleAddOrEditDiscount = async () => {
+    // Verificar si la descripción ha cambiado (solo si es un descuento con ID)
+    const isDescriptionChanged = newDiscount.id
+      ? newDiscount.description !==
+        discounts.find((d) => d.id === newDiscount.id)?.description
+      : false; // Solo verificar si hay un ID y si la descripción ha cambiado
+
+    // Validar la descripción solo si ha cambiado o si es un nuevo descuento
+    if (
+      ((newDiscount.id && isDescriptionChanged) || !newDiscount.id) &&
+      newDiscount.description.length <= 5
+    ) {
+      Swal.fire(
+        'Error',
+        'La descripción debe tener más de 5 caracteres.',
+        'error',
+      );
+      return; // Detener el proceso si la validación falla
+    }
+
+    // Verificar si la descripción ya existe solo si ha cambiado
+    if (isDescriptionChanged) {
+      const isDuplicate = await checkIfDescriptionExists(
+        newDiscount.description,
+      );
+      if (isDuplicate) {
+        Swal.fire(
+          'Error',
+          'Ya existe un descuento con esa descripción, puede estar habilitado o deshabilitado',
+          'error',
+        );
+        return; // Detener el proceso si ya existe
+      }
+    }
+
     const discountValue = Number(newDiscount.discount); // Convierte a número
 
     if (isNaN(discountValue)) {
@@ -55,24 +111,55 @@ function DashboardDiscounts() {
       discount: adjustedDiscount,
     };
 
-    // Comprobar si tiene ID para editar o crear
-    if (newDiscount.id) {
-      // Modificar descuento
-      const updatedDiscount = await modificarDescuento(
-        newDiscount.id,
-        discountToSubmit,
-      );
-      setDiscounts(
-        discounts.map((discount) =>
-          discount.id === newDiscount.id ? updatedDiscount : discount,
-        ),
-      );
-      Swal.fire('Éxito', 'Descuento actualizado correctamente.', 'success');
-    } else {
-      // Agregar nuevo descuento
-      const addedDiscount = await agregarDescuento(discountToSubmit);
-      setDiscounts([...discounts, addedDiscount]);
-      Swal.fire('Éxito', 'Descuento agregado correctamente.', 'success');
+    try {
+      // Comprobar si tiene ID para editar o crear
+      if (newDiscount.id) {
+        // Modificar descuento
+        const updatedDiscount = await modificarDescuento(
+          newDiscount.id,
+          discountToSubmit,
+        );
+
+        // Actualizar los descuentos en la interfaz
+        setDiscounts((prevDiscounts) =>
+          prevDiscounts.map((discount) =>
+            discount.id === newDiscount.id ? updatedDiscount : discount,
+          ),
+        );
+
+        Swal.fire('Éxito', 'Descuento actualizado correctamente.', 'success');
+      } else {
+        // Agregar nuevo descuento
+        const response = await agregarDescuento(discountToSubmit);
+        if (response && response.data) {
+          const addedDiscount = response.data; // Asignamos el descuento desde la respuesta
+          setDiscounts((prevDiscounts) => [...prevDiscounts, addedDiscount]);
+
+          Swal.fire('Éxito', 'Descuento agregado correctamente.', 'success');
+        } else {
+          window.location.reload();
+        }
+      }
+    } catch (error) {
+      // Manejo de errores por expiración de token (código 403)
+      if (error.response && error.response.status === 403) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Token Expirado',
+          text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+        }).then(() => {
+          localStorage.removeItem('adminToken'); // Eliminar el token expirado
+          window.location.href = '/loginAdm'; // Redirigir al login de administrador
+        });
+      } else {
+        // Manejo de otros errores
+        console.error('Error al agregar o editar descuento:', error);
+        Swal.fire(
+          'Error',
+          'Hubo un problema al procesar la solicitud. Inténtalo de nuevo.',
+          'error',
+        );
+      }
     }
 
     handleCloseModal();
@@ -96,13 +183,43 @@ function DashboardDiscounts() {
     });
 
     if (result.isConfirmed) {
-      await inhabilitarDescuento(id);
-      setDiscounts(discounts.filter((discount) => discount.id !== id));
-      Swal.fire(
-        'Deshabilitado!',
-        'El descuento ha sido deshabilitado.',
-        'success',
-      );
+      try {
+        // Llamar a la API para deshabilitar el descuento
+        await inhabilitarDescuento(id);
+
+        // Actualizar los descuentos en la interfaz
+        setDiscounts(discounts.filter((discount) => discount.id !== id)); // Eliminar del listado de habilitados
+        const discountToDisable = discounts.find(
+          (discount) => discount.id === id,
+        ); // Buscar el descuento deshabilitado
+        setDisabledDiscounts([...disabledDiscounts, discountToDisable]); // Agregar al listado de inhabilitados
+
+        Swal.fire(
+          'Deshabilitado!',
+          'El descuento ha sido deshabilitado.',
+          'success',
+        );
+      } catch (error) {
+        // Manejo de errores por expiración de token (código 403)
+        if (error.response && error.response.status === 403) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Token Expirado',
+            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+          }).then(() => {
+            localStorage.removeItem('adminToken'); // Eliminar el token expirado
+            window.location.href = '/loginAdm'; // Redirigir al login de administrador
+          });
+        } else {
+          // Manejo de otros errores
+          console.error('Error al deshabilitar el descuento:', error);
+          Swal.fire(
+            'Error',
+            'Hubo un problema al deshabilitar el descuento. Inténtalo de nuevo.',
+            'error',
+          );
+        }
+      }
     }
   };
 
@@ -119,12 +236,39 @@ function DashboardDiscounts() {
     });
 
     if (result.isConfirmed) {
-      const reactivatedDiscount = await habilitarDescuento(id);
-      setDiscounts([...discounts, reactivatedDiscount]);
-      setDisabledDiscounts(
-        disabledDiscounts.filter((discount) => discount.id !== id),
-      );
-      Swal.fire('Habilitado!', 'El descuento ha sido habilitado.', 'success');
+      try {
+        // Llamar a la API para habilitar el descuento
+        const reactivatedDiscount = await habilitarDescuento(id);
+
+        // Si la respuesta es exitosa, actualizar la interfaz
+        setDiscounts([...discounts, reactivatedDiscount]);
+        setDisabledDiscounts(
+          disabledDiscounts.filter((discount) => discount.id !== id),
+        );
+
+        // Notificación de éxito
+        Swal.fire('Habilitado!', 'El descuento ha sido habilitado.', 'success');
+      } catch (error) {
+        // Manejo de errores por expiración del token (código 403)
+        if (error.response && error.response.status === 403) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Token Expirado',
+            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+          }).then(() => {
+            localStorage.removeItem('adminToken'); // Eliminar el token expirado
+            window.location.href = '/loginAdm'; // Redirigir al login de administrador
+          });
+        } else {
+          // Manejo de otros errores
+          console.error('Error al habilitar el descuento:', error);
+          Swal.fire(
+            'Error',
+            'Hubo un problema al habilitar el descuento. Inténtalo de nuevo.',
+            'error',
+          );
+        }
+      }
     }
   };
 
@@ -199,20 +343,23 @@ function DashboardDiscounts() {
       >
         <h3 className="text-xl mb-2 mt-10">Descuentos Inhabilitados</h3>
         <ul>
-          {disabledDiscounts.map((discount) => (
-            <li
-              key={discount.id}
-              className="mb-2 flex justify-between items-center"
-            >
-              <span>{discount.description}</span>
-              <button
-                onClick={() => handleEnableDiscount(discount.id)}
-                className="bg-green-500 text-white py-1 px-2 rounded"
+          {disabledDiscounts
+            .filter((discount) => discount && discount.description) // Aseguramos que no sea null ni undefined
+            .sort((a, b) => a.description.localeCompare(b.description)) // Ordenamos por descripción
+            .map((discount) => (
+              <li
+                key={discount.id}
+                className="mb-2 flex justify-between items-center"
               >
-                Habilitar
-              </button>
-            </li>
-          ))}
+                <span>{discount.description}</span>
+                <button
+                  onClick={() => handleEnableDiscount(discount.id)}
+                  className="bg-green-500 text-white py-1 px-2 rounded"
+                >
+                  Habilitar
+                </button>
+              </li>
+            ))}
         </ul>
         <button
           onClick={() => setEnableModalIsOpen(false)}

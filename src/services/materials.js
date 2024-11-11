@@ -2,6 +2,28 @@ import axios from 'axios';
 
 const BASE_URL = import.meta.env.VITE_API_URL; // Obtener la URL base desde el .env
 
+export const isNameDuplicated = (
+  name,
+  materials,
+  disabledMaterials,
+  excludeId = null,
+) => {
+  // Revisamos si el nombre existe en los materiales activos o deshabilitados, excepto si es el mismo material que se está editando.
+  const duplicatedInActive = materials.some(
+    (material) =>
+      material.name.toLowerCase() === name.toLowerCase() &&
+      material.id !== excludeId,
+  );
+
+  const duplicatedInDisabled = disabledMaterials.some(
+    (material) =>
+      material.name.toLowerCase() === name.toLowerCase() &&
+      material.id !== excludeId,
+  );
+
+  return duplicatedInActive || duplicatedInDisabled;
+};
+
 // Función para consultar los materiales inhabilitados
 export const consultaMaterialesInhabilitados = async () => {
   const URL = `${BASE_URL}/materials`;

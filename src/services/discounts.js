@@ -14,6 +14,20 @@ export const consultaDescuentosHabilitados = async () => {
     return []; // Retornar un arreglo vacío en caso de error
   }
 };
+export const checkIfDescriptionExists = async (description) => {
+  try {
+    // Hacer una consulta a la API para verificar si la descripción ya existe
+    const response = await consultaDescuentosHabilitados(); // O podrías hacer la consulta a un endpoint específico que te devuelva todos los descuentos
+    const existingDiscount = response.find(
+      (discount) =>
+        discount.description.toLowerCase() === description.toLowerCase(),
+    );
+    return existingDiscount ? true : false;
+  } catch (error) {
+    console.error('Error al verificar la descripción:', error);
+    return false; // Si hay un error en la consulta, retornar false
+  }
+};
 
 // Función para consultar los descuentos inhabilitados (isDeleted: true)
 export const consultaDescuentosInhabilitados = async (headers) => {
@@ -129,12 +143,16 @@ export const agregarDescuento = async (descuento) => {
   console.log('Cuerpo del request:', discountToSubmit);
 
   try {
+    // Enviar la solicitud a la API
     const response = await axios.post(URL, discountToSubmit, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`, // Agregar el token en el encabezado de la petición
       },
     });
+
+    // Verificar la respuesta
+    console.log('Respuesta de la API:', response);
 
     // Verificar si la respuesta fue exitosa (código HTTP 201)
     if (response.status === 201) {
@@ -144,16 +162,11 @@ export const agregarDescuento = async (descuento) => {
         throw new Error('La respuesta no contiene datos válidos');
       }
     } else {
-      throw new Error('Error en la creación del descuento');
+      throw new Error(
+        `Error en la creación del descuento: ${response.status} - ${response.statusText}`,
+      );
     }
   } catch (error) {
-    console.error('Error agregando el descuento:', error);
-    // Mostrar un mensaje de error al usuario
-    Swal.fire(
-      'Error',
-      'No se pudo agregar el descuento. Intenta nuevamente.',
-      'error',
-    );
     return null; // Retornar null en caso de error
   }
 };
