@@ -13,22 +13,13 @@ export const obtenerCarritoPorUsuario = async (id) => {
   }
 };
 
-export const updateCartItem = () => {
-  return {
-    headers: {
-      Authorization: `Bearer ${token}`, // Agregar el token a los headers
-      'Content-Type': 'application/json',
-    },
-  };
-};
-
 // Función para editar un producto existente
-export const editarProductoDB = async (item, quantity, token) => {
+export const updateCartItemDB = async (item, quantity, token) => {
   const URL = `${BASE_URL}/carts/item/${item.idItemCart}`;
   const datos = { quantity: quantity };
 
   try {
-    const response = await axios.put(URL, datos, {
+    const response = await axios.patch(URL, datos, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -57,6 +48,23 @@ export const addCartItemDB = async (cartId, item, token) => {
   } catch (error) {
     console.error('Error adding product:', error);
     return null; // Retornar null en caso de error
+  }
+};
+
+// Función para editar un producto existente
+export const deleteCartItemDB = async (item, token) => {
+  const URL = `${BASE_URL}/carts/item/${item.idItemCart}`;
+  try {
+    const response = await axios.delete(URL, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error editing product:', error.response.data); // Imprime el error detallado
+    return null;
   }
 };
 

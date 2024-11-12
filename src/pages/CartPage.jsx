@@ -27,18 +27,13 @@ function CartPage() {
   const total = subtotal - discounts;
 
   const updateQuantity = (id, quantity) => {
-    const updatedCart = cartItems.map((item) => {
-      if (item.id === id) {
-        updateCartItem(item, quantity);
-        return { ...item, quantity: Math.max(1, quantity) };
-      }
-      return item;
-    });
+    const cartItem = cartItems.filter((item) => item.id === id);
+    updateCartItem(cartItem[0], quantity);
   };
 
   const removeItem = (id) => {
-    const updatedCart = cartItems.filter((item) => item.id !== id);
-    deleteCartItem(updatedCart);
+    const cartItem = cartItems.filter((item) => item.id === id);
+    deleteCartItem(cartItem[0]);
   };
 
   return (

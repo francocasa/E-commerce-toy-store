@@ -29,7 +29,7 @@ const CategoryFilter = ({
 
 // Validación de prop-types
 CategoryFilter.propTypes = {
-  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
+  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
   selectedCategory: PropTypes.string.isRequired,
   setSelectedCategory: PropTypes.func.isRequired,
 };

@@ -65,7 +65,7 @@ export default function CartItem({ item, onUpdateQuantity, onRemove }) {
 // Validación de tipos de las props
 CartItem.propTypes = {
   item: PropTypes.shape({
-    id: PropTypes.number.isRequired, // Asegúrate de que sea un número
+    id: PropTypes.string.isRequired, // Asegúrate de que sea un número
     title: PropTypes.string.isRequired,
     finalPrice: PropTypes.number.isRequired,
     price: PropTypes.number.isRequired,
