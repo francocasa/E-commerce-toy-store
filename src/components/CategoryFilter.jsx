@@ -5,8 +5,6 @@ const CategoryFilter = ({
   selectedCategory,
   setSelectedCategory,
 }) => {
-  console.log(categories);
-  console.log(selectedCategory);
   return (
     <div className="mb-4">
       <label className="mr-2" htmlFor="category-select">
@@ -31,7 +29,7 @@ const CategoryFilter = ({
 
 // Validación de prop-types
 CategoryFilter.propTypes = {
-  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
+  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
   selectedCategory: PropTypes.string.isRequired,
   setSelectedCategory: PropTypes.func.isRequired,
 };

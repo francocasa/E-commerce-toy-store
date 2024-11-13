@@ -2,23 +2,14 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FaTruck } from 'react-icons/fa';
 import Swal from 'sweetalert2';
+import { useCounter } from '../components/counter/Context';
 
 const ProductDetailPreCart = ({ product }) => {
+  const { updateCart } = useCounter();
   const [quantity, setQuantity] = useState(1);
 
   const calculateTotal = () => {
     let price = product.price;
-
-    // Aplicar descuento del 30% si categoryPromo es 'Navidad'
-    if (product.categoryPromo === 'Navidad') {
-      price *= 0.7; // 30% de descuento
-    }
-
-    // Aplicar descuento del 33.33% si categoryPromo es '3x2' y la cantidad es múltiplo de 3
-    if (product.categoryPromo === '3x2' && quantity % 3 === 0) {
-      price *= 0.66667; // 33.33% de descuento
-    }
-
     return price * quantity;
   };
 
@@ -46,7 +37,7 @@ const ProductDetailPreCart = ({ product }) => {
       });
     }
 
-    localStorage.setItem('Cart', JSON.stringify(existingCart));
+    updateCart(existingCart);
   };
 
   // Mensaje de promoción

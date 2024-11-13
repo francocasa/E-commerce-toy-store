@@ -1,5 +1,11 @@
 import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
+import Swal from 'sweetalert2';
+import {
+  addCartItemDB,
+  updateCartItemDB,
+  deleteCartItemDB,
+} from '../../services/cart';
 
 // Crear el contexto
 const CounterContext = createContext();
@@ -7,6 +13,7 @@ const CounterContext = createContext();
 // Crear un Provider que envuelva a los componentes
 export const CounterProvider = ({ children }) => {
   const [user, setUser] = useState({});
+  const [userCart, setUserCart] = useState({});
   const [userAdm, setUserAdm] = useState('');
   const [token, setToken] = useState('');
   const [cartItems, setCartItems] = useState([]);
@@ -60,6 +67,80 @@ export const CounterProvider = ({ children }) => {
     setIsUserLoggedIn(false);
   };
 
+  const updateCartItem = async (item, quantity) => {
+    console.log('ingreso al pud');
+    try {
+      let response;
+      const updatedCart = cartItems.map((cartItem) => {
+        if (cartItem.id === item.id) {
+          return { ...cartItem, quantity: Math.max(1, quantity) };
+        }
+        return item;
+      });
+      response = await updateCartItemDB(item, quantity, token);
+
+      updateLocalCart(updatedCart);
+    } catch (error) {
+      console.error('Error al actualizar un item:', error);
+      Swal.fire(
+        'Error',
+        error.response?.data?.details[0]?.message ||
+          'Ocurrió un error inesperado.',
+        'error',
+      );
+    }
+  };
+
+  const deleteCartItem = async (item) => {
+    try {
+      console.log('item');
+      console.log(item);
+      let response;
+      const updatedCart = cartItems.filter(
+        (cartItem) => cartItem.id !== item.id,
+      );
+      console.log('updatedCart');
+      console.log(updatedCart);
+      response = await deleteCartItemDB(item, token);
+      updateLocalCart(updatedCart);
+    } catch (error) {
+      console.error('Error al eliminar un item:', error);
+      Swal.fire(
+        'Error',
+        error.response?.data?.details[0]?.message ||
+          'Ocurrió un error inesperado.',
+        'error',
+      );
+    }
+  };
+
+  const addCartItem = async (item) => {
+    console.log('addCartItem');
+    console.log(item);
+    try {
+      let response;
+      response = await addCartItemDB(userCart, item[item.length - 1], token);
+      item[item.length - 1].idItemCart = response.id;
+      updateLocalCart(item);
+    } catch (error) {
+      console.error('Error al agregar un item:', error);
+      Swal.fire(
+        'Error',
+        error.response?.data?.details[0]?.message ||
+          'Ocurrió un error inesperado.',
+        'error',
+      );
+    }
+  };
+
+  // falta arreglar
+  const updateLocalCart = (updatedCart) => {
+    console.log('updateLocalCart');
+    console.log(updatedCart);
+    setCartItems(updatedCart);
+    localStorage.setItem('Cart', JSON.stringify(updatedCart));
+  };
+
   const store = useMemo(
     () => ({
       user,
@@ -76,6 +157,11 @@ export const CounterProvider = ({ children }) => {
       loginUser,
       logoutUser,
       setToken,
+      updateCartItem,
+      deleteCartItem,
+      addCartItem,
+      updateLocalCart,
+      setUserCart,
     }),
     [user, userAdm, cartItems, isAdminLoggedIn, isUserLoggedIn, adminToken],
   );

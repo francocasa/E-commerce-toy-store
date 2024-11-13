@@ -11,7 +11,6 @@ const PromotionSection = ({ selectedCategory }) => {
   useEffect(() => {
     const fetchPromotions = async () => {
       const data = await consultaPromociones(); // Usar la función del servicio
-      console.log('Descuentos:', data); // Verificar la salida
       setPromotions(data || []); // Guarda las promociones en el estado
     };
 
