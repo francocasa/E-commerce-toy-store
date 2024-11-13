@@ -8,6 +8,7 @@ import {
 } from '../services/products';
 import { AddToCart, ProductsSection } from '../components';
 import { useEffect, useState } from 'react';
+
 const IMAGES_URL = import.meta.env.VITE_IMAGES_URL; // Obtener la URL base desde el .env
 
 function DetailsProductPage() {
@@ -66,12 +67,17 @@ function DetailsProductPage() {
 
   const imageUrl =
     Array.isArray(product.images) && product.images.length > 0
-      ? IMAGES_URL + '/' + product.images[0].url
+      ? IMAGES_URL + product.images[0].url
       : '';
   const brand = brands.find((b) => b.id === product.brandId);
   const material = materials.find((m) => m.id === product.materialId);
   const category = categories.find((c) => c.id === product.categoryId);
   const discount = discounts.find((d) => d.id === product.discountId);
+
+  const hasDiscount = discount && discount.id === product.discountId;
+  const finalPrice = hasDiscount
+    ? (product.price * (1 - discount.discount)).toFixed(2)
+    : product.price.toFixed(2);
 
   return (
     <main className="container mx-auto p-5 md:mt-8 lg:mt-10">
@@ -93,18 +99,17 @@ function DetailsProductPage() {
           <div className="text-md">
             <h1 className="font-bold text-2xl">{product.name}</h1>
 
-            {discount === '' ? (
-              <p className="font-medium text-xl">${product.price.toFixed(2)}</p>
-            ) : (
+            {/* Si hay descuento, mostrar precio original tachado y el nuevo precio */}
+            {hasDiscount ? (
               <div className="text-gray-600 mb-3 flex gap-3 items-center h-7">
                 <p className="font-medium text-xl text-gray-400 line-through ">
                   ${product.price.toFixed(2)}
                 </p>
-                <p className="font-medium text-xl">
-                  $
-                  {(product.price * (1 - product.discount.discount)).toFixed(2)}
-                </p>
+                <p className="font-medium text-xl">${finalPrice}</p>
               </div>
+            ) : (
+              // Si no hay descuento, mostrar solo el precio regular
+              <p className="font-medium text-xl">${product.price.toFixed(2)}</p>
             )}
 
             <p className="my-3">{product.description}</p>
@@ -123,17 +128,17 @@ function DetailsProductPage() {
             </p>
 
             {/* Sección de promociones si aplica */}
-            {product.discountId && discount ? (
+            {hasDiscount && (
               <div className="mt-4 border-t pt-4">
                 <h2 className="text-xl font-bold mb-2">PROMOCIÓN</h2>
                 <h3 className="text-lg font-bold mb-2">
-                  {product.discount.description}
+                  {discount.description}
                 </h3>
                 <p className="text-md mb-2">
-                  {`Descuento del ${(product.discount.discount * 100).toFixed(0)}%`}
+                  {`Descuento del ${(discount.discount * 100).toFixed(0)}%`}
                 </p>
               </div>
-            ) : null}
+            )}
           </div>
 
           <AddToCart product={product} />

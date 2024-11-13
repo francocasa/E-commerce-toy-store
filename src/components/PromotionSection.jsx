@@ -1,30 +1,58 @@
 import { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ProductCard from './ProductCard';
 import PropTypes from 'prop-types';
-import { consultaPromociones } from '../services/products'; // Importa la función de consulta
+import { consultaProductos, consultaDescuentos } from '../services/products'; // Importa la función de consulta
 
 const PromotionSection = ({ selectedCategory }) => {
+  const [products, setProducts] = useState([]); // Estado para almacenar los productos
+  const [discounts, setDiscounts] = useState([]); // Estado para almacenar los descuentos
   const scrollRef = useRef(null); // Referencia al contenedor
-  const navigate = useNavigate(); // Crea la instancia de navegación
-  const [promotions, setPromotions] = useState([]); // Estado para las promociones
+  const [loading, setLoading] = useState(true); // Estado de carga
+  const [error, setError] = useState(null); // Estado de error
 
   useEffect(() => {
-    const fetchPromotions = async () => {
-      const data = await consultaPromociones(); // Usar la función del servicio
-      setPromotions(data || []); // Guarda las promociones en el estado
+    const fetchDiscounts = async () => {
+      setLoading(true);
+      try {
+        const data = await consultaDescuentos(); // Usa el servicio
+        if (data) {
+          setDiscounts(data);
+        } else {
+          setError('Error al cargar los descuentos');
+        }
+      } catch (err) {
+        setError('Error al cargar los productos');
+      } finally {
+        setLoading(false); // Finaliza carga
+      }
     };
 
-    fetchPromotions();
+    const fetchProductos = async () => {
+      setLoading(true);
+      try {
+        const data = await consultaProductos(); // Usa el servicio
+        if (data) {
+          const filteredPromotions = data.filter(
+            (product) => product.discountId !== null, // Filtrar productos que tienen descuentos
+          );
+          setProducts(filteredPromotions); // Guarda todos los productos sin filtrar
+        } else {
+          setError('Error al cargar los productos');
+        }
+      } catch (err) {
+        setError('Error al cargar los productos');
+      } finally {
+        setLoading(false); // Finaliza carga
+      }
+    };
+
+    fetchDiscounts();
+    fetchProductos();
   }, []);
 
-  // Filtra las promociones según la categoría seleccionada
-  const filteredPromotions = selectedCategory
-    ? promotions.filter((promo) =>
-        promo.products.some(
-          (product) => product.categoryId === selectedCategory,
-        ),
-      )
-    : promotions;
+  if (loading) return <p>Cargando promociones...</p>;
+  if (error) return <p className="text-center text-red-500">{error}</p>;
 
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -38,44 +66,28 @@ const PromotionSection = ({ selectedCategory }) => {
     }
   };
 
-  const handleViewPromotion = (id) => {
-    navigate(`/detailsproduct/${id}`); // Redirige a la ruta deseada
-  };
-
   return (
     <section className="py-10">
       <div className="flex justify-between items-center mb-5">
-        <h2 className="text-2xl font-semibold">Promociones</h2>
-        <a href="/promotions" className="text-blue-600 hover:underline">
+        <h2 className="text-2xl font-semibold">
+          Promociones - Juguetes con descuentos
+        </h2>
+        <a href="/products" className="text-blue-600 hover:underline">
           Ver todo &rarr;
         </a>
       </div>
       <div className="relative">
         <div
           ref={scrollRef}
-          className="flex space-x-4 overflow-x-scroll no-scrollbar p-2"
+          className="flex gap-3 overflow-x-scroll no-scrollbar p-2"
         >
-          {filteredPromotions.length > 0 ? (
-            filteredPromotions.map((promo) => (
-              <div
-                key={promo.id}
-                className="min-w-[200px] sm:min-w-[250px] md:min-w-[300px] bg-white shadow-md p-4 rounded-md mx-auto"
-              >
-                <h3 className="text-lg mt-2 font-medium text-center">
-                  {promo.description} - {Math.round((1 - promo.discount) * 100)}
-                  %
-                </h3>
-                <button
-                  onClick={() => handleViewPromotion(promo.id)}
-                  className="text-blue-600 hover:underline block mx-auto mt-2"
-                >
-                  Ver promoción
-                </button>
-              </div>
-            ))
-          ) : (
-            <p className="text-center">No hay promociones disponibles.</p>
-          )}
+          {/* Mapear los productos */}
+          {products.map((product) => (
+            <div className="min-w-60" key={product.id}>
+              <ProductCard product={product} discounts={discounts} />{' '}
+              {/* Asegúrate de pasar discounts aquí */}
+            </div>
+          ))}
         </div>
 
         {/* Controles para desplazamiento */}
@@ -94,11 +106,6 @@ const PromotionSection = ({ selectedCategory }) => {
       </div>
     </section>
   );
-};
-
-// Validación de prop-types
-PromotionSection.propTypes = {
-  selectedCategory: PropTypes.string.isRequired,
 };
 
 export default PromotionSection;

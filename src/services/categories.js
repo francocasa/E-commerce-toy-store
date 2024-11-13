@@ -6,16 +6,17 @@ const BASE_URL = import.meta.env.VITE_API_URL; // Obtener la URL base desde el .
 
 // Función para obtener datos de categorías (por ejemplo)
 export const consultaDatos = async () => {
-  const URL = `${BASE_URL}/categories`;
+  const URL = `${BASE_URL}/categories`; // Endpoint para obtener todas las categorías
   try {
-    const response = await axios.get(URL, getAuthHeaders());
-    return response.data;
-  } catch (error) {
-    console.error(
-      'Error fetching data:',
-      error.response?.data || error.message,
+    const response = await axios.get(URL, getAuthHeaders()); // Obtener todas las categorías, sin filtrar en el backend
+    // Filtrar categorías activas (isDeleted: false)
+    const activeCategories = response.data.filter(
+      (category) => !category.isDeleted,
     );
-    return [];
+    return activeCategories; // Retornar solo las categorías activas
+  } catch (error) {
+    console.error('Error fetching active categories:', error);
+    return []; // Retornar un arreglo vacío en caso de error
   }
 };
 

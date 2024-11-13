@@ -10,7 +10,7 @@ export default function AddToCart({ product }) {
   const { updateCartItem, addCartItem } = useCounter();
   const imageUrl =
     Array.isArray(product.images) && product.images.length > 0
-      ? IMAGES_URL + '/' + product.images[0].url
+      ? IMAGES_URL + product.images[0].url
       : '';
 
   const addToCart = () => {

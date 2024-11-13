@@ -20,7 +20,7 @@ function PromotionsPage() {
           setError('Error al cargar los descuentos');
         }
       } catch (err) {
-        setError('Error al cargar los productos');
+        setError('Error al cargar los descuentos');
       } finally {
         setLoading(false); // Finaliza carga
       }
@@ -49,13 +49,17 @@ function PromotionsPage() {
     fetchProductos();
   }, []);
 
+  // Filtra las promociones para obtener solo las categorías que tienen productos asociados
+  const categoriesWithPromotions = discounts.filter((discount) => {
+    return promotions.some((product) => product.discountId === discount.id);
+  });
+
   const filteredPromotions = promotions.filter((product) => {
     if (selectedCategoryPromo === 'Todas') {
       return product.discountId !== null; // Solo mostrar productos con discountId no nulo
     }
     return (
       selectedCategoryPromo === '' ||
-      // product.discountId === (selectedCategoryPromo === 'Navidad' ? '2' : '1')
       product.discountId === selectedCategoryPromo
     );
   });
@@ -70,7 +74,7 @@ function PromotionsPage() {
 
         <div className="mb-8">
           <CategoryFilter
-            categories={discounts}
+            categories={categoriesWithPromotions} // Solo pasamos las categorías con productos asociados
             selectedCategory={selectedCategoryPromo}
             setSelectedCategory={setSelectedCategoryPromo}
           />

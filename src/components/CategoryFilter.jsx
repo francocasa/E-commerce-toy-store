@@ -17,11 +17,13 @@ const CategoryFilter = ({
         className="border p-2"
       >
         <option value="">Todas</option>
-        {categories.map((category) => (
-          <option key={category.id} value={category.id}>
-            {category.description}
-          </option>
-        ))}
+        {categories
+          .sort((a, b) => a.description.localeCompare(b.description)) // Ordena por el atributo "name" de A a Z
+          .map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.description}
+            </option>
+          ))}
       </select>
     </div>
   );

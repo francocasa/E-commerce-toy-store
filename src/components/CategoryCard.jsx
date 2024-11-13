@@ -4,7 +4,7 @@ const IMAGES_URL = import.meta.env.VITE_IMAGES_URL; // Obtener la URL base desde
 
 function CategoryCard({ category }) {
   // Manejo de la imagen
-  const imageUrl = IMAGES_URL + '/' + category.image;
+  const imageUrl = IMAGES_URL + category.image;
   return (
     <div className="border px-4 py-6 rounded-lg shadow-lg w-full mx-auto">
       {/* Ancho fijo de 270 px */}
