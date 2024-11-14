@@ -91,7 +91,6 @@ export const inhabilitarDescuento = async (id) => {
       { isDeleted: true }, // Cambiar isDeleted a true en lugar de status
       { headers }, // Usamos los headers de autenticación
     );
-    console.log('Descuento deshabilitado correctamente:', response.data); // Imprime la respuesta
     return response.data; // Retornar la respuesta de la API (descuento inhabilitado)
   } catch (error) {
     if (error.response) {
@@ -139,9 +138,6 @@ export const agregarDescuento = async (descuento) => {
     discount, // El valor del descuento (en formato decimal, por ejemplo 0.3 para 30%)
   };
 
-  // Hacer log del cuerpo del request
-  console.log('Cuerpo del request:', discountToSubmit);
-
   try {
     // Enviar la solicitud a la API
     const response = await axios.post(URL, discountToSubmit, {
@@ -150,9 +146,6 @@ export const agregarDescuento = async (descuento) => {
         Authorization: `Bearer ${token}`, // Agregar el token en el encabezado de la petición
       },
     });
-
-    // Verificar la respuesta
-    console.log('Respuesta de la API:', response);
 
     // Verificar si la respuesta fue exitosa (código HTTP 201)
     if (response.status === 201) {

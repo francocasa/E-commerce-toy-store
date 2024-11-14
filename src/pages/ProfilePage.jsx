@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import {
-  updateUserProfile,
-  getUserById,
-  getUserIdByEmail,
-} from '../services/users'; // Asegúrate de que estas funciones estén correctamente importadas
+import { updateUserProfile } from '../services/users'; // Asegúrate de que estas funciones estén correctamente importadas
 import { useCounter } from '../components/counter/Context';
 
 function ProfilePage() {
@@ -14,7 +10,7 @@ function ProfilePage() {
   const [address, setAddress] = useState(''); // Agrega dirección si es parte del perfil
   const [phone, setPhone] = useState(''); // Agrega teléfono si es parte del perfil
   const [isEditing, setIsEditing] = useState(false);
-  const { token, user } = useCounter();
+  const { token, user, isUserLoggedIn } = useCounter();
 
   // useEffect(() => {
   //   const email = localStorage.getItem('currentUserEmail');

@@ -68,9 +68,20 @@ export const deleteCartItemDB = async (item, token) => {
   }
 };
 
-/*
+// Función para pagar
+export const payment = async (id, token) => {
+  const URL = `${BASE_URL}/payment/${id}`;
 
-
-updateCartItem
-deleteCartItem,
-addCartItem,*/
+  try {
+    const response = await axios.post(URL, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`, // Agregar el token
+      },
+    });
+    return response.data; // Retornar el pago
+  } catch (error) {
+    console.error('Error adding product:', error);
+    return null; // Retornar null en caso de error
+  }
+};

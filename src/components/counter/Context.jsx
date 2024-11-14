@@ -21,7 +21,9 @@ export const CounterProvider = ({ children }) => {
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(
     () => localStorage.getItem('AdminLogueado') !== null,
   );
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(() => user.id !== null);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(
+    () => user.id !== undefined,
+  );
 
   const [adminToken, setAdminToken] = useState(
     localStorage.getItem('adminToken') || '',
@@ -54,7 +56,6 @@ export const CounterProvider = ({ children }) => {
   };
 
   const loginUser = (email, id) => {
-    console.log('ingreso al login');
     const user = { email, id };
     setUser(user);
     setIsUserLoggedIn(true);
@@ -93,10 +94,9 @@ export const CounterProvider = ({ children }) => {
         if (cartItem.id === item.id) {
           return { ...cartItem, quantity: Math.max(1, quantity) };
         }
-        return item;
+        return cartItem;
       });
       response = await updateCartItemDB(item, quantity, token);
-
       updateLocalCart(updatedCart);
     } catch (error) {
       console.error('Error al actualizar un item:', error);
@@ -115,8 +115,6 @@ export const CounterProvider = ({ children }) => {
       const updatedCart = cartItems.filter(
         (cartItem) => cartItem.id !== item.id,
       );
-      console.log('updatedCart');
-      console.log(updatedCart);
       response = await deleteCartItemDB(item, token);
       updateLocalCart(updatedCart);
     } catch (error) {
@@ -131,8 +129,6 @@ export const CounterProvider = ({ children }) => {
   };
 
   const addCartItem = async (item) => {
-    console.log('addCartItem');
-    console.log(item);
     try {
       let response;
       response = await addCartItemDB(userCart, item[item.length - 1], token);
