@@ -15,15 +15,15 @@ function LoginPage() {
     e.preventDefault();
 
     // Comprobar si el usuario ya está registrado
-    if (localStorage.getItem('currentUserEmail')) {
-      Swal.fire({
-        title: 'Usuario logueado con éxito!',
-        text: 'No se puede crear una nueva cuenta mientras estés conectado.',
-        icon: 'info',
-        confirmButtonText: 'Aceptar',
-      });
-      return;
-    }
+    // if (localStorage.getItem('currentUserEmail')) {
+    //   Swal.fire({
+    //     title: 'Usuario logueado con éxito!',
+    //     text: 'No se puede crear una nueva cuenta mientras estés conectado.',
+    //     icon: 'info',
+    //     confirmButtonText: 'Aceptar',
+    //   });
+    //   return;
+    // }
 
     // Lógica de autenticación
     const responseData = await authenticateUser(email, password);
