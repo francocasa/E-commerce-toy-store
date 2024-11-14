@@ -8,7 +8,6 @@ import ProductCard from './ProductCard';
 import HistoryDetails from './HistoryDetails';
 import CategoryCard from './CategoryCard';
 import TestimonialCard from './TestimonialCard';
-//import PromotionCard from './PromotionCard';
 import Searchbar from './Searchbar';
 import CartItem from './CartItem';
 import CartSummary from './CartSummary';
@@ -28,7 +27,6 @@ export {
   HistoryDetails,
   CategoryCard as CategorieCard,
   TestimonialCard,
-  // PromotionCard, Eliminar
   Searchbar,
   CartItem,
   CartSummary,

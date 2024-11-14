@@ -1,15 +1,39 @@
 import PropTypes from 'prop-types';
 import { useCounter } from './counter/Context';
-//import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
+import { payment } from '../services/cart';
+import Swal from 'sweetalert2';
 
 export default function CartSummary({ subtotal, discounts }) {
-  const { user } = useCounter();
+  const { user, token } = useCounter();
+  const navigate = useNavigate();
   //const { CartItems, setCartItems } = useCounter();
-  const payment = () => {
-    if (user && user.email) {
-      alert('Pagado');
+
+  const paymentCart = async (e) => {
+    e.preventDefault();
+
+    // Comprobar si el usuario ya está registrado
+    if (user.id !== undefined) {
+      const responseData = await payment(user.id, token);
+      console.log('responseData');
+      console.log(responseData);
+      Swal.fire({
+        title: 'Pagado!',
+        text: 'Pago exitoso',
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+      }).then(() => {
+        navigate(responseData);
+      });
     } else {
-      alert('Debes iniciar sesión para realizar el pago.');
+      Swal.fire({
+        title: 'Error!',
+        text: 'Debe de iniciar sesión',
+        icon: 'error',
+        confirmButtonText: 'Iniciar sesión',
+      }).then(() => {
+        navigate('/login');
+      });
     }
   };
 
@@ -42,7 +66,7 @@ export default function CartSummary({ subtotal, discounts }) {
             Seguir Comprando
           </a>
           <a
-            onClick={payment}
+            onClick={paymentCart}
             className="block flex-grow text-center py-1 text-white text-base  border-2 border-blue-500 bg-blue-500 rounded-md font-bold hover:bg-blue-400 hover:border-blue-400 cursor-pointer transition-colors lg:py-2"
           >
             Pagar

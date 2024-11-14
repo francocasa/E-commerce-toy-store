@@ -151,7 +151,6 @@ export const consultaDescuentos = async () => {
   const URL = `${BASE_URL}/discounts`; // Asegúrate de que BASE_URL esté correctamente configurada
   try {
     const response = await axios.get(URL);
-    console.log('Descuentos obtenidos:', response.data); // Agrega un log para verificar la respuesta
     return response.data; // Retornar los datos obtenidos
   } catch (error) {
     console.error('Error fetching discounts:', error);
