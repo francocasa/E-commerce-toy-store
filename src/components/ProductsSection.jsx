@@ -31,10 +31,7 @@ const ProductsSection = () => {
       try {
         const data = await consultaProductos(); // Usa el servicio
         if (data) {
-          const filteredPromotions = data.filter(
-            (product) => product.discountId !== null, // Filtrar productos que tienen descuentos
-          );
-          setProducts(filteredPromotions); // Guarda las promociones filtradas
+          setProducts(data); // Guarda todos los productos sin filtrar
         } else {
           setError('Error al cargar los productos');
         }
@@ -78,12 +75,14 @@ const ProductsSection = () => {
           className="flex gap-3 overflow-x-scroll no-scrollbar p-2"
         >
           {/* Mapear los productos */}
-          {products.map((product) => (
-            <div className="min-w-60" key={product.id}>
-              <ProductCard product={product} discounts={discounts} />{' '}
-              {/* Asegúrate de pasar discounts aquí */}
-            </div>
-          ))}
+          {products
+            .sort((a, b) => a.description.localeCompare(b.description)) // Ordena por el atributo "name" de A a Z
+            .map((product) => (
+              <div className="min-w-60" key={product.id}>
+                <ProductCard product={product} discounts={discounts} />{' '}
+                {/* Asegúrate de pasar discounts aquí */}
+              </div>
+            ))}
         </div>
 
         {/* Controles para desplazamiento */}

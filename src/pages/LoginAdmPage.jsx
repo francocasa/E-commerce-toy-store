@@ -13,7 +13,6 @@ function LoginAdmPage() {
 
     try {
       const responseData = await authenticateAdmin(username, password);
-      console.log(responseData);
 
       if (responseData && responseData.admin) {
         const admin = responseData.admin;

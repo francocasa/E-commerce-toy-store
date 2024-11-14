@@ -11,7 +11,6 @@ import HistoryDetails from './HistoryDetails';
 import CategoryCard from './CategoryCard';
 >>>>>>> develop
 import TestimonialCard from './TestimonialCard';
-//import PromotionCard from './PromotionCard';
 import Searchbar from './Searchbar';
 import CartItem from './CartItem';
 import CartSummary from './CartSummary';
@@ -34,7 +33,6 @@ export {
   CategoryCard as CategorieCard,
 >>>>>>> develop
   TestimonialCard,
-  // PromotionCard, Eliminar
   Searchbar,
   CartItem,
   CartSummary,

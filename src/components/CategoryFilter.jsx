@@ -5,8 +5,6 @@ const CategoryFilter = ({
   selectedCategory,
   setSelectedCategory,
 }) => {
-  console.log(categories);
-  console.log(selectedCategory);
   return (
     <div className="mb-4">
       <label className="mr-2" htmlFor="category-select">
@@ -19,11 +17,13 @@ const CategoryFilter = ({
         className="border p-2"
       >
         <option value="">Todas</option>
-        {categories.map((category) => (
-          <option key={category.id} value={category.id}>
-            {category.description}
-          </option>
-        ))}
+        {categories
+          .sort((a, b) => a.description.localeCompare(b.description)) // Ordena por el atributo "name" de A a Z
+          .map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.description}
+            </option>
+          ))}
       </select>
     </div>
   );
@@ -31,7 +31,7 @@ const CategoryFilter = ({
 
 // Validación de prop-types
 CategoryFilter.propTypes = {
-  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
+  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
   selectedCategory: PropTypes.string.isRequired,
   setSelectedCategory: PropTypes.func.isRequired,
 };

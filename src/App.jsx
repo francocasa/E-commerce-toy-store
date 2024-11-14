@@ -24,6 +24,7 @@ import DashboardMateriales from './pages/adminCRUD/DashboardMaterials';
 import PromotionsPage from './pages/PromotionsPage';
 import ProfilePage from './pages/ProfilePage';
 import TestimoniosPage from './pages/TestimoniosPage';
+import SuccessPayment from './pages/SuccessPayment';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import './index.css';
@@ -49,6 +50,7 @@ function App() {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/promotions" element={<PromotionsPage />} />
           <Route path="/testimonios" element={<TestimoniosPage />} />
+          <Route path="/payment/success/" element={<SuccessPayment />} />
           <Route path="/history/:id" element={<HistoryPage />} />
 
           {/* Rutas de administración */}

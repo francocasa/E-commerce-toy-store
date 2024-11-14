@@ -3,6 +3,7 @@ import {
   agregarMaterial,
   modificarMaterial,
   eliminarMaterial,
+  isNameDuplicated,
   consultaMateriales,
   consultaMaterialesInhabilitados,
   habilitarMaterial,
@@ -26,10 +27,28 @@ function DashboardMaterials() {
 
   useEffect(() => {
     const fetchMaterials = async () => {
-      const fetchedMaterials = await consultaMateriales();
-      setMaterials(fetchedMaterials);
-    };
+      const token = localStorage.getItem('adminToken');
 
+      if (!token) {
+        // Si no hay token, redirigir al login
+        window.location.href = '/loginAdm';
+        return;
+      }
+
+      try {
+        // Si el token está presente, realizar las consultas
+        const fetchedMaterials = await consultaMateriales();
+        setMaterials(fetchedMaterials);
+      } catch (error) {
+        // Manejo de errores, por ejemplo si la API falla
+        console.error('Error al cargar los descuentos:', error);
+        Swal.fire(
+          'Error',
+          'Hubo un problema al cargar los descuentos.',
+          'error',
+        );
+      }
+    };
     fetchMaterials();
   }, []);
 
@@ -41,21 +60,60 @@ function DashboardMaterials() {
   };
 
   const handleAddOrEditMaterial = async () => {
-    if (newMaterial.id) {
-      const updatedMaterial = await modificarMaterial(
+    const materialData = { ...newMaterial };
+
+    // Validar si el nombre del material ya existe en los materiales activos o inhabilitados
+    if (
+      isNameDuplicated(
+        newMaterial.name,
+        materials,
+        inhabilitados,
         newMaterial.id,
-        newMaterial,
-      );
-      setMaterials(
-        materials.map((material) =>
-          material.id === newMaterial.id ? updatedMaterial : material,
-        ),
-      );
-      Swal.fire('Éxito', 'Material actualizado correctamente.', 'success');
-    } else {
-      const addedMaterial = await agregarMaterial(newMaterial);
-      setMaterials([...materials, addedMaterial]);
-      Swal.fire('Éxito', 'Material agregado correctamente.', 'success');
+      )
+    ) {
+      Swal.fire('Error', 'Ya existe un material con el mismo nombre.', 'error');
+      return;
+    }
+
+    try {
+      if (newMaterial.id) {
+        // Si estamos editando un material, solo procedemos si el nombre cambió
+        const updatedMaterial = await modificarMaterial(
+          newMaterial.id,
+          materialData,
+        );
+        setMaterials(
+          materials.map((material) =>
+            material.id === newMaterial.id ? updatedMaterial : material,
+          ),
+        );
+        Swal.fire('Éxito', 'Material actualizado correctamente.', 'success');
+      } else {
+        // Si es un nuevo material, lo agregamos a la lista
+        const addedMaterial = await agregarMaterial(materialData);
+        setMaterials([...materials, addedMaterial]);
+        Swal.fire('Éxito', 'Material agregado correctamente.', 'success');
+      }
+    } catch (error) {
+      // Manejo de errores por expiración de token (código 403)
+      if (error.response && error.response.status === 403) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Token Expirado',
+          text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+        }).then(() => {
+          localStorage.removeItem('adminToken'); // Eliminar el token expirado
+          window.location.href = '/loginAdm'; // Redirigir al login de administrador
+        });
+      } else {
+        // Manejo de otros errores
+        console.error('Error al agregar o editar descuento:', error);
+        Swal.fire(
+          'Error',
+          'Hubo un problema al procesar la solicitud. Inténtalo de nuevo.',
+          'error',
+        );
+      }
     }
 
     handleCloseModal();
@@ -79,13 +137,35 @@ function DashboardMaterials() {
     });
 
     if (result.isConfirmed) {
-      await deshabilitarMaterial(id);
-      setMaterials(materials.filter((material) => material.id !== id));
-      Swal.fire(
-        'Deshabilitado!',
-        'El material ha sido deshabilitado.',
-        'success',
-      );
+      try {
+        await deshabilitarMaterial(id);
+        setMaterials(materials.filter((material) => material.id !== id));
+        Swal.fire(
+          'Deshabilitado!',
+          'El material ha sido deshabilitado.',
+          'success',
+        );
+      } catch (error) {
+        // Manejo de errores por expiración de token (código 403)
+        if (error.response && error.response.status === 403) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Token Expirado',
+            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+          }).then(() => {
+            localStorage.removeItem('adminToken'); // Eliminar el token expirado
+            window.location.href = '/loginAdm'; // Redirigir al login de administrador
+          });
+        } else {
+          // Manejo de otros errores
+          console.error('Error al deshabilitar el descuento:', error);
+          Swal.fire(
+            'Error',
+            'Hubo un problema al deshabilitar el descuento. Inténtalo de nuevo.',
+            'error',
+          );
+        }
+      }
     }
   };
 
@@ -101,10 +181,34 @@ function DashboardMaterials() {
     });
 
     if (result.isConfirmed) {
-      const updatedMaterial = await habilitarMaterial(id);
-      setMaterials([...materials, updatedMaterial]);
-      setInhabilitados(inhabilitados.filter((material) => material.id !== id));
-      Swal.fire('Habilitado!', 'El material ha sido habilitado.', 'success');
+      try {
+        const updatedMaterial = await habilitarMaterial(id);
+        setMaterials([...materials, updatedMaterial]);
+        setInhabilitados(
+          inhabilitados.filter((material) => material.id !== id),
+        );
+        Swal.fire('Habilitado!', 'El material ha sido habilitado.', 'success');
+      } catch (error) {
+        // Manejo de errores por expiración del token (código 403)
+        if (error.response && error.response.status === 403) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Token Expirado',
+            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+          }).then(() => {
+            localStorage.removeItem('adminToken'); // Eliminar el token expirado
+            window.location.href = '/loginAdm'; // Redirigir al login de administrador
+          });
+        } else {
+          // Manejo de otros errores
+          console.error('Error al habilitar el descuento:', error);
+          Swal.fire(
+            'Error',
+            'Hubo un problema al habilitar el descuento. Inténtalo de nuevo.',
+            'error',
+          );
+        }
+      }
     }
   };
 
@@ -221,22 +325,24 @@ function DashboardMaterials() {
             </tr>
           </thead>
           <tbody>
-            {inhabilitados.map((material) => (
-              <tr key={material.id}>
-                <td className="border p-2">{material.name}</td>
-                <td className="border p-2">
-                  {material.description || 'Sin descripción'}
-                </td>
-                <td className="border p-2">
-                  <button
-                    onClick={() => handleEnableMaterial(material.id)}
-                    className="bg-green-500 text-white py-1 px-2 rounded"
-                  >
-                    Habilitar
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {inhabilitados
+              .sort((a, b) => a.name.localeCompare(b.name)) // Ordena por el atributo "name" de A a Z
+              .map((material) => (
+                <tr key={material.id}>
+                  <td className="border p-2">{material.name}</td>
+                  <td className="border p-2">
+                    {material.description || 'Sin descripción'}
+                  </td>
+                  <td className="border p-2">
+                    <button
+                      onClick={() => handleEnableMaterial(material.id)}
+                      className="bg-green-500 text-white py-1 px-2 rounded"
+                    >
+                      Habilitar
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
         <div className="mt-4">

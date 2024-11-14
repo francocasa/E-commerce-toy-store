@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import {
-  updateUserProfile,
-  getUserById,
-  getUserIdByEmail,
-} from '../services/users'; // Asegúrate de que estas funciones estén correctamente importadas
+import { updateUserProfile } from '../services/users'; // Asegúrate de que estas funciones estén correctamente importadas
 import { useCounter } from '../components/counter/Context';
 
 function ProfilePage() {
@@ -14,33 +10,37 @@ function ProfilePage() {
   const [address, setAddress] = useState(''); // Agrega dirección si es parte del perfil
   const [phone, setPhone] = useState(''); // Agrega teléfono si es parte del perfil
   const [isEditing, setIsEditing] = useState(false);
-  const { token } = useCounter();
+  const { token, user, isUserLoggedIn } = useCounter();
 
-  useEffect(() => {
-    const email = localStorage.getItem('currentUserEmail');
+  // useEffect(() => {
+  //   const email = localStorage.getItem('currentUserEmail');
+  //   console.log('user');
+  //   console.log(user);
 
-    if (email) {
-      const fetchUserDetails = async () => {
-        try {
-          const userId = await getUserIdByEmail(email);
-          if (userId) {
-            const user = await getUserById(userId);
-            if (user) {
-              setFullName(user.fullName || '');
-              setId(user.id);
-              setProfileImage(user.profileImage || '');
-              setAddress(user.address || ''); // Ajusta según tus datos
-              setPhone(user.phone || ''); // Ajusta según tus datos
-            }
-          }
-        } catch (error) {
-          console.error('Error fetching user details:', error);
-        }
-      };
+  // if (email) {
+  //   const fetchUserDetails = async () => {
+  //     try {
+  //       const userId = await getUserIdByEmail(email);
+  //       if (userId) {
+  //         const user = await getUserById(userId);
+  //         if (user) {
+  //           setFullName(user.fullName || '');
+  //           setId(user.id);
+  //           setProfileImage(user.profileImage || '');
+  //           setAddress(user.address || ''); // Ajusta según tus datos
+  //           setPhone(user.phone || ''); // Ajusta según tus datos
+  //         }
+  //         console.log('user2');
+  //         console.log(user);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching user details:', error);
+  //     }
+  //   };
 
-      fetchUserDetails();
-    }
-  }, []);
+  //   fetchUserDetails();
+  // }
+  // }, []);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -100,11 +100,11 @@ function ProfilePage() {
   return (
     <main className="my-8">
       <div className="container mx-auto">
-        {id ? (
+        {user.id ? (
           <div className="bg-white p-6 rounded shadow-md">
             <h1 className="text-2xl font-bold mb-4">Perfil de Usuario</h1>
             <p className="mb-4">
-              <strong>Email:</strong> {localStorage.getItem('currentUserEmail')}
+              <strong>Email:</strong> {user.email}
             </p>
 
             <div className="mb-4 flex">
@@ -112,9 +112,9 @@ function ProfilePage() {
                 className="border border-gray-300 p-4 rounded flex items-center justify-center mr-4"
                 style={{ width: '100px', height: '100px' }}
               >
-                {profileImage ? (
+                {user.profileImage ? (
                   <img
-                    src={profileImage}
+                    src={user.profileImage}
                     alt="Perfil"
                     className="w-full h-full object-cover rounded"
                   />
@@ -124,7 +124,7 @@ function ProfilePage() {
               </div>
               <input
                 type="text"
-                value={fullName}
+                value={user.fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="Nombre de perfil"
                 className={`border p-2 w-full mb-2 rounded ${isEditing ? '' : 'bg-gray-200 cursor-not-allowed'}`}
@@ -134,13 +134,13 @@ function ProfilePage() {
 
             <input
               type="text"
-              value={profileImage}
+              value={user.profileImage}
               onChange={(e) => setProfileImage(e.target.value)}
               placeholder="URL de la foto"
               className={`border p-2 w-full mb-2 rounded ${isEditing ? '' : 'bg-gray-200 cursor-not-allowed'}`}
               disabled={!isEditing}
             />
-            <input
+            {/* <input
               type="text"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
@@ -155,7 +155,7 @@ function ProfilePage() {
               placeholder="Teléfono"
               className={`border p-2 w-full mb-4 rounded ${isEditing ? '' : 'bg-gray-200 cursor-not-allowed'}`}
               disabled={!isEditing}
-            />
+            /> */}
 
             <div className="flex justify-between">
               {isEditing ? (

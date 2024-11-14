@@ -2,27 +2,28 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { authenticateUser } from '../services/users';
+import { obtenerCarritoPorUsuario } from '../services/cart';
 import { useCounter } from '../components/counter/Context';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { setUser, setToken } = useCounter();
+  const { setUser, setToken, setUserCart, loadCartItems } = useCounter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Comprobar si el usuario ya está registrado
-    if (localStorage.getItem('currentUserEmail')) {
-      Swal.fire({
-        title: 'Usuario logueado con éxito!',
-        text: 'No se puede crear una nueva cuenta mientras estés conectado.',
-        icon: 'info',
-        confirmButtonText: 'Aceptar',
-      });
-      return;
-    }
+    // if (localStorage.getItem('currentUserEmail')) {
+    //   Swal.fire({
+    //     title: 'Usuario logueado con éxito!',
+    //     text: 'No se puede crear una nueva cuenta mientras estés conectado.',
+    //     icon: 'info',
+    //     confirmButtonText: 'Aceptar',
+    //   });
+    //   return;
+    // }
 
     // Lógica de autenticación
     const responseData = await authenticateUser(email, password);
@@ -31,6 +32,8 @@ function LoginPage() {
     setToken(tokenId);
 
     if (user) {
+      userCart(user);
+      loadCartItems(user.id);
       localStorage.setItem('currentUserId', user.id); // Guarda el ID
       localStorage.setItem('currentUserEmail', email);
       Swal.fire({
@@ -50,6 +53,11 @@ function LoginPage() {
         confirmButtonText: 'Intentar de nuevo',
       });
     }
+  };
+  const userCart = async (user) => {
+    const CarritoPorUsuario = await obtenerCarritoPorUsuario(user.id);
+    const carritoId = CarritoPorUsuario.id;
+    setUserCart(carritoId);
   };
 
   return (

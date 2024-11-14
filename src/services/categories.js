@@ -6,16 +6,17 @@ const BASE_URL = import.meta.env.VITE_API_URL; // Obtener la URL base desde el .
 
 // Función para obtener datos de categorías (por ejemplo)
 export const consultaDatos = async () => {
-  const URL = `${BASE_URL}/categories`;
+  const URL = `${BASE_URL}/categories`; // Endpoint para obtener todas las categorías
   try {
-    const response = await axios.get(URL, getAuthHeaders());
-    return response.data;
-  } catch (error) {
-    console.error(
-      'Error fetching data:',
-      error.response?.data || error.message,
+    const response = await axios.get(URL, getAuthHeaders()); // Obtener todas las categorías, sin filtrar en el backend
+    // Filtrar categorías activas (isDeleted: false)
+    const activeCategories = response.data.filter(
+      (category) => !category.isDeleted,
     );
-    return [];
+    return activeCategories; // Retornar solo las categorías activas
+  } catch (error) {
+    console.error('Error fetching active categories:', error);
+    return []; // Retornar un arreglo vacío en caso de error
   }
 };
 
@@ -42,6 +43,20 @@ export const consultaCategories = async () => {
   } catch (error) {
     console.error('Error fetching active categories:', error);
     return []; // Retornar un arreglo vacío en caso de error
+  }
+};
+
+export const checkIfNameExists = async (name) => {
+  try {
+    // Hacer una consulta a la API para verificar si la descripción ya existe
+    const response = await consultaCategories(); // O podrías hacer la consulta a un endpoint específico que te devuelva todos los descuentos
+    const existingCategory = response.find(
+      (category) => category.name.toLowerCase() === name.toLowerCase(),
+    );
+    return existingCategory ? true : false;
+  } catch (error) {
+    console.error('Error al verificar la descripción:', error);
+    return false; // Si hay un error en la consulta, retornar false
   }
 };
 

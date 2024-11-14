@@ -16,11 +16,10 @@ import { useParams } from 'react-router-dom';
 
 function ProductsPage() {
   const { cat } = useParams();
-
   const categoria = cat || '';
   const [selectedCategory, setSelectedCategory] = useState(categoria);
   const [products, setProducts] = useState([]); // Estado para los productos
-  const [categories, setCategories] = useState([]); // Estado para los productos
+  const [categories, setCategories] = useState([]); // Estado para las categorías
   const [discounts, setDiscounts] = useState([]); // Estado para los descuentos
   const [loading, setLoading] = useState(true); // Estado de carga
   const [error, setError] = useState(null); // Estado de error
@@ -43,7 +42,7 @@ function ProductsPage() {
       }
     };
 
-    const fetchBrands = async () => {
+    const fetchCategories = async () => {
       setLoading(true); // Inicia carga
       try {
         const data = await consultaCategories(); // Usa el servicio
@@ -73,10 +72,16 @@ function ProductsPage() {
     };
 
     fetchProducts();
-    fetchBrands(); // Este código se ejecuta solo una vez al cargar la página
+    fetchCategories(); // Este código se ejecuta solo una vez al cargar la página
     fetchDiscounts();
   }, []);
 
+  // Filtra las categorías que tienen productos asociados
+  const categoriesWithProducts = categories.filter((category) => {
+    return products.some((product) => product.categoryId === category.id);
+  });
+
+  // Filtra los productos según la categoría seleccionada
   const filteredProducts = products.filter((product) => {
     return selectedCategory === '' || product.categoryId === selectedCategory;
   });
@@ -91,19 +96,21 @@ function ProductsPage() {
 
         <div className="mb-8">
           <CategoryFilter
-            categories={categories}
+            categories={categoriesWithProducts} // Solo pasamos las categorías que tienen productos asociados
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
           />
         </div>
 
         <div className="flex flex-wrap gap-3 justify-center">
-          {filteredProducts.map((product) => (
-            <div className="w-4/5 max-w-80" key={product.id}>
-              <ProductCard product={product} discounts={discounts} />{' '}
-              {/* Pasa el producto y los descuentos */}
-            </div>
-          ))}
+          {filteredProducts
+            .sort((a, b) => a.name.localeCompare(b.name)) // Ordena por el atributo "name" de A a Z
+            .map((product) => (
+              <div className="w-4/5 max-w-80" key={product.id}>
+                <ProductCard product={product} discounts={discounts} />{' '}
+                {/* Pasa el producto y los descuentos */}
+              </div>
+            ))}
         </div>
       </section>
     </main>
