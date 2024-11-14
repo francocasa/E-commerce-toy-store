@@ -51,7 +51,7 @@ export const addCartItemDB = async (cartId, item, token) => {
   }
 };
 
-// Función para editar un producto existente
+// Función para eliminar un producto existente
 export const deleteCartItemDB = async (item, token) => {
   const URL = `${BASE_URL}/carts/item/${item.idItemCart}`;
   try {
