@@ -21,9 +21,7 @@ export const CounterProvider = ({ children }) => {
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(
     () => localStorage.getItem('AdminLogueado') !== null,
   );
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(
-    () => localStorage.getItem('currentUserEmail') !== null,
-  );
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(() => user.id !== null);
 
   const [adminToken, setAdminToken] = useState(
     localStorage.getItem('adminToken') || '',
@@ -68,8 +66,8 @@ export const CounterProvider = ({ children }) => {
     try {
       console.log('ingreso al cargar carrito');
       console.log(id);
-      console.log('cartItems');
-      console.log(cartItems);
+      console.log('ingreso al cargar carrito');
+      console.log(id);
       const cart = await obtenerCarritoPorUsuario(id);
       console.log(cart);
     } catch (error) {
