@@ -5,6 +5,7 @@ import {
   addCartItemDB,
   updateCartItemDB,
   deleteCartItemDB,
+  obtenerCarritoPorUsuario,
 } from '../../services/cart';
 
 // Crear el contexto
@@ -55,11 +56,31 @@ export const CounterProvider = ({ children }) => {
   };
 
   const loginUser = (email, id) => {
+    console.log('ingreso al login');
     const user = { email, id };
     setUser(user);
     setIsUserLoggedIn(true);
     localStorage.setItem('currentUserEmail', email);
     localStorage.setItem('currentUserId', id); // Asegúrate de guardar el ID también
+  };
+
+  const loadCartItems = async (id) => {
+    try {
+      console.log('ingreso al cargar carrito');
+      console.log(id);
+      console.log('cartItems');
+      console.log(cartItems);
+      const cart = await obtenerCarritoPorUsuario(id);
+      console.log(cart);
+    } catch (error) {
+      console.error('Error al obtener id de carrito:', error);
+      Swal.fire(
+        'Error',
+        error.response?.data?.details[0]?.message ||
+          'Ocurrió un error inesperado.',
+        'error',
+      );
+    }
   };
 
   const logoutUser = () => {
@@ -68,7 +89,6 @@ export const CounterProvider = ({ children }) => {
   };
 
   const updateCartItem = async (item, quantity) => {
-    console.log('ingreso al pud');
     try {
       let response;
       const updatedCart = cartItems.map((cartItem) => {
@@ -93,8 +113,6 @@ export const CounterProvider = ({ children }) => {
 
   const deleteCartItem = async (item) => {
     try {
-      console.log('item');
-      console.log(item);
       let response;
       const updatedCart = cartItems.filter(
         (cartItem) => cartItem.id !== item.id,
@@ -133,10 +151,7 @@ export const CounterProvider = ({ children }) => {
     }
   };
 
-  // falta arreglar
   const updateLocalCart = (updatedCart) => {
-    console.log('updateLocalCart');
-    console.log(updatedCart);
     setCartItems(updatedCart);
     localStorage.setItem('Cart', JSON.stringify(updatedCart));
   };
@@ -162,6 +177,7 @@ export const CounterProvider = ({ children }) => {
       addCartItem,
       updateLocalCart,
       setUserCart,
+      loadCartItems,
     }),
     [user, userAdm, cartItems, isAdminLoggedIn, isUserLoggedIn, adminToken],
   );

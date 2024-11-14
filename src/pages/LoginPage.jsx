@@ -9,7 +9,7 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { setUser, setToken, setUserCart } = useCounter();
+  const { setUser, setToken, setUserCart, loadCartItems } = useCounter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,6 +33,7 @@ function LoginPage() {
 
     if (user) {
       userCart(user);
+      loadCartItems(user.id);
       localStorage.setItem('currentUserId', user.id); // Guarda el ID
       localStorage.setItem('currentUserEmail', email);
       Swal.fire({
