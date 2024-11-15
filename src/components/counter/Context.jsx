@@ -114,7 +114,7 @@ export const CounterProvider = ({ children }) => {
             addCartItem(cartItems);
           }
         }
-      });
+      }); //item no existente en db
       cartItems.map((item) => {
         const existingProduct = userCart.items.find(
           (userCartItem) => item.id === userCartItem.productId,
