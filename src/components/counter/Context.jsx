@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import { consultaProductos } from '../../services/products'; // Importa el servicio
 import PropTypes from 'prop-types';
 import Swal from 'sweetalert2';
 import {
@@ -7,6 +8,7 @@ import {
   deleteCartItemDB,
   obtenerCarritoPorUsuario,
 } from '../../services/cart';
+const IMAGES_URL = import.meta.env.VITE_IMAGES_URL; // Obtener la URL base desde el .env
 
 // Crear el contexto
 const CounterContext = createContext();
@@ -63,14 +65,65 @@ export const CounterProvider = ({ children }) => {
     localStorage.setItem('currentUserId', id); // Asegúrate de guardar el ID también
   };
 
-  const loadCartItems = async (id) => {
+  const loadCartItems = async () => {
     try {
-      console.log('ingreso al cargar carrito');
-      console.log(id);
-      console.log('ingreso al cargar carrito');
-      console.log(id);
-      const cart = await obtenerCarritoPorUsuario(id);
-      console.log(cart);
+      const products = await consultaProductos(); // Usa el servicio
+      // agregar de localstorage
+      userCart.items.map((userCartItem) => {
+        const existingProduct = cartItems.find(
+          (cartItem) => cartItem.id === userCartItem.productId,
+        );
+        // en caso exista producto en carrito local de compras
+        if (existingProduct) {
+          existingProduct.idItemCart = userCartItem.id;
+          updateCartItem(existingProduct, existingProduct.quantity);
+          // en caso NO exista producto en carrito local de compras
+        } else {
+          const existingProductDB = products.find(
+            (product) => product.id === userCartItem.productId,
+          );
+          if (existingProductDB) {
+            let finalPrice = existingProductDB.price;
+            let discount = 0;
+            if (existingProductDB.discountId) {
+              discount = (
+                existingProductDB.price * existingProductDB.discount.discount
+              ).toFixed(2);
+              finalPrice = (
+                existingProductDB.price *
+                (1 - existingProductDB.discount.discount)
+              ).toFixed(2);
+            }
+            const imageUrl =
+              Array.isArray(existingProductDB.images) &&
+              existingProductDB.images.length > 0
+                ? IMAGES_URL + existingProductDB.images[0].url
+                : '';
+            cartItems.push({
+              id: existingProductDB.id, // Se mantiene como string
+              title: existingProductDB.name, // Cambiado de title a name
+              price: existingProductDB.price,
+              finalPrice: parseFloat(finalPrice),
+              discount: discount,
+              image: imageUrl, // Asegúrate de obtener la URL de la imagen
+              quantity: userCartItem.quantity,
+              categoryId: existingProductDB.categoryId, // Añadir categoryId aquí
+              idItemCart: userCartItem.id,
+            });
+
+            addCartItem(cartItems);
+          }
+        }
+      });
+      cartItems.map((item) => {
+        const existingProduct = userCart.items.find(
+          (userCartItem) => item.id === userCartItem.productId,
+        );
+        if (existingProduct === undefined) {
+          item.idItemCart = userCart.id;
+          response = addCartItemDB(userCart.id, item, token);
+        }
+      });
     } catch (error) {
       console.error('Error al obtener id de carrito:', error);
       Swal.fire(
@@ -89,14 +142,15 @@ export const CounterProvider = ({ children }) => {
 
   const updateCartItem = async (item, quantity) => {
     try {
-      let response;
       const updatedCart = cartItems.map((cartItem) => {
         if (cartItem.id === item.id) {
           return { ...cartItem, quantity: Math.max(1, quantity) };
         }
         return cartItem;
       });
-      response = await updateCartItemDB(item, quantity, token);
+      if (user.id !== undefined) {
+        let response = await updateCartItemDB(item, quantity, token);
+      }
       updateLocalCart(updatedCart);
     } catch (error) {
       console.error('Error al actualizar un item:', error);
@@ -115,7 +169,9 @@ export const CounterProvider = ({ children }) => {
       const updatedCart = cartItems.filter(
         (cartItem) => cartItem.id !== item.id,
       );
-      response = await deleteCartItemDB(item, token);
+      if (user.id !== undefined) {
+        response = await deleteCartItemDB(item, token);
+      }
       updateLocalCart(updatedCart);
     } catch (error) {
       console.error('Error al eliminar un item:', error);
@@ -131,8 +187,14 @@ export const CounterProvider = ({ children }) => {
   const addCartItem = async (item) => {
     try {
       let response;
-      response = await addCartItemDB(userCart, item[item.length - 1], token);
-      item[item.length - 1].idItemCart = response.id;
+      if (user.id !== undefined) {
+        response = await addCartItemDB(
+          userCart.id,
+          item[item.length - 1],
+          token,
+        );
+        item[item.length - 1].idItemCart = response.id;
+      }
       updateLocalCart(item);
     } catch (error) {
       console.error('Error al agregar un item:', error);
@@ -172,6 +234,7 @@ export const CounterProvider = ({ children }) => {
       updateLocalCart,
       setUserCart,
       loadCartItems,
+      setIsUserLoggedIn,
     }),
     [user, userAdm, cartItems, isAdminLoggedIn, isUserLoggedIn, adminToken],
   );
