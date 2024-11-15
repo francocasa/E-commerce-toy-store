@@ -50,7 +50,7 @@ function App() {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/promotions" element={<PromotionsPage />} />
           <Route path="/testimonios" element={<TestimoniosPage />} />
-          <Route path="/payment/success/" element={<SuccessPayment />} />
+          <Route path="/paymentsuccess" element={<SuccessPayment />} />
           <Route path="/history/:id" element={<HistoryPage />} />
 
           {/* Rutas de administración */}
