@@ -24,7 +24,7 @@ export default function AddToCart({ product }) {
         text: 'Has actualizado la cantidad para la compra',
         icon: 'info',
       });
-      updateCartItem(existingCart);
+      updateCartItem(existingProduct, existingProduct.quantity);
     } else {
       let finalPrice = product.price;
       let discount = 0;

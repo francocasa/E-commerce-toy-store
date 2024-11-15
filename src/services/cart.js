@@ -35,7 +35,13 @@ export const updateCartItemDB = async (item, quantity, token) => {
 // Función para agregar un nuevo producto
 export const addCartItemDB = async (cartId, item, token) => {
   const URL = `${BASE_URL}/carts/${cartId}/item`;
+  console.log('URL');
+  console.log(URL);
+  console.log('item.id');
+  console.log(item.id);
   const datos = { productId: item.id, quantity: item.quantity };
+  console.log('datos');
+  console.log(datos);
 
   try {
     const response = await axios.post(URL, datos, {
