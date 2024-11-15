@@ -5,11 +5,8 @@ import ProductsSection from './ProductsSection';
 import TestimonialSection from './TestimonialSection';
 import PromotionSection from './PromotionSection';
 import ProductCard from './ProductCard';
-<<<<<<< HEAD
-=======
 import HistoryDetails from './HistoryDetails';
 import CategoryCard from './CategoryCard';
->>>>>>> develop
 import TestimonialCard from './TestimonialCard';
 import Searchbar from './Searchbar';
 import CartItem from './CartItem';
@@ -27,11 +24,8 @@ export {
   TestimonialSection,
   PromotionSection,
   ProductCard,
-<<<<<<< HEAD
-=======
   HistoryDetails,
   CategoryCard as CategorieCard,
->>>>>>> develop
   TestimonialCard,
   Searchbar,
   CartItem,

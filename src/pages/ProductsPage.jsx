@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-import { useState } from 'react';
-import { dbProducts } from '../data/DbProducts'; // Asegúrate de que la ruta sea correcta
-import { ProductCard } from '../components';
-import { CategoryFilter } from '../components'; // Asegúrate de importar el componente
-
-function ProductsPage() {
-  const categories = ['Educativo', 'Acción'];
-  const [selectedCategory, setSelectedCategory] = useState('');
-=======
 import { useState, useEffect } from 'react';
 import { consultaProductos, consultaDescuentos } from '../services/products'; // Importa el servicio
 import { consultaCategories } from '../services/categories'; // Importa el servicio
@@ -23,7 +13,6 @@ function ProductsPage() {
   const [discounts, setDiscounts] = useState([]); // Estado para los descuentos
   const [loading, setLoading] = useState(true); // Estado de carga
   const [error, setError] = useState(null); // Estado de error
->>>>>>> develop
 
   useEffect(() => {
     const fetchProducts = async () => {
