@@ -5,8 +5,10 @@ import Swal from 'sweetalert2';
 import { useCounter } from '../components/counter/Context';
 
 const ProductDetailPreCart = ({ product }) => {
-  const { updateCart } = useCounter();
+  const { addCartItem, deleteCartItem } = useCounter();
   const [quantity, setQuantity] = useState(1);
+
+  console.log('product', product);
 
   const calculateTotal = () => {
     let price = product.price;
@@ -15,29 +17,8 @@ const ProductDetailPreCart = ({ product }) => {
 
   const total = calculateTotal();
 
-  const addToCart = () => {
-    const existingCart = JSON.parse(localStorage.getItem('Cart')) || [];
-    const existingProduct = existingCart.find((item) => item.id === product.id);
-
-    if (existingProduct) {
-      // Reemplazar la cantidad del producto
-      existingProduct.quantity = quantity;
-      Swal.fire({
-        title: 'Cantidad actualizada',
-        text: 'Has actualizado la cantidad para la compra',
-        icon: 'info',
-      });
-    } else {
-      // Si se añade el producto
-      existingCart.push({ ...product, quantity });
-      Swal.fire({
-        title: 'Producto añadido',
-        text: 'Se añadió el producto al carrito',
-        icon: 'success',
-      });
-    }
-
-    updateCart(existingCart);
+  const addToCart = async () => {
+    await addCartItem(product.id, quantity);
   };
 
   // Mensaje de promoción

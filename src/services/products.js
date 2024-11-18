@@ -3,6 +3,18 @@ import axios from 'axios';
 const BASE_URL = import.meta.env.VITE_API_URL; // Obtener la URL base desde el .env
 // Función para consultar los productos inhabilitados
 
+export const getProductById = async (id) => {
+  const URL = `${BASE_URL}/products/${id}`;
+  try {
+    const response = await axios.get(URL);
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    return null;
+  }
+};
+
 export const isProductNameDuplicated = (name, products, excludeId = null) => {
   // Comprobamos si el nombre existe en los productos activos, excluyendo el ID si se está editando un producto.
   const duplicated = products.some(

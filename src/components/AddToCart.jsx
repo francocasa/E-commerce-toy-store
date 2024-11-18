@@ -13,44 +13,9 @@ export default function AddToCart({ product }) {
       ? IMAGES_URL + product.images[0].url
       : '';
 
-  const addToCart = () => {
-    const existingCart = JSON.parse(localStorage.getItem('Cart')) || [];
-    const existingProduct = existingCart.find((item) => item.id === product.id); // Comparar por id como string
-    if (existingProduct) {
-      // Aumentar la cantidad del producto existente
-      existingProduct.quantity += quantity;
-      Swal.fire({
-        title: 'Cantidad actualizada',
-        text: 'Has actualizado la cantidad para la compra',
-        icon: 'info',
-      });
-      updateCartItem(existingProduct, existingProduct.quantity);
-    } else {
-      let finalPrice = product.price;
-      let discount = 0;
-      if (product.discountId) {
-        discount = (product.price * product.discount.discount).toFixed(2);
-        finalPrice = (product.price * (1 - product.discount.discount)).toFixed(
-          2,
-        );
-      }
-      existingCart.push({
-        id: product.id, // Se mantiene como string
-        title: product.name, // Cambiado de title a name
-        price: product.price,
-        finalPrice: parseFloat(finalPrice),
-        discount: discount,
-        image: imageUrl, // Asegúrate de obtener la URL de la imagen
-        quantity,
-        categoryId: product.categoryId, // Añadir categoryId aquí
-      });
-      Swal.fire({
-        title: 'Producto añadido',
-        text: 'Se añadió el producto al carrito',
-        icon: 'success',
-      });
-      addCartItem(existingCart);
-    }
+  const addToCart = async () => {
+    console.log(product.id, quantity);
+    await addCartItem(product.id, quantity);
   };
 
   return (

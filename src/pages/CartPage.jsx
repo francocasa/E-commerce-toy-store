@@ -5,12 +5,6 @@ import { useCounter } from '../components/counter/Context';
 function CartPage() {
   const { cartItems, updateCartItem, deleteCartItem } = useCounter();
 
-  const calculateTotal = (product) => {
-    let price = product.price;
-
-    return price * product.quantity;
-  };
-
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0,
@@ -46,17 +40,10 @@ function CartPage() {
               <p>No hay artículos en el carrito.</p>
             ) : (
               cartItems.map((item) => {
-                // Verifica que title esté definido
-                if (!item.title) {
-                  console.error(
-                    `El artículo con id ${item.id} no tiene un título definido.`,
-                  );
-                  return null; // O manejar de otra forma
-                }
                 return (
                   <CartItem
                     key={item.id}
-                    item={{ ...item, total: calculateTotal(item) }}
+                    item={item}
                     onUpdateQuantity={updateQuantity}
                     onRemove={removeItem}
                   />
