@@ -13,6 +13,66 @@ export const obtenerCarritoPorUsuario = async (id) => {
   }
 };
 
+export const getCartByUser = async (id, token) => {
+  const URL = `${BASE_URL}/carts/user/${id}`;
+
+  try {
+    const response = await axios.get(URL, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    return null;
+  }
+};
+
+export const addCartItem = async (cartId, productId, quantity, token) => {
+  const URL = `${BASE_URL}/carts/${cartId}/item`;
+  const data = {
+    productId,
+    quantity,
+  };
+
+  console.log(data);
+
+  try {
+    const response = await axios.post(URL, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error adding product:', error);
+    return null;
+  }
+};
+
+export const deleteCartItem = async (itemId, token) => {
+  const URL = `${BASE_URL}/carts/item/${itemId}`;
+
+  try {
+    const response = await axios.delete(URL, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    return null;
+  }
+};
+
 // Función para editar un producto existente
 export const updateCartItemDB = async (item, quantity, token) => {
   const URL = `${BASE_URL}/carts/item/${item.idItemCart}`;
