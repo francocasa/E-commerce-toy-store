@@ -17,14 +17,10 @@ export default function CartSummary({ subtotal, discounts }) {
       const responseData = await payment(user.id, token);
       console.log('responseData');
       console.log(responseData);
-      Swal.fire({
-        title: 'Pagado!',
-        text: 'Pago exitoso',
-        icon: 'success',
-        confirmButtonText: 'Aceptar',
-      }).then(() => {
-        navigate(responseData);
-      });
+
+      if (responseData) {
+        window.open(responseData, '_blank');
+      }
     } else {
       Swal.fire({
         title: 'Error!',
