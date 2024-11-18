@@ -3,6 +3,17 @@ import Swal from 'sweetalert2';
 
 const BASE_URL = import.meta.env.VITE_API_URL; // Obtener la URL base desde el .env
 
+export const getDiscountById = async (id) => {
+  const URL = `${BASE_URL}/discounts/${id}`;
+  try {
+    const response = await axios.get(URL);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching discount:', error);
+    return null;
+  }
+};
+
 // Función para consultar los descuentos habilitados (isDeleted: false)
 export const consultaDescuentosHabilitados = async () => {
   const URL = `${BASE_URL}/discounts`;
