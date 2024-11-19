@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import VerMas from './VerMas';
 import { useEffect, useState } from 'react';
-const IMAGES_URL = import.meta.env.VITE_IMAGES_URL; // Obtener la URL base desde el .env
 
 function ProductCard({ product, discounts }) {
   const [price, setPrice] = useState(product.price);
@@ -20,20 +19,22 @@ function ProductCard({ product, discounts }) {
     setPrice(updatedPrice);
     setPromo(discountPromo);
   }, [product, discounts]);
-  const imageUrl =
-    Array.isArray(product.images) && product.images.length > 0
-      ? `${import.meta.env.VITE_IMAGES_URL}${product.images[0].url}` // Usar la variable de entorno VITE_IMAGES_URL
-      : '';
 
   return (
     <div className="border px-4 py-6 rounded-lg shadow-lg w-full mx-auto">
       <div className="flex justify-center mb-4">
-        <img
-          crossOrigin="anonymous"
-          src={imageUrl}
-          alt={product.name}
-          className="w-auto h-40 object-cover"
-        />
+        {product.images.length > 0 ? (
+          <img
+            crossOrigin="anonymous"
+            src={product.images[0].url}
+            alt={product.name}
+            className="w-full h-64 object-contain md:h-72 lg:h-80"
+          />
+        ) : (
+          <p className="w-full h-64 object-contain md:h-72 lg:h-80">
+            Imagen no disponible
+          </p>
+        )}
       </div>
       <h3 className="text-lg font-bold text-center mb-1">{product.name}</h3>
       {promo !== '' ? (
