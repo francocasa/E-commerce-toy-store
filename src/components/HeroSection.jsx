@@ -57,7 +57,7 @@ const HeroSection = () => {
 
       <a
         href={heroData[currentSlide].buttonLink}
-        className="text-sm sm:text-base mb-3 text-white bg-blue-600 py-2 px-4 sm:mb-0 sm:px-6  rounded-md hover:bg-blue-700 transition-all inline-block"
+        className="text-sm sm:text-base mb-3 text-white bg-blue-500 py-2 px-4 sm:mb-0 sm:px-6  rounded-md hover:bg-blue-700 transition-all inline-block"
       >
         {heroData[currentSlide].buttonText}
       </a>
