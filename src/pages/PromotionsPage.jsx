@@ -68,7 +68,7 @@ function PromotionsPage() {
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <main className="container mx-auto my-8">
+    <main className="container mx-auto mt-8 mb-12">
       <section className="mx-9">
         <h2 className="text-2xl font-bold mb-4">Promociones</h2>
 
@@ -80,9 +80,9 @@ function PromotionsPage() {
           />
         </div>
 
-        <div className="flex flex-wrap gap-3 justify-center">
+        <div className="mx-auto w-fit grid gap-8 min-[500px]:grid-cols-2 md:grid-cols-3 md:gap-x-4 md:gap-y-6 xl:grid-cols-4 2xl:grid-cols-5">
           {filteredPromotions.map((product) => (
-            <div className="w-4/5 max-w-80" key={product.id}>
+            <div className="max-w-60 mx-auto" key={product.id}>
               <ProductCard product={product} discounts={discounts} />{' '}
               {/* Pasar los descuentos aquí */}
             </div>

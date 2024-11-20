@@ -4,24 +4,29 @@ const IMAGES_URL = import.meta.env.VITE_IMAGES_URL; // Obtener la URL base desde
 
 function CategoryCard({ category }) {
   // Manejo de la imagen
-  const imageUrl = IMAGES_URL + category.image;
+
   return (
-    <div className="border px-4 py-6 rounded-lg shadow-lg w-full mx-auto">
+    <div className="w-full mx-auto min-w-52  space-y-3">
       {/* Ancho fijo de 270 px */}
-      <div className="flex justify-center mb-4">
-        {/* Contenedor flex para centrar la imagen */}
-        <img
-          crossOrigin="anonymous"
-          src={imageUrl}
-          alt={category.name}
-          className="w-auto h-40 object-cover" // Mantiene el ajuste de la imagen
-        />
+      <div className="flex justify-center">
+        {category.image ? (
+          <img
+            crossOrigin="anonymous"
+            src={category.image}
+            alt={category.name}
+            className="object-cover border border-gray-200 rounded-md h-52 w-52 lg:h-60 lg:min-w-60"
+          />
+        ) : (
+          <p className="h-full w-full border border-gray-200 rounded-md flex justify-center items-center min-h-52 lg:min-h-60 lg:w-60">
+            Imagen no disponible
+          </p>
+        )}
       </div>
       <h3 className="text-lg font-bold text-center">
         {category.name.toUpperCase()}
       </h3>
 
-      <VerMas link={`/products/${category.id}`} />
+      <VerMas link={`/products/${category.id}`} text="Ver productos" />
     </div>
   );
 }

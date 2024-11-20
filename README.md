@@ -110,26 +110,26 @@ Tendras 02 localhost activos:
 
 /localhost/9090
 
-![alt text](image.png)
+![alt text](/screenshots/image.png)
 
 Donde entrando a la ruta http://localhost:9090/products/ tendras una vista como esta:
-![alt text](image-1.png)
+![alt text](/screenshots/image-1.png)
 
 La 2da será la propia pagina web:
 http://localhost:XXXX/
 
 Que tendrá esta vista por ejemplo:
 
-![alt text](image-2.png)
+![alt text](/screenshots/image-2.png)
 
 ### Paginas y funcionalidades 📊
 
 Se presenta un diagrama en Octopus.io sobre la navegación entre paginas y sus funcionalidades a manera general:
 
-![alt text](image-3.png)
+![alt text](/screenshots/image-3.png)
 
 Sobre las paginas se tiene la siguiente descripcion de sus funcionalidades:
-![alt text](image-4.png)
+![alt text](/screenshots/image-4.png)
 
 ### Estructura del db.json 📑
 
