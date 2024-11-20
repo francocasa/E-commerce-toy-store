@@ -65,7 +65,7 @@ const HeroSection = () => {
       {/* Controles para el slider */}
       <div className="absolute left-2 top-1/2 transform -translate-y-1/2">
         <button
-          className="text-xl text-black bg-slate-100 bg-opacity-50 font-bold px-2 rounded-md"
+          className="bg-white font-bold border shadow-md text-blue-500 h-8 aspect-square flex justify-center items-center rounded-full"
           onClick={handlePrev}
         >
           {'<'}
@@ -73,7 +73,7 @@ const HeroSection = () => {
       </div>
       <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
         <button
-          className="text-xl text-black bg-slate-100 bg-opacity-50 font-bold px-2 rounded-md"
+          className="bg-white font-bold border shadow-md text-blue-500 h-8 aspect-square flex justify-center items-center rounded-full"
           onClick={handleNext}
         >
           {'>'}

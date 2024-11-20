@@ -49,15 +49,13 @@ const ProductsSection = () => {
   if (loading) return <p>Cargando promociones...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
-  const scrollLeft = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -200, behavior: 'smooth' });
-    }
-  };
-
   const scrollRight = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+      const elementWidth = document.getElementById(
+        'products-scroll-container',
+      ).scrollWidth;
+
+      scrollRef.current.scrollBy({ left: elementWidth, behavior: 'smooth' });
     }
   };
 
@@ -69,10 +67,10 @@ const ProductsSection = () => {
           Ver todo &rarr;
         </a>
       </div>
-      <div className="relative">
+      <div className="relative" id="products-scroll-container">
         <div
           ref={scrollRef}
-          className="flex gap-3 overflow-x-scroll no-scrollbar space-x-4 pb-2 md:space-x-3 lg:space-x-2"
+          className="flex gap-3 overflow-x-auto no-scrollbar space-x-4 pb-2 md:space-x-3 lg:space-x-2"
         >
           {/* Mapear los productos */}
           {products
@@ -84,6 +82,13 @@ const ProductsSection = () => {
               </div>
             ))}
         </div>
+
+        <button
+          onClick={scrollRight}
+          className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white font-bold border shadow-md text-blue-500 h-8 aspect-square flex justify-center items-center rounded-full"
+        >
+          {'>'}
+        </button>
       </div>
     </section>
   );
