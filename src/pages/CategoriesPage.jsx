@@ -38,7 +38,12 @@ function CategoriesPage() {
     fetchCategoriesAndProducts();
   }, []); // Solo ejecuta una vez al montar el componente
 
-  if (loading) return <p>Cargando categorías...</p>; // Mensaje de carga
+  if (loading)
+    return (
+      <p className="grow flex justify-center items-center">
+        Cargando categorías...
+      </p>
+    ); // Mensaje de carga
   if (error) return <p className="text-center text-red-500">{error}</p>; // Manejo de error
 
   return (

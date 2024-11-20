@@ -21,7 +21,7 @@ function CategoryCard({ category }) {
         {category.name.toUpperCase()}
       </h3>
 
-      <VerMas link={`/products/${category.id}`} />
+      <VerMas link={`/products/${category.id}`} text="Ver productos" />
     </div>
   );
 }

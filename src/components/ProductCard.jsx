@@ -64,7 +64,7 @@ function ProductCard({ product, discounts }) {
           </p>
         )}
       </div>
-      <VerMas link={`/detailsproduct/${product.id}`} />
+      <VerMas link={`/detailsproduct/${product.id}`} text="Ver detalles" />
     </div>
   );
 }

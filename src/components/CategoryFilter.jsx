@@ -6,8 +6,8 @@ const CategoryFilter = ({
   setSelectedCategory,
 }) => {
   return (
-    <div className="mb-4 max-w-60">
-      <label className="mr-2" htmlFor="category-select">
+    <div className="mb-4 max-w-60 flex justify-start items-center gap-3">
+      <label className="text-md" htmlFor="category-select">
         Categoría
       </label>
       <div className="relative">

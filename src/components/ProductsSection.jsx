@@ -46,7 +46,12 @@ const ProductsSection = () => {
     fetchProductos();
   }, []);
 
-  if (loading) return <p>Cargando promociones...</p>;
+  if (loading)
+    return (
+      <p className="grow flex justify-center items-center">
+        Cargando promociones...
+      </p>
+    );
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   const scrollRight = () => {

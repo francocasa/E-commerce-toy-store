@@ -75,7 +75,12 @@ function ProductsPage() {
     return selectedCategory === '' || product.categoryId === selectedCategory;
   });
 
-  if (loading) return <p>Cargando productos...</p>; // Mensaje de carga
+  if (loading)
+    return (
+      <p className="grow flex justify-center items-center">
+        Cargando productos...
+      </p>
+    ); // Mensaje de carga
   if (error) return <p className="text-center text-red-500">{error}</p>; // Manejo de error
 
   return (
