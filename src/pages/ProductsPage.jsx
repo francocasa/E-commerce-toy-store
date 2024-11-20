@@ -79,7 +79,7 @@ function ProductsPage() {
   if (error) return <p className="text-center text-red-500">{error}</p>; // Manejo de error
 
   return (
-    <main className="container mx-auto my-8">
+    <main className="container mx-auto mt-8 mb-12">
       <section className="mx-9">
         <h2 className="text-2xl font-bold mb-4">Productos</h2>
 
@@ -91,7 +91,7 @@ function ProductsPage() {
           />
         </div>
 
-        <div className="mx-auto w-fit grid gap-8 min-[500px]:grid-cols-2 md:grid-cols-3 md:gap-x-4 md:gap-y-6 xl:grid-cols-4">
+        <div className="mx-auto w-fit grid gap-8 min-[500px]:grid-cols-2 md:grid-cols-3 md:gap-x-4 md:gap-y-6 xl:grid-cols-4 2xl:grid-cols-5">
           {filteredProducts
             .sort((a, b) => a.name.localeCompare(b.name)) // Ordena por el atributo "name" de A a Z
             .map((product) => (
