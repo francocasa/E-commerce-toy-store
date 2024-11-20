@@ -72,13 +72,13 @@ const ProductsSection = () => {
       <div className="relative">
         <div
           ref={scrollRef}
-          className="flex gap-3 overflow-x-scroll no-scrollbar space-x-4 pb-2"
+          className="flex gap-3 overflow-x-scroll no-scrollbar space-x-4 pb-2 md:space-x-3 lg:space-x-2"
         >
           {/* Mapear los productos */}
           {products
             .sort((a, b) => a.description.localeCompare(b.description)) // Ordena por el atributo "name" de A a Z
             .map((product) => (
-              <div className="min-w-52" key={product.id}>
+              <div className="w-fit" key={product.id}>
                 <ProductCard product={product} discounts={discounts} />{' '}
                 {/* Asegúrate de pasar discounts aquí */}
               </div>

@@ -91,11 +91,11 @@ function ProductsPage() {
           />
         </div>
 
-        <div className="flex flex-wrap gap-3 justify-center">
+        <div className="mx-auto w-fit grid gap-8 min-[500px]:grid-cols-2 md:grid-cols-3 md:gap-4 xl:grid-cols-4">
           {filteredProducts
             .sort((a, b) => a.name.localeCompare(b.name)) // Ordena por el atributo "name" de A a Z
             .map((product) => (
-              <div className="w-4/5 max-w-80" key={product.id}>
+              <div className="max-w-60 mx-auto" key={product.id}>
                 <ProductCard product={product} discounts={discounts} />{' '}
                 {/* Pasa el producto y los descuentos */}
               </div>
