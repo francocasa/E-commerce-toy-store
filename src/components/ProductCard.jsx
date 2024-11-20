@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import VerMas from './VerMas';
 import { useEffect, useState } from 'react';
-const IMAGES_URL = import.meta.env.VITE_IMAGES_URL; // Obtener la URL base desde el .env
 
 function ProductCard({ product, discounts }) {
   const [price, setPrice] = useState(product.price);
@@ -20,42 +19,51 @@ function ProductCard({ product, discounts }) {
     setPrice(updatedPrice);
     setPromo(discountPromo);
   }, [product, discounts]);
-  const imageUrl =
-    Array.isArray(product.images) && product.images.length > 0
-      ? `${import.meta.env.VITE_IMAGES_URL}${product.images[0].url}` // Usar la variable de entorno VITE_IMAGES_URL
-      : '';
 
   return (
-    <div className="border px-4 py-6 rounded-lg shadow-lg w-full mx-auto">
-      <div className="flex justify-center mb-4">
-        <img
-          crossOrigin="anonymous"
-          src={imageUrl}
-          alt={product.name}
-          className="w-auto h-40 object-cover"
-        />
-      </div>
-      <h3 className="text-lg font-bold text-center mb-1">{product.name}</h3>
-      {promo !== '' ? (
-        <div className="text-gray-600 mb-3 text-center flex justify-center gap-3 items-center h-7">
-          <span className="bg-red-600 text-xs text-white font-medium rounded-md py-1 px-2">
+    <div className="p-3 w-full mx-auto">
+      <div className="flex justify-center mb-4 h-52 md:h-72 lg:h-80 position relative">
+        {promo && (
+          <span className="absolute top-2 left-2 bg-red-200 text-sm text-red-700 border border-red-700 font-bold rounded-md py-1 px-2">
             {promo}
           </span>
-          {product.price !== price ? (
-            <span className="text-sm font-medium text-gray-400 line-through ">
-              ${product.price.toFixed(2)}
-            </span>
-          ) : (
-            <span>${product.price}</span>
-          )}
-          <span className="font-bold">${price.toFixed(2)}</span>
-        </div>
-      ) : (
-        <p className="text-gray-600 mb-3 text-center font-bold text-lg">
-          ${product.price.toFixed(2)}
-        </p>
-      )}
+        )}
+        {product.images.length > 0 ? (
+          <img
+            crossOrigin="anonymous"
+            src={product.images[0].url}
+            alt={product.name}
+            className="object-cover h-full w-full border border-gray-200 rounded-md"
+          />
+        ) : (
+          <p className="h-full w-full border border-gray-200 rounded-md flex justify-center items-center">
+            Imagen no disponible
+          </p>
+        )}
+      </div>
+      <h3 className="text-xl font-bold mb-2">{product.name}</h3>
 
+      <div className="flex justify-between items-center mb-3">
+        <p className="text-gray-400 font-semibold">Precio</p>
+        {promo !== '' ? (
+          <div className="flex justify-end gap-2 items-center">
+            {product.price !== price ? (
+              <span className="text-sm font-medium text-gray-400 line-through ">
+                ${product.price.toFixed(2)}
+              </span>
+            ) : (
+              <span>${product.price}</span>
+            )}
+            <span className="text-end font-bold text-lg">
+              ${price.toFixed(2)}
+            </span>
+          </div>
+        ) : (
+          <p className="text-end font-bold text-lg">
+            ${product.price.toFixed(2)}
+          </p>
+        )}
+      </div>
       <VerMas link={`/detailsproduct/${product.id}`} />
     </div>
   );

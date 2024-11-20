@@ -65,10 +65,6 @@ function DetailsProductPage() {
   if (!product)
     return <p className="text-center text-red-500">Producto no encontrado</p>;
 
-  const imageUrl =
-    Array.isArray(product.images) && product.images.length > 0
-      ? IMAGES_URL + product.images[0].url
-      : '';
   const brand = brands.find((b) => b.id === product.brandId);
   const material = materials.find((m) => m.id === product.materialId);
   const category = categories.find((c) => c.id === product.categoryId);
@@ -83,15 +79,17 @@ function DetailsProductPage() {
     <main className="container mx-auto p-5 md:mt-8 lg:mt-10">
       <div className="flex flex-col gap-6 md:flex-row md:justify-center">
         <div className="flex justify-center items-center">
-          {imageUrl ? (
+          {product.images.length > 0 ? (
             <img
               crossOrigin="anonymous"
-              src={imageUrl}
+              src={product.images[0].url}
               alt={product.name}
               className="w-full h-64 object-contain md:h-72 lg:h-80"
             />
           ) : (
-            <p>Imagen no disponible</p>
+            <p className="w-full h-64 object-contain md:h-72 lg:h-80">
+              Imagen no disponible
+            </p>
           )}
         </div>
 

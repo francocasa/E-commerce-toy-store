@@ -65,7 +65,7 @@ const ProductsSection = () => {
     <section className="py-10">
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-2xl font-semibold">Juguetes</h2>
-        <a href="/products" className="text-blue-600 hover:underline">
+        <a href="/products" className="text-blue-500 hover:underline">
           Ver todo &rarr;
         </a>
       </div>
@@ -85,7 +85,7 @@ const ProductsSection = () => {
             ))}
         </div>
 
-        {/* Controles para desplazamiento */}
+        {/* Controles para desplazamiento
         <button
           onClick={scrollLeft}
           className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
@@ -97,7 +97,7 @@ const ProductsSection = () => {
           className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
         >
           {'>'}
-        </button>
+        </button> */}
       </div>
     </section>
   );
