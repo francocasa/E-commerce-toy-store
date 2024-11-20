@@ -91,7 +91,7 @@ function ProductsPage() {
           />
         </div>
 
-        <div className="mx-auto w-fit grid gap-8 min-[500px]:grid-cols-2 md:grid-cols-3 md:gap-4 xl:grid-cols-4">
+        <div className="mx-auto w-fit grid gap-8 min-[500px]:grid-cols-2 md:grid-cols-3 md:gap-x-4 md:gap-y-6 xl:grid-cols-4">
           {filteredProducts
             .sort((a, b) => a.name.localeCompare(b.name)) // Ordena por el atributo "name" de A a Z
             .map((product) => (

@@ -62,7 +62,7 @@ const ProductsSection = () => {
   };
 
   return (
-    <section className="my-6">
+    <section className="my-8">
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-2xl font-semibold">Juguetes</h2>
         <a href="/products" className="text-blue-500 hover:underline">
@@ -84,20 +84,6 @@ const ProductsSection = () => {
               </div>
             ))}
         </div>
-
-        {/* Controles para desplazamiento
-        <button
-          onClick={scrollLeft}
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
-        >
-          {'<'}
-        </button>
-        <button
-          onClick={scrollRight}
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
-        >
-          {'>'}
-        </button> */}
       </div>
     </section>
   );
