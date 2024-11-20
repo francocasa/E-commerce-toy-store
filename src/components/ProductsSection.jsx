@@ -62,8 +62,8 @@ const ProductsSection = () => {
   };
 
   return (
-    <section className="py-10">
-      <div className="flex justify-between items-center mb-5">
+    <section className="my-6">
+      <div className="flex justify-between items-center mb-3">
         <h2 className="text-2xl font-semibold">Juguetes</h2>
         <a href="/products" className="text-blue-500 hover:underline">
           Ver todo &rarr;
@@ -72,13 +72,13 @@ const ProductsSection = () => {
       <div className="relative">
         <div
           ref={scrollRef}
-          className="flex gap-3 overflow-x-scroll no-scrollbar p-2"
+          className="flex gap-3 overflow-x-scroll no-scrollbar space-x-4 pb-2"
         >
           {/* Mapear los productos */}
           {products
             .sort((a, b) => a.description.localeCompare(b.description)) // Ordena por el atributo "name" de A a Z
             .map((product) => (
-              <div className="min-w-60" key={product.id}>
+              <div className="min-w-52" key={product.id}>
                 <ProductCard product={product} discounts={discounts} />{' '}
                 {/* Asegúrate de pasar discounts aquí */}
               </div>

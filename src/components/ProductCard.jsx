@@ -21,7 +21,7 @@ function ProductCard({ product, discounts }) {
   }, [product, discounts]);
 
   return (
-    <div className="p-3 w-full mx-auto">
+    <div className="w-full mx-auto">
       <div className="flex justify-center mb-4 h-52 md:h-72 lg:h-80 position relative">
         {promo && (
           <span className="absolute top-2 left-2 bg-red-200 text-sm text-red-700 border border-red-700 font-bold rounded-md py-1 px-2">
@@ -48,7 +48,7 @@ function ProductCard({ product, discounts }) {
         {promo !== '' ? (
           <div className="flex justify-end gap-2 items-center">
             {product.price !== price ? (
-              <span className="text-sm font-medium text-gray-400 line-through ">
+              <span className="text-sm font-medium text-gray-400 line-through">
                 ${product.price.toFixed(2)}
               </span>
             ) : (
