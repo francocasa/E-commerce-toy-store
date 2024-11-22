@@ -59,6 +59,12 @@ const PromotionSection = ({ selectedCategory }) => {
     );
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
+  const scrollLeft = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: -200, behavior: 'smooth' });
+    }
+  };
+
   const scrollRight = () => {
     if (scrollRef.current) {
       const elementWidth = document.getElementById(
@@ -91,6 +97,12 @@ const PromotionSection = ({ selectedCategory }) => {
           ))}
         </div>
 
+        <button
+          onClick={scrollLeft}
+          className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white font-bold border shadow-md text-blue-500 h-8 aspect-square flex justify-center items-center rounded-full "
+        >
+          {'<'}
+        </button>
         <button
           onClick={scrollRight}
           className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white font-bold border shadow-md text-blue-500 h-8 aspect-square flex justify-center items-center rounded-full"

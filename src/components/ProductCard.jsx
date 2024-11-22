@@ -41,7 +41,7 @@ function ProductCard({ product, discounts }) {
           </p>
         )}
       </div>
-      <h3 className="text-xl font-bold mb-2">{product.name}</h3>
+      <h3 className="text-xl font-bold mb-2 h-12">{product.name}</h3>
 
       <div className="flex justify-between items-center mb-3">
         <p className="text-gray-400 font-semibold">Precio</p>
