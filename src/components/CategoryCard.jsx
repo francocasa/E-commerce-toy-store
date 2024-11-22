@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types'; // Importar PropTypes
 import VerMas from './VerMas';
-const IMAGES_URL = import.meta.env.VITE_IMAGES_URL; // Obtener la URL base desde el .env
 
 function CategoryCard({ category }) {
   // Manejo de la imagen
