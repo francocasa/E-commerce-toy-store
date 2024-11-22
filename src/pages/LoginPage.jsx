@@ -9,35 +9,17 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { setUser, setToken, setIsUserLoggedIn, setUserCart } = useCounter();
+  const { setUser, setToken, setIsUserLoggedIn, setUserCart, loginUser } =
+    useCounter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Comprobar si el usuario ya está registrado
-    // if (localStorage.getItem('currentUserEmail')) {
-    //   Swal.fire({
-    //     title: 'Usuario logueado con éxito!',
-    //     text: 'No se puede crear una nueva cuenta mientras estés conectado.',
-    //     icon: 'info',
-    //     confirmButtonText: 'Aceptar',
-    //   });
-    //   return;
-    // }
-
-    // Lógica de autenticación
     const responseData = await authenticateUser(email, password);
     const user = responseData.user;
-    const tokenId = responseData.token;
-    setToken(tokenId);
-
     if (user) {
       const carritoPorUsuario = await obtenerCarritoPorUsuario(user.id);
-      setUser(user);
-      setUserCart(carritoPorUsuario);
-      setIsUserLoggedIn(true);
-      localStorage.setItem('currentUserId', user.id); // Guarda el ID
-      localStorage.setItem('currentUserEmail', email);
+      loginUser(user, responseData.token, carritoPorUsuario);
       Swal.fire({
         title: 'Éxito!',
         text: 'Inicio de sesión aceptado.',
