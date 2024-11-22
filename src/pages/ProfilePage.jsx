@@ -12,36 +12,6 @@ function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const { token, user, isUserLoggedIn } = useCounter();
 
-  // useEffect(() => {
-  //   const email = localStorage.getItem('currentUserEmail');
-  //   console.log('user');
-  //   console.log(user);
-
-  // if (email) {
-  //   const fetchUserDetails = async () => {
-  //     try {
-  //       const userId = await getUserIdByEmail(email);
-  //       if (userId) {
-  //         const user = await getUserById(userId);
-  //         if (user) {
-  //           setFullName(user.fullName || '');
-  //           setId(user.id);
-  //           setProfileImage(user.profileImage || '');
-  //           setAddress(user.address || ''); // Ajusta según tus datos
-  //           setPhone(user.phone || ''); // Ajusta según tus datos
-  //         }
-  //         console.log('user2');
-  //         console.log(user);
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching user details:', error);
-  //     }
-  //   };
-
-  //   fetchUserDetails();
-  // }
-  // }, []);
-
   const handleEdit = () => {
     setIsEditing(true);
   };
