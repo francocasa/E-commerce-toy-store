@@ -10,37 +10,11 @@ function ProfilePage() {
   const [address, setAddress] = useState(''); // Agrega dirección si es parte del perfil
   const [phone, setPhone] = useState(''); // Agrega teléfono si es parte del perfil
   const [isEditing, setIsEditing] = useState(false);
-  const { token, user, isUserLoggedIn } = useCounter();
+  const { token, user, loadCartItems, setCartItems } = useCounter();
 
-  // useEffect(() => {
-  //   const email = localStorage.getItem('currentUserEmail');
-  //   console.log('user');
-  //   console.log(user);
-
-  // if (email) {
-  //   const fetchUserDetails = async () => {
-  //     try {
-  //       const userId = await getUserIdByEmail(email);
-  //       if (userId) {
-  //         const user = await getUserById(userId);
-  //         if (user) {
-  //           setFullName(user.fullName || '');
-  //           setId(user.id);
-  //           setProfileImage(user.profileImage || '');
-  //           setAddress(user.address || ''); // Ajusta según tus datos
-  //           setPhone(user.phone || ''); // Ajusta según tus datos
-  //         }
-  //         console.log('user2');
-  //         console.log(user);
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching user details:', error);
-  //     }
-  //   };
-
-  //   fetchUserDetails();
-  // }
-  // }, []);
+  useEffect(() => {
+    loadCartItems();
+  }, [user.id]);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -88,6 +62,7 @@ function ProfilePage() {
   const handleLogout = () => {
     localStorage.removeItem('currentUserEmail');
     localStorage.removeItem('currentUserId'); // También elimina el ID del localStorage
+    localStorage.removeItem('Cart'); // También elimina el ID del localStorage
     Swal.fire({
       title: 'Sesión Cerrada',
       text: 'Has cerrado sesión.',

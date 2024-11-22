@@ -3,14 +3,13 @@ import PropTypes from 'prop-types';
 import Swal from 'sweetalert2';
 import { DashSquareFill, PlusSquareFill } from 'react-bootstrap-icons';
 import { useCounter } from './counter/Context';
-const IMAGES_URL = import.meta.env.VITE_IMAGES_URL; // Obtener la URL base desde el .env
 
 export default function AddToCart({ product }) {
   const [quantity, setQuantity] = useState(1);
   const { updateCartItem, addCartItem } = useCounter();
   const imageUrl =
     Array.isArray(product.images) && product.images.length > 0
-      ? IMAGES_URL + product.images[0].url
+      ? product.images[0].url
       : '';
 
   const addToCart = () => {
@@ -24,7 +23,7 @@ export default function AddToCart({ product }) {
         text: 'Has actualizado la cantidad para la compra',
         icon: 'info',
       });
-      updateCartItem(existingCart);
+      updateCartItem(existingProduct, existingProduct.quantity);
     } else {
       let finalPrice = product.price;
       let discount = 0;
@@ -34,7 +33,7 @@ export default function AddToCart({ product }) {
           2,
         );
       }
-      existingCart.push({
+      const item = {
         id: product.id, // Se mantiene como string
         title: product.name, // Cambiado de title a name
         price: product.price,
@@ -43,13 +42,14 @@ export default function AddToCart({ product }) {
         image: imageUrl, // Asegúrate de obtener la URL de la imagen
         quantity,
         categoryId: product.categoryId, // Añadir categoryId aquí
-      });
+      };
+      existingCart.push(item);
+      addCartItem(item);
       Swal.fire({
         title: 'Producto añadido',
         text: 'Se añadió el producto al carrito',
         icon: 'success',
       });
-      addCartItem(existingCart);
     }
   };
 
