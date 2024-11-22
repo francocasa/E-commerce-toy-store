@@ -46,20 +46,21 @@ const HeroSection = () => {
         backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)), url(${heroData[currentSlide].backgroundImage})`,
       }}
     >
-      <div className="text-left ml-0 sm:ml-5 mb-5">
-        <h1 className="text-2xl sm:text-4xl font-bold">
+      <div className="text-left">
+        <h1 className="text-xl font-bold sm:text-2xl md:text-3xl lg:text-4xl">
           {heroData[currentSlide].title}
         </h1>
-        <p className="text-sm sm:text-lg mt-4">
+        <p className="text-sm mt-2 sm:text-base ">
           {heroData[currentSlide].description}
         </p>
-        <a
-          href={heroData[currentSlide].buttonLink}
-          className="mt-6 bg-blue-600 py-2 px-4 sm:px-6 rounded-md text-white hover:bg-blue-700 transition-all inline-block"
-        >
-          {heroData[currentSlide].buttonText}
-        </a>
       </div>
+
+      <a
+        href={heroData[currentSlide].buttonLink}
+        className="text-sm sm:text-base mb-3 text-white bg-blue-500 py-2 px-4 sm:mb-0 sm:px-6  rounded-md hover:bg-blue-700 transition-all inline-block"
+      >
+        {heroData[currentSlide].buttonText}
+      </a>
 
       {/* Controles para el slider */}
       <div className="absolute left-2 top-1/2 transform -translate-y-1/2">
