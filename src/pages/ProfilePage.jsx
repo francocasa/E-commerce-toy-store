@@ -67,6 +67,9 @@ function ProfilePage() {
     localStorage.removeItem('currentUserEmail');
     localStorage.removeItem('currentUserId'); // También elimina el ID del localStorage
     localStorage.removeItem('Cart'); // También elimina el ID del localStorage
+    sessionStorage.removeItem('User'); // También elimina el ID del localStorage
+    sessionStorage.removeItem('carritoPorUsuario'); // También elimina el ID del localStorage
+    sessionStorage.removeItem('TokenId'); // También elimina el ID del localStorage
     setVerifiedCart(false);
     Swal.fire({
       title: 'Sesión Cerrada',

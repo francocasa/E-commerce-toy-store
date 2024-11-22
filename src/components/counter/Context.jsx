@@ -41,6 +41,15 @@ export const CounterProvider = ({ children }) => {
       parsedCart.map((item) => delete item.idItemCart);
       setCartItems(parsedCart.map((item) => ({ ...item, id: item.id })));
     }
+    // validar si el usuario esta conectado
+    const userSession = JSON.parse(sessionStorage.getItem('User'));
+    if (userSession) {
+      loginUser(
+        JSON.parse(sessionStorage.getItem('User')),
+        sessionStorage.getItem('TokenId'),
+        JSON.parse(sessionStorage.getItem('carritoPorUsuario')),
+      );
+    }
     if (localStorage.getItem('currentUserEmail')) {
       localStorage.removeItem('currentUserEmail');
     }
@@ -64,12 +73,19 @@ export const CounterProvider = ({ children }) => {
     setAdminToken('');
   };
 
-  const loginUser = (email, id) => {
-    const user = { email, id };
+  const loginUser = (user, tokenId, carritoPorUsuario) => {
     setUser(user);
+    setUserCart(carritoPorUsuario);
     setIsUserLoggedIn(true);
-    localStorage.setItem('currentUserEmail', email);
-    localStorage.setItem('currentUserId', id); // Asegúrate de guardar el ID también
+    setToken(tokenId);
+    localStorage.setItem('currentUserId', user.id); // Guarda el ID
+    localStorage.setItem('currentUserEmail', user.email);
+    sessionStorage.setItem('User', JSON.stringify(user));
+    sessionStorage.setItem('TokenId', tokenId);
+    sessionStorage.setItem(
+      'carritoPorUsuario',
+      JSON.stringify(carritoPorUsuario),
+    );
   };
 
   const loadCartItems = async () => {
@@ -149,7 +165,6 @@ export const CounterProvider = ({ children }) => {
   };
 
   const updateCartItem = async (item, quantity) => {
-    console.log(item);
     try {
       const storedCart = JSON.parse(localStorage.getItem('Cart'));
       const updatedCart = storedCart.map((cartItem) => {
