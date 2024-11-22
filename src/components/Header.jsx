@@ -194,8 +194,8 @@ const Header = () => {
                   className="cursor-pointer text-xl lg:text-[26px]"
                 />
                 {cartItems && cartItems.length > 0 && (
-                  <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 aspect-square flex justify-center items-center">
-                    <span className="mt-1">{cartItems.length}</span>
+                  <div className="absolute -top-2 -right-2 bg-red-500 text-white text-[8px] font-bold rounded-full w-4 aspect-square flex justify-center items-center sm:text-xs md:w-5">
+                    <span className=":mt-1">{cartItems.length}</span>
                   </div>
                 )}
               </Link>
