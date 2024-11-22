@@ -9,7 +9,7 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { setUser, setToken, setUserCart, loadCartItems } = useCounter();
+  const { setUser, setToken, setIsUserLoggedIn, setUserCart } = useCounter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,8 +32,10 @@ function LoginPage() {
     setToken(tokenId);
 
     if (user) {
-      userCart(user);
-      loadCartItems(user.id);
+      const carritoPorUsuario = await obtenerCarritoPorUsuario(user.id);
+      setUser(user);
+      setUserCart(carritoPorUsuario);
+      setIsUserLoggedIn(true);
       localStorage.setItem('currentUserId', user.id); // Guarda el ID
       localStorage.setItem('currentUserEmail', email);
       Swal.fire({
@@ -42,7 +44,6 @@ function LoginPage() {
         icon: 'success',
         confirmButtonText: 'Aceptar',
       }).then(() => {
-        setUser(user);
         navigate('/perfil');
       });
     } else {
@@ -53,11 +54,6 @@ function LoginPage() {
         confirmButtonText: 'Intentar de nuevo',
       });
     }
-  };
-  const userCart = async (user) => {
-    const CarritoPorUsuario = await obtenerCarritoPorUsuario(user.id);
-    const carritoId = CarritoPorUsuario.id;
-    setUserCart(carritoId);
   };
 
   return (
