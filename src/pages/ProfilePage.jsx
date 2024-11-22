@@ -10,10 +10,14 @@ function ProfilePage() {
   const [address, setAddress] = useState(''); // Agrega dirección si es parte del perfil
   const [phone, setPhone] = useState(''); // Agrega teléfono si es parte del perfil
   const [isEditing, setIsEditing] = useState(false);
-  const { token, user, loadCartItems, setCartItems } = useCounter();
+  const { token, user, loadCartItems, setVerifiedCart, verifiedCart } =
+    useCounter();
 
   useEffect(() => {
-    loadCartItems();
+    if (!verifiedCart && user.id != undefined) {
+      loadCartItems();
+    }
+    setVerifiedCart(true);
   }, [user.id]);
 
   const handleEdit = () => {
@@ -63,6 +67,7 @@ function ProfilePage() {
     localStorage.removeItem('currentUserEmail');
     localStorage.removeItem('currentUserId'); // También elimina el ID del localStorage
     localStorage.removeItem('Cart'); // También elimina el ID del localStorage
+    setVerifiedCart(false);
     Swal.fire({
       title: 'Sesión Cerrada',
       text: 'Has cerrado sesión.',

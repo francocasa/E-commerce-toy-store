@@ -19,6 +19,7 @@ export const CounterProvider = ({ children }) => {
   const [userCart, setUserCart] = useState({});
   const [userAdm, setUserAdm] = useState('');
   const [token, setToken] = useState('');
+  const [verifiedCart, setVerifiedCart] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(
     () => localStorage.getItem('AdminLogueado') !== null,
@@ -34,8 +35,10 @@ export const CounterProvider = ({ children }) => {
   // Cargar el carrito desde el localStorage
   useEffect(() => {
     const storedCart = localStorage.getItem('Cart');
+    setVerifiedCart(false);
     if (storedCart) {
-      const parsedCart = JSON.parse(storedCart);
+      let parsedCart = JSON.parse(storedCart);
+      parsedCart.map((item) => delete item.idItemCart);
       setCartItems(parsedCart.map((item) => ({ ...item, id: item.id })));
     }
     if (localStorage.getItem('currentUserEmail')) {
@@ -146,14 +149,19 @@ export const CounterProvider = ({ children }) => {
   };
 
   const updateCartItem = async (item, quantity) => {
+    console.log(item);
     try {
-      const updatedCart = cartItems.map((cartItem) => {
+      const storedCart = JSON.parse(localStorage.getItem('Cart'));
+      const updatedCart = storedCart.map((cartItem) => {
         if (cartItem.id === item.id) {
-          return { ...cartItem, quantity: Math.max(1, quantity) };
+          return {
+            ...cartItem,
+            quantity: Math.max(1, quantity),
+            idItemCart: item.idItemCart,
+          };
         }
         return cartItem;
       });
-      console.log(updatedCart);
       if (user.id !== undefined) {
         let response = await updateCartItemDB(item, quantity, token);
       }
@@ -206,6 +214,16 @@ export const CounterProvider = ({ children }) => {
         }
         setCartItems(arrayCartItems);
         localStorage.setItem('Cart', JSON.stringify(arrayCartItems));
+      } else {
+        const storedCart = JSON.parse(localStorage.getItem('Cart'));
+        const updatedCart = storedCart.map((cartItem) => {
+          if (cartItem.id === item.id) {
+            return { ...cartItem, idItemCart: item.idItemCart };
+          }
+          return cartItem;
+        });
+        setCartItems(updatedCart);
+        localStorage.setItem('Cart', JSON.stringify(updatedCart));
       }
     } catch (error) {
       console.error('Error al agregar un item:', error);
@@ -231,6 +249,7 @@ export const CounterProvider = ({ children }) => {
       isAdminLoggedIn,
       isUserLoggedIn,
       adminToken,
+      verifiedCart,
       setUser,
       setUserAdm,
       setCartItems,
@@ -246,6 +265,7 @@ export const CounterProvider = ({ children }) => {
       setUserCart,
       loadCartItems,
       setIsUserLoggedIn,
+      setVerifiedCart,
     }),
     [user, userAdm, cartItems, isAdminLoggedIn, isUserLoggedIn, adminToken],
   );
