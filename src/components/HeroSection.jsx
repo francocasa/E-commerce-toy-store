@@ -41,7 +41,7 @@ const HeroSection = () => {
 
   return (
     <section
-      className="relative h-96 bg-cover bg-center flex flex-col justify-end items-start text-white p-4 sm:p-6 lg:p-8"
+      className="relative h-52 bg-cover bg-center flex flex-col text-gray-800 justify-between items-start p-4 rounded-md sm:px-6 sm:pb-8 md:h-60 md:px-9 lg:h-72 lg:pb-10"
       style={{
         backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)), url(${heroData[currentSlide].backgroundImage})`,
       }}
