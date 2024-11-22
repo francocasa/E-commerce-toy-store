@@ -37,7 +37,8 @@ export const CounterProvider = ({ children }) => {
     const storedCart = localStorage.getItem('Cart');
     setVerifiedCart(false);
     if (storedCart) {
-      const parsedCart = JSON.parse(storedCart);
+      let parsedCart = JSON.parse(storedCart);
+      parsedCart.map((item) => delete item.idItemCart);
       setCartItems(parsedCart.map((item) => ({ ...item, id: item.id })));
     }
     if (localStorage.getItem('currentUserEmail')) {
@@ -148,11 +149,16 @@ export const CounterProvider = ({ children }) => {
   };
 
   const updateCartItem = async (item, quantity) => {
+    console.log(item);
     try {
       const storedCart = JSON.parse(localStorage.getItem('Cart'));
       const updatedCart = storedCart.map((cartItem) => {
         if (cartItem.id === item.id) {
-          return { ...cartItem, quantity: Math.max(1, quantity) };
+          return {
+            ...cartItem,
+            quantity: Math.max(1, quantity),
+            idItemCart: item.idItemCart,
+          };
         }
         return cartItem;
       });
@@ -208,6 +214,16 @@ export const CounterProvider = ({ children }) => {
         }
         setCartItems(arrayCartItems);
         localStorage.setItem('Cart', JSON.stringify(arrayCartItems));
+      } else {
+        const storedCart = JSON.parse(localStorage.getItem('Cart'));
+        const updatedCart = storedCart.map((cartItem) => {
+          if (cartItem.id === item.id) {
+            return { ...cartItem, idItemCart: item.idItemCart };
+          }
+          return cartItem;
+        });
+        setCartItems(updatedCart);
+        localStorage.setItem('Cart', JSON.stringify(updatedCart));
       }
     } catch (error) {
       console.error('Error al agregar un item:', error);
