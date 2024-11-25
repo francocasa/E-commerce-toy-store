@@ -51,7 +51,7 @@ function App() {
           <Route path="/promotions" element={<PromotionsPage />} />
           <Route path="/testimonios" element={<TestimoniosPage />} />
           <Route path="/paymentsuccess/" element={<SuccessPayment />} />
-          <Route path="/history/:id" element={<HistoryPage />} />
+          <Route path="/history" element={<HistoryPage />} />
 
           {/* Rutas de administración */}
           <Route path="/admin/dashboard" element={<DashboardAdmin />} />

@@ -69,7 +69,7 @@ function HistoryDetails({ purchases }) {
                   {purchase.quantity} {/* Cantidad */}
                 </td>
                 <td className="md:px-6 md:py-4 text-gray-600">
-                  ${purchase.price} {/* Precio */}
+                  ${purchase.totalAmount.toFixed(2)} {/* Precio */}
                 </td>
               </tr>
             );
