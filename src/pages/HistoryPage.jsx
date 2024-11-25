@@ -57,6 +57,9 @@ function HistoryPage() {
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase ">
               <tr>
+                <th scope="col" className="md:px-6 md:py-3 md:hidden">
+                  ID
+                </th>
                 <th scope="col" className="md:px-6 md:py-3 hidden md:block">
                   ID de compra
                 </th>
@@ -83,7 +86,8 @@ function HistoryPage() {
                     </button>
                   </th>
                   <td className="md:px-6 md:py-4 text-gray-600">
-                    {order.orderDate} {/* Cambiar según tu esquema */}
+                    {order.orderDate.substring(0, 10)}{' '}
+                    {/* Cambiar según tu esquema */}
                   </td>
                   <td className="md:px-6 md:py-4 text-gray-600">
                     ${order.totalAmount} {/* Cambiar según tu esquema */}

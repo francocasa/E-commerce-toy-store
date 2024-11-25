@@ -78,8 +78,6 @@ export const CounterProvider = ({ children }) => {
     setUserCart(carritoPorUsuario);
     setIsUserLoggedIn(true);
     setToken(tokenId);
-    console.log('tokenId');
-    console.log(tokenId);
     localStorage.setItem('currentUserId', user.id); // Guarda el ID
     localStorage.setItem('currentUserEmail', user.email);
     sessionStorage.setItem('User', JSON.stringify(user));
