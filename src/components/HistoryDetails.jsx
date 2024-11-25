@@ -37,9 +37,6 @@ function HistoryDetails({ purchases }) {
             <th scope="col" className="md:px-6 md:py-3">
               Producto
             </th>
-            <th scope="col" className="md:px-6 md:py-3 md:hidden">
-              Cant
-            </th>
             <th scope="col" className="md:px-6 md:py-3 hidden md:block">
               Cantidad
             </th>
@@ -57,7 +54,14 @@ function HistoryDetails({ purchases }) {
               <tr className="bg-white border-b" key={purchase.productId}>
                 <th
                   scope="row"
-                  className="md:px-6 md:py-4 font-medium whitespace-nowrap text-gray-600"
+                  className="md:px-6 md:py-4 text-gray-600  md:hidden"
+                >
+                  {purchase.productId.substring(0, 13) + '-'}
+                  {purchase.productId.substring(13)}
+                </th>
+                <th
+                  scope="row"
+                  className="md:px-6 md:py-4 text-gray-600 hidden md:block"
                 >
                   {purchase.productId}
                 </th>
@@ -65,11 +69,11 @@ function HistoryDetails({ purchases }) {
                   {product ? product.name : 'Producto no encontrado'}{' '}
                   {/* Nombre del producto */}
                 </td>
-                <td className="md:px-6 md:py-4 text-gray-600">
+                <td className="md:px-6 md:py-4 text-gray-600 hidden md:block">
                   {purchase.quantity} {/* Cantidad */}
                 </td>
                 <td className="md:px-6 md:py-4 text-gray-600">
-                  ${purchase.price} {/* Precio */}
+                  ${purchase.totalAmount.toFixed(2)} {/* Precio */}
                 </td>
               </tr>
             );

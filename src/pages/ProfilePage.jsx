@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { updateUserProfile } from '../services/users'; // Asegúrate de que estas funciones estén correctamente importadas
 import { useCounter } from '../components/counter/Context';
+import { useNavigate } from 'react-router-dom';
 
 function ProfilePage() {
+  const navigate = useNavigate();
   const [fullName, setFullName] = useState('');
   const [id, setId] = useState('');
   const [profileImage, setProfileImage] = useState('');
@@ -60,7 +62,7 @@ function ProfilePage() {
   };
 
   const handleHistory = () => {
-    window.location.href = '/history/' + id;
+    navigate('/history');
   };
 
   const handleLogout = () => {
