@@ -96,6 +96,7 @@ Donde se debe colocar tu ruta de backend
 
 - En caso de usar VSC, abre el terminal y ejecuta el siguiente comando
   ```
+  npm install
   npm run dev
   ```
 
