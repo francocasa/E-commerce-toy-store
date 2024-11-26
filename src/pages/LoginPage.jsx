@@ -9,40 +9,23 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { setUser, setToken, setUserCart, loadCartItems } = useCounter();
+  const { setUser, setToken, setIsUserLoggedIn, setUserCart, loginUser } =
+    useCounter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Comprobar si el usuario ya está registrado
-    // if (localStorage.getItem('currentUserEmail')) {
-    //   Swal.fire({
-    //     title: 'Usuario logueado con éxito!',
-    //     text: 'No se puede crear una nueva cuenta mientras estés conectado.',
-    //     icon: 'info',
-    //     confirmButtonText: 'Aceptar',
-    //   });
-    //   return;
-    // }
-
-    // Lógica de autenticación
     const responseData = await authenticateUser(email, password);
     const user = responseData.user;
-    const tokenId = responseData.token;
-    setToken(tokenId);
-
     if (user) {
-      userCart(user);
-      loadCartItems(user.id);
-      localStorage.setItem('currentUserId', user.id); // Guarda el ID
-      localStorage.setItem('currentUserEmail', email);
+      const carritoPorUsuario = await obtenerCarritoPorUsuario(user.id);
+      loginUser(user, responseData.token, carritoPorUsuario);
       Swal.fire({
         title: 'Éxito!',
         text: 'Inicio de sesión aceptado.',
         icon: 'success',
         confirmButtonText: 'Aceptar',
       }).then(() => {
-        setUser(user);
         navigate('/perfil');
       });
     } else {
@@ -53,11 +36,6 @@ function LoginPage() {
         confirmButtonText: 'Intentar de nuevo',
       });
     }
-  };
-  const userCart = async (user) => {
-    const CarritoPorUsuario = await obtenerCarritoPorUsuario(user.id);
-    const carritoId = CarritoPorUsuario.id;
-    setUserCart(carritoId);
   };
 
   return (

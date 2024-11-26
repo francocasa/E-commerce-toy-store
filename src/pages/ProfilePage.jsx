@@ -2,45 +2,25 @@ import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { updateUserProfile } from '../services/users'; // Asegúrate de que estas funciones estén correctamente importadas
 import { useCounter } from '../components/counter/Context';
+import { useNavigate } from 'react-router-dom';
 
 function ProfilePage() {
+  const navigate = useNavigate();
   const [fullName, setFullName] = useState('');
   const [id, setId] = useState('');
   const [profileImage, setProfileImage] = useState('');
   const [address, setAddress] = useState(''); // Agrega dirección si es parte del perfil
   const [phone, setPhone] = useState(''); // Agrega teléfono si es parte del perfil
   const [isEditing, setIsEditing] = useState(false);
-  const { token, user, isUserLoggedIn } = useCounter();
+  const { token, user, loadCartItems, setVerifiedCart, verifiedCart } =
+    useCounter();
 
-  // useEffect(() => {
-  //   const email = localStorage.getItem('currentUserEmail');
-  //   console.log('user');
-  //   console.log(user);
-
-  // if (email) {
-  //   const fetchUserDetails = async () => {
-  //     try {
-  //       const userId = await getUserIdByEmail(email);
-  //       if (userId) {
-  //         const user = await getUserById(userId);
-  //         if (user) {
-  //           setFullName(user.fullName || '');
-  //           setId(user.id);
-  //           setProfileImage(user.profileImage || '');
-  //           setAddress(user.address || ''); // Ajusta según tus datos
-  //           setPhone(user.phone || ''); // Ajusta según tus datos
-  //         }
-  //         console.log('user2');
-  //         console.log(user);
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching user details:', error);
-  //     }
-  //   };
-
-  //   fetchUserDetails();
-  // }
-  // }, []);
+  useEffect(() => {
+    if (!verifiedCart && user.id != undefined) {
+      loadCartItems();
+    }
+    setVerifiedCart(true);
+  }, [user.id]);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -82,12 +62,17 @@ function ProfilePage() {
   };
 
   const handleHistory = () => {
-    window.location.href = '/history/' + id;
+    navigate('/history');
   };
 
   const handleLogout = () => {
     localStorage.removeItem('currentUserEmail');
     localStorage.removeItem('currentUserId'); // También elimina el ID del localStorage
+    localStorage.removeItem('Cart'); // También elimina el ID del localStorage
+    sessionStorage.removeItem('User'); // También elimina el ID del localStorage
+    sessionStorage.removeItem('carritoPorUsuario'); // También elimina el ID del localStorage
+    sessionStorage.removeItem('TokenId'); // También elimina el ID del localStorage
+    setVerifiedCart(false);
     Swal.fire({
       title: 'Sesión Cerrada',
       text: 'Has cerrado sesión.',

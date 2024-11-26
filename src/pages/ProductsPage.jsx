@@ -75,11 +75,16 @@ function ProductsPage() {
     return selectedCategory === '' || product.categoryId === selectedCategory;
   });
 
-  if (loading) return <p>Cargando productos...</p>; // Mensaje de carga
+  if (loading)
+    return (
+      <p className="grow flex justify-center items-center">
+        Cargando productos...
+      </p>
+    ); // Mensaje de carga
   if (error) return <p className="text-center text-red-500">{error}</p>; // Manejo de error
 
   return (
-    <main className="container mx-auto my-8">
+    <main className="container mx-auto mt-8 mb-12">
       <section className="mx-9">
         <h2 className="text-2xl font-bold mb-4">Productos</h2>
 
@@ -91,11 +96,11 @@ function ProductsPage() {
           />
         </div>
 
-        <div className="flex flex-wrap gap-3 justify-center">
+        <div className="mx-auto w-fit grid gap-8 min-[500px]:grid-cols-2 md:grid-cols-3 md:gap-x-4 md:gap-y-6 xl:grid-cols-4 2xl:grid-cols-5">
           {filteredProducts
             .sort((a, b) => a.name.localeCompare(b.name)) // Ordena por el atributo "name" de A a Z
             .map((product) => (
-              <div className="w-4/5 max-w-80" key={product.id}>
+              <div className="max-w-60 mx-auto" key={product.id}>
                 <ProductCard product={product} discounts={discounts} />{' '}
                 {/* Pasa el producto y los descuentos */}
               </div>

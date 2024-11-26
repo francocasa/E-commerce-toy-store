@@ -1,0 +1,13 @@
+[
+    {
+      "id": "1",
+      "description": "Descuento anterior",
+      "discount": 0.15
+    },
+    {
+      "id": "2",
+      "description": "Descuento adicional",
+      "discount": 0.10
+    }
+  ]
+  

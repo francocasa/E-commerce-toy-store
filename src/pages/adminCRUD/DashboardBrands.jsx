@@ -31,10 +31,22 @@ function DashboardBrands() {
     Authorization: `Bearer ${adminToken}`,
   };
 
+  // Función para manejar la expiración del token
+  const handleTokenExpiration = () => {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Token Expirado',
+      text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+    }).then(() => {
+      localStorage.removeItem('adminToken'); // Eliminar el token expirado
+      window.location.href = '/loginAdm'; // Redirigir al login de administrador
+    });
+  };
+
   useEffect(() => {
     const fetchBrands = async () => {
       if (!adminToken) {
-        window.location.href = '/loginAdm';
+        handleTokenExpiration();
         return;
       }
 
@@ -42,7 +54,12 @@ function DashboardBrands() {
         const fetchedBrands = await consultaMarcas(headers);
         setBrands(fetchedBrands);
       } catch (error) {
-        Swal.fire('Error', 'No se pudieron cargar las marcas.', 'error');
+        // Manejo de error por token expirado
+        if (error.response && error.response.status === 403) {
+          handleTokenExpiration();
+        } else {
+          Swal.fire('Error', 'No se pudieron cargar las marcas.', 'error');
+        }
       }
     };
 
@@ -55,11 +72,16 @@ function DashboardBrands() {
       setDisabledBrands(fetchedDisabledBrands);
       setModalDisabledIsOpen(true);
     } catch (error) {
-      Swal.fire(
-        'Error',
-        'No se pudieron cargar las marcas deshabilitadas.',
-        'error',
-      );
+      // Manejo de error por token expirado
+      if (error.response && error.response.status === 403) {
+        handleTokenExpiration();
+      } else {
+        Swal.fire(
+          'Error',
+          'No se pudieron cargar las marcas deshabilitadas.',
+          'error',
+        );
+      }
     }
   };
 
@@ -80,27 +102,19 @@ function DashboardBrands() {
         await habilitarMarca(id, headers); // Habilitar la marca
         setDisabledBrands(disabledBrands.filter((brand) => brand.id !== id)); // Eliminarla de la lista de deshabilitadas
         setBrands([
+          // Agregarla a la lista de activas
           ...brands,
           {
             ...disabledBrands.find((brand) => brand.id === id),
             isDeleted: false,
           },
-        ]); // Agregarla a la lista de activas
+        ]);
         Swal.fire('Habilitada!', 'La marca ha sido habilitada.', 'success');
       } catch (error) {
-        // Manejo de errores por expiración de token (código 403)
+        // Manejo de error por token expirado
         if (error.response && error.response.status === 403) {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Token Expirado',
-            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
-          }).then(() => {
-            localStorage.removeItem('adminToken'); // Eliminar el token expirado
-            window.location.href = '/loginAdm'; // Redirigir al login de administrador
-          });
+          handleTokenExpiration();
         } else {
-          // Manejo de otros errores
-          console.error('Error al habilitar la marca:', error);
           Swal.fire('Error', 'No se pudo habilitar la marca.', 'error');
         }
       }
@@ -121,23 +135,26 @@ function DashboardBrands() {
 
     if (result.isConfirmed) {
       try {
+        // Verificar si el token es válido antes de hacer la solicitud
+        if (!adminToken) {
+          handleTokenExpiration();
+          return; // Evita continuar si el token es inválido
+        }
+
         await desactivarMarca(id, headers); // Desactivar la marca
-        setBrands(brands.filter((brand) => brand.id !== id)); // Eliminarla de la lista de marcas activas
+
+        // Si la desactivación es exitosa, actualizar las listas
+        setBrands(brands.filter((brand) => brand.id !== id)); // Eliminarla de las marcas activas
+        setDisabledBrands((prevState) => [
+          ...prevState,
+          brands.find((brand) => brand.id === id),
+        ]); // Añadirla a las marcas deshabilitadas
+
         Swal.fire('Desactivada!', 'La marca ha sido desactivada.', 'success');
       } catch (error) {
-        // Manejo de errores por expiración de token (código 403)
         if (error.response && error.response.status === 403) {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Token Expirado',
-            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
-          }).then(() => {
-            localStorage.removeItem('adminToken'); // Eliminar el token expirado
-            window.location.href = '/loginAdm'; // Redirigir al login de administrador
-          });
+          handleTokenExpiration();
         } else {
-          // Manejo de otros errores
-          console.error('Error al desactivar la marca:', error);
           Swal.fire('Error', 'No se pudo desactivar la marca.', 'error');
         }
       }
@@ -182,19 +199,10 @@ function DashboardBrands() {
         Swal.fire('Éxito', 'Marca agregada correctamente.', 'success');
       }
     } catch (error) {
-      // Manejo de errores por expiración de token (código 403)
+      // Manejo de error por token expirado
       if (error.response && error.response.status === 403) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Token Expirado',
-          text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
-        }).then(() => {
-          localStorage.removeItem('adminToken'); // Eliminar el token expirado
-          window.location.href = '/loginAdm'; // Redirigir al login de administrador
-        });
+        handleTokenExpiration();
       } else {
-        // Manejo de otros errores
-        console.error('Error al agregar/editar la marca:', error);
         Swal.fire('Error', 'No se pudo agregar/editar la marca.', 'error');
       }
     }

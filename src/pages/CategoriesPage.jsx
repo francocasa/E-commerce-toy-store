@@ -38,18 +38,24 @@ function CategoriesPage() {
     fetchCategoriesAndProducts();
   }, []); // Solo ejecuta una vez al montar el componente
 
-  if (loading) return <p>Cargando categorías...</p>; // Mensaje de carga
+  if (loading)
+    return (
+      <p className="grow flex justify-center items-center">
+        Cargando categorías...
+      </p>
+    ); // Mensaje de carga
   if (error) return <p className="text-center text-red-500">{error}</p>; // Manejo de error
 
   return (
-    <main className="container mx-auto my-8">
+    <main className="container mx-auto mt-8 mb-12">
       <section className="mx-9">
         <h2 className="text-2xl font-bold mb-4">Categorías</h2>
-        <div className="flex flex-wrap gap-3 justify-center">
+
+        <div className="mx-auto w-fit grid gap-8 min-[500px]:grid-cols-2 md:grid-cols-3 md:gap-x-4 md:gap-y-6 xl:grid-cols-4 2xl:grid-cols-5">
           {categories
             .sort((a, b) => a.name.localeCompare(b.name)) // Ordena por el atributo "name" de A a Z
             .map((category) => (
-              <div className="w-4/5 max-w-80" key={category.id}>
+              <div className="w-fit" key={category.id}>
                 <CategoryCard category={category} />{' '}
                 {/* Mostrar las categorías filtradas */}
               </div>

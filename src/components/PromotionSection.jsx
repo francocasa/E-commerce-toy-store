@@ -51,7 +51,12 @@ const PromotionSection = ({ selectedCategory }) => {
     fetchProductos();
   }, []);
 
-  if (loading) return <p>Cargando promociones...</p>;
+  if (loading)
+    return (
+      <p className="grow flex justify-center items-center">
+        Cargando promociones...
+      </p>
+    );
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   const scrollLeft = () => {
@@ -62,44 +67,45 @@ const PromotionSection = ({ selectedCategory }) => {
 
   const scrollRight = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+      const elementWidth = document.getElementById(
+        'promotions-scroll-container',
+      ).scrollWidth;
+
+      scrollRef.current.scrollBy({ left: elementWidth, behavior: 'smooth' });
     }
   };
 
   return (
-    <section className="py-10">
-      <div className="flex justify-between items-center mb-5">
-        <h2 className="text-2xl font-semibold">
-          Promociones - Juguetes con descuentos
-        </h2>
-        <a href="/products" className="text-blue-600 hover:underline">
+    <section className="my-8">
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-2xl font-semibold">Promociones</h2>
+        <a href="/products" className="text-blue-500 hover:underline">
           Ver todo &rarr;
         </a>
       </div>
-      <div className="relative">
+      <div className="relative" id="promotions-scroll-container">
         <div
           ref={scrollRef}
-          className="flex gap-3 overflow-x-scroll no-scrollbar p-2"
+          className="flex gap-3 overflow-x-auto no-scrollbar space-x-4 pb-2 md:space-x-3 lg:space-x-2"
         >
           {/* Mapear los productos */}
           {products.map((product) => (
-            <div className="min-w-60" key={product.id}>
+            <div className="w-fit" key={product.id}>
               <ProductCard product={product} discounts={discounts} />{' '}
               {/* Asegúrate de pasar discounts aquí */}
             </div>
           ))}
         </div>
 
-        {/* Controles para desplazamiento */}
         <button
           onClick={scrollLeft}
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
+          className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white font-bold border shadow-md text-blue-500 h-8 aspect-square flex justify-center items-center rounded-full "
         >
           {'<'}
         </button>
         <button
           onClick={scrollRight}
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
+          className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white font-bold border shadow-md text-blue-500 h-8 aspect-square flex justify-center items-center rounded-full"
         >
           {'>'}
         </button>

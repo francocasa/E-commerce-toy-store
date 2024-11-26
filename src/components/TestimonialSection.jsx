@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import TestimonialCard from './TestimonialCard';
 
 const TestimonialSection = () => {
   const scrollRef = useRef(null); // Referencia al contenedor
@@ -7,39 +8,39 @@ const TestimonialSection = () => {
   const testimonials = [
     {
       id: 'test1',
-      nombrePersona: 'Miguel Pariona',
+      author: 'Miguel Pariona',
       image: '/Perfil/photo_1.png',
-      mensaje: 'Me gustó mucho el carrito.',
+      text: 'Me gustó mucho el carrito.',
     },
     {
       id: 'test2',
-      nombrePersona: 'Juan Pérez',
+      author: 'Juan Pérez',
       image: '/Perfil/photo_2.png',
-      mensaje: 'Me gustó el tractor.',
+      text: 'Me gustó el tractor.',
     },
     {
       id: 'test3',
-      nombrePersona: 'Ana Gómez',
+      author: 'Ana Gómez',
       image: '/Perfil/photo_3.png',
-      mensaje: 'Excelente calidad en los juguetes.',
+      text: 'Excelente calidad en los juguetes.',
     },
     {
       id: 'test4',
-      nombrePersona: 'Luis Fernández',
+      author: 'Luis Fernández',
       image: '/Perfil/photo_4.png',
-      mensaje: 'Los precios son muy accesibles.',
+      text: 'Los precios son muy accesibles.',
     },
     {
       id: 'test5',
-      nombrePersona: 'Sofía López',
+      author: 'Sofía López',
       image: '/Perfil/photo_5.png',
-      mensaje: 'Gran variedad de productos.',
+      text: 'Gran variedad de productos.',
     },
     {
       id: 'test6',
-      nombrePersona: 'Carlos Rodríguez',
+      author: 'Carlos Rodríguez',
       image: '/Perfil/photo_6.png',
-      mensaje: 'Me encantó la atención al cliente.',
+      text: 'Me encantó la atención al cliente.',
     },
   ];
 
@@ -56,7 +57,7 @@ const TestimonialSection = () => {
   };
 
   return (
-    <section className="py-10">
+    <section className="mt-8">
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-2xl font-semibold">Testimonios</h2>
         <a href="/testimonios" className="text-blue-600 hover:underline">
@@ -70,33 +71,21 @@ const TestimonialSection = () => {
         >
           {/* Mapear los testimonios desde el arreglo estático */}
           {testimonials.map((testimonial) => (
-            <div
-              key={testimonial.id}
-              className="min-w-[150px] sm:min-w-[200px] md:min-w-[250px] bg-white shadow-md p-4 rounded-md text-center"
-            >
-              <img
-                src={testimonial.image}
-                alt={testimonial.nombrePersona}
-                className="w-24 h-24 object-cover rounded-full mx-auto"
-              />
-              <p className="mt-4">&quot;{testimonial.mensaje}&quot;</p>
-              <h4 className="text-lg mt-2 font-medium">
-                {testimonial.nombrePersona}
-              </h4>
+            <div key={testimonial.id} className="w-fit">
+              <TestimonialCard testimonial={testimonial} />
             </div>
           ))}
         </div>
 
-        {/* Controles para desplazamiento */}
         <button
           onClick={scrollLeft}
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
+          className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white font-bold border shadow-md text-blue-500 h-8 aspect-square flex justify-center items-center rounded-full "
         >
           {'<'}
         </button>
         <button
           onClick={scrollRight}
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
+          className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white font-bold border shadow-md text-blue-500 h-8 aspect-square flex justify-center items-center rounded-full"
         >
           {'>'}
         </button>

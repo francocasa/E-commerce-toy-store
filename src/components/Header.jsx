@@ -5,8 +5,13 @@ import { Cart3, Person } from 'react-bootstrap-icons';
 import { useCounter } from '../components/counter/Context';
 
 const Header = () => {
-  const { isAdminLoggedIn, isUserLoggedIn, logoutAdmin, logoutUser } =
-    useCounter();
+  const {
+    isAdminLoggedIn,
+    isUserLoggedIn,
+    logoutAdmin,
+    logoutUser,
+    cartItems,
+  } = useCounter();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -123,17 +128,7 @@ const Header = () => {
                     )}
                   </div>
                 </li>
-                <li>
-                  {/*
-
-  <Link
-    to="/admin/dashboard/reportes"
-    className="block py-2 px-3 text-gray-900 rounded hover:bg-blue-100 transition-colors"
-  >
-    Reporte Ventas
-  </Link>
-*/}
-                </li>
+                <li></li>
                 <li>
                   <button
                     onClick={handleLogout}
@@ -193,11 +188,16 @@ const Header = () => {
                   className="cursor-pointer text-2xl lg:text-[30px]"
                 />
               </Link>
-              <Link to="/cart">
+              <Link to="/cart" className="relative">
                 <Cart3
                   color="black"
                   className="cursor-pointer text-xl lg:text-[26px]"
                 />
+                {cartItems && cartItems.length > 0 && (
+                  <div className="absolute -top-2 -right-2 bg-red-500 text-white text-[8px] font-bold rounded-full w-4 aspect-square flex justify-center items-center sm:text-xs md:w-5">
+                    <span className=":mt-1">{cartItems.length}</span>
+                  </div>
+                )}
               </Link>
             </div>
           )}

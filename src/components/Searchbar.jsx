@@ -60,7 +60,8 @@ const Searchbar = () => {
           d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
         />
       </svg>
-      {loading && <p>Cargando productos...</p>} {/* Mensaje de carga */}
+      {loading && <p className="text-sm">Cargando...</p>}{' '}
+      {/* Mensaje de carga */}
       {error && <p className="text-red-500">{error}</p>}{' '}
       {/* Mensaje de error */}
       {filteredProducts.length > 0 && (
