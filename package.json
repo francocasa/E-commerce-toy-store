@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+     "cypress": "cypress open",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
@@ -15,7 +16,10 @@
     "api": "json-server --watch db.json --routes routes.json --port 9090"
   },
   "dependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
     "axios": "^1.7.7",
+    "jest-fetch-mock": "^3.0.3",
     "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
     "react-bootstrap-icons": "^1.11.4",
@@ -36,6 +40,8 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.20",
+    "cypress": "^13.16.0",
+    "dotenv": "^16.4.5",
     "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^9.1.0",
