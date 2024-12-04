@@ -65,9 +65,9 @@ function AdminDashboard() {
           <div className="flex-shrink-0">
             {admin.profileImage ? (
               <img
-                src={`${import.meta.env.VITE_IMAGES_URL}${admin.profileImage}`} // Aquí se concatenan las URLs
-                alt={`${admin.fullName}'s profile`}
-                className="w-24 h-24 rounded-full"
+  src={`${import.meta.env.VITE_IMAGES_URL.replace(/\/$/, '')}/${admin.profileImage}`}
+  alt={`${admin.fullName}'s profile`}
+  className="w-24 h-24 rounded-full"
               />
             ) : (
               <div className="w-24 h-24 flex items-center justify-center bg-gray-200 rounded-full">
