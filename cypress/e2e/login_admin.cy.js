@@ -28,7 +28,9 @@ describe('Login de Administrador', () => {
     // Validar error devuelto por el backend
     cy.wait('@loginRequestError').then((interception) => {
       expect(interception.response.statusCode).to.equal(400);
-      expect(interception.response.body.message).to.equal('Credenciales incorrectas');
+      expect(interception.response.body.message).to.equal(
+        'Credenciales incorrectas',
+      );
     });
 
     // Verificar que no se redirige

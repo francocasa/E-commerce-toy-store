@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-     "cypress": "cypress open",
+    "cypress": "cypress open",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
