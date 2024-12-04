@@ -243,7 +243,7 @@ function DashboardProducts() {
       Swal.fire(
         'Error',
         'Por favor, complete todos los campos obligatorios.',
-        'error',
+        'error'
       );
       return;
     }
@@ -252,13 +252,13 @@ function DashboardProducts() {
     const isDuplicated = isProductNameDuplicated(
       newProduct.name,
       products,
-      newProduct.id,
+      newProduct.id
     );
     if (isDuplicated) {
       Swal.fire(
         'Error',
         'Ya existe un producto con ese nombre. Por favor, elija otro.',
-        'error',
+        'error'
       );
       return;
     }
@@ -281,7 +281,7 @@ function DashboardProducts() {
       Swal.fire(
         'Error',
         'No se encontró el token de autenticación. Por favor, inicia sesión.',
-        'error',
+        'error'
       );
       window.location.href = '/loginAdm'; // Redirige al login si no hay token
       return;
@@ -291,7 +291,7 @@ function DashboardProducts() {
       let response;
 
       // Primero, editar o agregar el producto (dependiendo de si tiene un id)
-      if (newProduct.id) {
+      if (newProduct && newProduct.id) {
         // Si estamos editando un producto, eliminamos la imagen antigua solo si hay una nueva imagen
         if (newProduct.newImages.length > 0 && newProduct.images.length > 0) {
           const imageId = newProduct.images[0].id; // Solo eliminamos la primera imagen
@@ -309,12 +309,12 @@ function DashboardProducts() {
             } catch (deleteError) {
               console.error(
                 'Error al eliminar la imagen:',
-                deleteError.response || deleteError,
+                deleteError.response || deleteError
               );
               Swal.fire(
                 'Error',
                 'Hubo un error al eliminar la imagen. Intenta nuevamente.',
-                'error',
+                'error'
               );
             }
           };
@@ -324,84 +324,46 @@ function DashboardProducts() {
         }
 
         // Proceder con la edición del producto
-        try {
-          let response;
+        response = await editarProducto(newProduct.id, productData);
+        console.log('Respuesta al editar producto:', response); // Depuración
 
-          // Primero, intentamos editar el producto si tiene un ID
-          if (newProduct.id) {
-            response = await editarProducto(newProduct.id, productData);
-            console.log('Respuesta al editar producto:', response); // Depuración
+        if (response) {
+          // Si la respuesta es exitosa, actualizamos la lista de productos
+          setProducts(
+            products.map((product) =>
+              product.id === newProduct.id ? response : product
+            )
+          );
+          Swal.fire('Éxito', 'Producto editado correctamente.', 'success');
+        } else {
+          // Si no hubo respuesta o fue inválida
+          Swal.fire(
+            'Token Inválido',
+            'Tu sesión ha expirado o el token es inválido. Por favor, inicia sesión nuevamente.',
+            'warning'
+          );
+        }
+      } else {
+        // Si no tiene ID, agregamos un nuevo producto
+        response = await agregarProducto(productData);
+        console.log('Respuesta al agregar producto:', response); // Depuración
 
-            if (response) {
-              // Si la respuesta es exitosa, actualizamos la lista de productos
-              setProducts(
-                products.map((product) =>
-                  product.id === newProduct.id ? response : product,
-                ),
-              );
-              Swal.fire('Éxito', 'Producto editado correctamente.', 'success');
-            } else {
-              // Si no hubo respuesta o fue inválida
-              Swal.fire(
-                'Token Inválido',
-                'Tu sesión ha expirado o el token es inválido. Por favor, inicia sesión nuevamente.',
-                'warning',
-              );
-            }
-          } else {
-            // Si no tiene ID, agregamos un nuevo producto
-            response = await agregarProducto(productData);
-            console.log('Respuesta al agregar producto:', response); // Depuración
-
-            if (response) {
-              // Si la respuesta es exitosa, agregamos el nuevo producto a la lista
-              setProducts([...products, response]);
-              Swal.fire('Éxito', 'Producto agregado correctamente.', 'success');
-            } else {
-              // Si no hubo respuesta o fue inválida
-              Swal.fire(
-                'Error',
-                'No se pudo agregar el producto. Inténtalo nuevamente.',
-                'error',
-              );
-            }
-          }
-        } catch (error) {
-          console.log('Error capturado:', error); // Depuración
-
-          // Verifica si el error tiene una respuesta con status 403 (token expirado o inválido)
-          if (error.response) {
-            if (error.response.status === 403) {
-              // Token expirado o inválido
-              Swal.fire({
-                icon: 'warning',
-                title: 'Token Expirado o Inválido',
-                text: 'Tu sesión ha expirado o el token es inválido. Por favor, inicia sesión nuevamente.',
-              }).then(() => {
-                localStorage.removeItem('adminToken'); // Eliminar el token inválido
-                window.location.href = '/loginAdm'; // Redirigir al login
-              });
-            } else {
-              // Manejo de otros códigos de error HTTP (ej. 500, 404)
-              Swal.fire(
-                'Error',
-                `Error ${error.response.status}: ${error.response.data.message || 'Ocurrió un error.'}`,
-                'error',
-              );
-            }
-          } else {
-            // Manejo de errores que no tienen una respuesta (por ejemplo, problemas de red)
-            Swal.fire(
-              'Error',
-              'Hubo un problema de conexión o de red. Por favor, inténtalo nuevamente.',
-              'error',
-            );
-          }
+        if (response) {
+          // Si la respuesta es exitosa, agregamos el nuevo producto a la lista
+          setProducts([...products, response]);
+          Swal.fire('Éxito', 'Producto agregado correctamente.', 'success');
+        } else {
+          // Si no hubo respuesta o fue inválida
+          Swal.fire(
+            'Error',
+            'No se pudo agregar el producto. Inténtalo nuevamente.',
+            'error'
+          );
         }
       }
 
       // Subir nuevas imágenes si existen
-      if (newProduct.newImages.length > 0) {
+      if (newProduct && newProduct.newImages.length > 0) {
         for (let i = 0; i < newProduct.newImages.length; i++) {
           const formData = new FormData();
           formData.append('image', newProduct.newImages[i]);
@@ -421,12 +383,12 @@ function DashboardProducts() {
           } catch (uploadError) {
             console.error(
               'Error al cargar la imagen:',
-              uploadError.response || uploadError,
+              uploadError.response || uploadError
             );
             Swal.fire(
               'Error',
               'Hubo un error al subir la imagen. Intenta nuevamente.',
-              'error',
+              'error'
             );
           }
         }
@@ -435,10 +397,7 @@ function DashboardProducts() {
       handleCloseModal(); // Cerrar el modal
     } catch (error) {
       // Manejo de otros errores generales
-      console.error(
-        'Error al agregar o editar el producto:',
-        error.response || error,
-      );
+      console.error('Error al agregar o editar el producto:', error.response || error);
 
       // Si el error es de tipo 403 (token expirado o inválido)
       if (error.response && error.response.status === 403) {
@@ -455,18 +414,19 @@ function DashboardProducts() {
         Swal.fire(
           'Error',
           error.response.data.message || 'Error de validación.',
-          'error',
+          'error'
         );
       } else {
         // Error inesperado
         Swal.fire(
           'Error',
           'Ocurrió un error inesperado. Por favor, inténtalo nuevamente.',
-          'error',
+          'error'
         );
       }
     }
   };
+
 
   const handleCloseModal = () => {
     setNewProduct({
