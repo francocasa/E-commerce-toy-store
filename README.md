@@ -42,7 +42,6 @@ Despliegue:
 
 - Despliegue en vercel: https://e-commerce-toy-store.vercel.app/
 
-
 Pruebas:
 
 - Implementación de pruebas end-to-end con Cypress más adelante se hace mención.
@@ -67,7 +66,7 @@ Pruebas:
 
 ## Instalación 🚧
 
-A la fecha 26 de noviembre, se tiene desplegado el backend en la red y está en nuestro .env 
+A la fecha 26 de noviembre, se tiene desplegado el backend en la red y está en nuestro .env
 
 Clona este repositorio:
 
@@ -87,11 +86,13 @@ En caso de usar Visual Studio Code:
 
 - Requieres tener un archivo .env (variable de entorno) Que tenga los términos:
 
- .env
-  ```
-VITE_API_URL=""
- VITE_IMAGES_URL=""
+.env
+
 ```
+VITE_API_URL=""
+VITE_IMAGES_URL=""
+```
+
 Donde se debe colocar tu ruta de backend
 
 - En caso de usar VSC, abre el terminal y ejecuta el siguiente comando
@@ -109,18 +110,25 @@ Se presenta un diagrama en Octopus.io sobre la navegación entre paginas y sus f
 Sobre las paginas se tiene la siguiente descripcion de sus funcionalidades:
 ![alt text](/screenshots/image-4.png)
 
-
 ## Cypress en frontend ⌨️
+
 Se usó Cypress para pruebas End-to-end, usando el comando
+
 ```
 npx cypress run
 ```
+
 Se tiene esta imagen:
 ![alt text](/screenshots/image-5.png)
 
 ## Contribuciones ⌨️
+
 Las contribuciones son bienvenidas. Por favor, abre un issue para discutir el cambio que deseas realizar. Siéntete libre de hacer un fork del proyecto y enviar un pull request.
 
 ## Licencia 🚀
+
 Este proyecto está licenciado bajo la Licencia MIT. Consulta el archivo LICENSE para más detalles.
+
+```
+
 ```
