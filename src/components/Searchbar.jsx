@@ -70,7 +70,7 @@ const Searchbar = () => {
             <Link to={`/detailsproduct/${product.id}`} key={product.id}>
               <div className="flex items-center p-2 hover:bg-gray-100">
                 <img
-                  src={product.image[0].url} // Asegúrate de usar la URL correcta de la imagen
+                  src={product.images[0].url} // Asegúrate de usar la URL correcta de la imagen
                   alt={product.name}
                   className="w-12 h-12 object-cover mr-2"
                 />
