@@ -22,6 +22,7 @@ Frontend:
 - Tailwind CSS: Para estilos utilitarios.
 - React Router DOM: Para el manejo de rutas.
 - JSON Server: Para simular una API REST durante el desarrollo.
+- Comunicación con backend onrender.
 - ESLint y Prettier: Para asegurar la calidad y el formato del código.
 - Husky y lint-staged: Para ejecutar scripts de pre-commit.
 
@@ -39,11 +40,12 @@ Funcionalidades Avanzadas:
 
 Despliegue:
 
-- Despliegue en plataformas como Netlify, Heroku o Vercel.
+- Despliegue en vercel: https://e-commerce-toy-store.vercel.app/
+
 
 Pruebas:
 
-- Implementación de pruebas end-to-end con Cypress.
+- Implementación de pruebas end-to-end con Cypress más adelante se hace mención.
 
 ## Estructura del proyecto 🖥️
 
@@ -55,25 +57,22 @@ Pruebas:
   - context/: Contexto de React para la gestión del estado global (por ejemplo, carrito de compras, usuario autenticado).
   - assets/: Archivos estáticos como imágenes y estilos globales.
 
-- db/
+- cypress/
 
-  - db.json: Archivo que simula la base de datos, usado por json-server para manejar los endpoints de la API.
-  - routes.json: Archivo de configuración para personalizar las rutas del json-server.
+  - ficheros importantes para los tests.
 
 - public/: Archivos públicos, incluyendo index.html y otros recursos que se sirven directamente.
-
-- tests/: Contiene las pruebas unitarias y de integración (si las has implementado) para componentes y servicios.
 
 - package.json: Archivo que define las dependencias y scripts del proyecto.
 
 ## Instalación 🚧
 
-A la fecha 03 de octubre 2024, se tiene el desarrollo con Db.Json para simular endpoints y ver como trabaja la pagina web.
+A la fecha 26 de noviembre, se tiene desplegado el backend en la red y está en nuestro .env 
 
 Clona este repositorio:
 
 ```
-git clone --single-branch --branch develop https://github.com/francocasa/E-commerce-toy-store.git
+git clone https://github.com/francocasa/E-commerce-toy-store.git
 ```
 
 Navega al directorio del proyecto:
@@ -86,41 +85,20 @@ cd E-commerce-toy-store
 
 En caso de usar Visual Studio Code:
 
-- Requieres tener un archivo .env (variable de entorno) con el siguiente mensaje dentro:
+- Requieres tener un archivo .env (variable de entorno) Que tenga los términos:
 
+ .env
   ```
-  VITE_API_URL=http://localhost:9090/api
+VITE_API_URL=""
+ VITE_IMAGES_URL=""
+```
+Donde se debe colocar tu ruta de backend
 
+- En caso de usar VSC, abre el terminal y ejecuta el siguiente comando
   ```
-
-- En caso de usar VSC, abre el terminal y ejecuta el siguiente comando para tener el server de db.json
-  ```
-  npm run api
-  ```
-- Luego abres otro terminal y ejecutas el siguiente comando para ver el proyecto
-  ```
+  npm install
   npm run dev
   ```
-
-### Configuraciones 📊
-
-Tendras 02 localhost activos:
-
-1ero el db.json =>
-
-/localhost/9090
-
-![alt text](/screenshots/image.png)
-
-Donde entrando a la ruta http://localhost:9090/products/ tendras una vista como esta:
-![alt text](/screenshots/image-1.png)
-
-La 2da será la propia pagina web:
-http://localhost:XXXX/
-
-Que tendrá esta vista por ejemplo:
-
-![alt text](/screenshots/image-2.png)
 
 ### Paginas y funcionalidades 📊
 
@@ -131,65 +109,15 @@ Se presenta un diagrama en Octopus.io sobre la navegación entre paginas y sus f
 Sobre las paginas se tiene la siguiente descripcion de sus funcionalidades:
 ![alt text](/screenshots/image-4.png)
 
-### Estructura del db.json 📑
 
-Estructura del db.json
-
-1. Products ("Productos disponibles en la tienda")
-
-- id: Identificador único del producto
-- title: Nombre del producto
-- price: Precio del producto
-- image: Ruta de la imagen del producto
-- descripcion: Descripción breve del producto
-- marca: Marca del producto
-- material: Material del producto
-- category: Categorías a las que pertenece
-- promocion: Indica si hay promoción (booleano)
-- descriptionPromo: Descripción de la promoción
-- categoryPromo: Categoría de la promoción
-
-2. Categories ("Clasificación de productos")
-
-- id: Identificador único de la categoría
-- title: Nombre de la categoría
-- image: Ruta de la imagen asociada a la categoría
-
-3. Users_Admin ("Cuentas de administradores")
-
-- id: Identificador único del administrador
-- email: Correo electrónico del administrador
-- password: Contraseña del administrador
-- name: Nombre del administrador
-
-4. Users_Cliente ("Cuentas de clientes")
-
-- id: Identificador único del cliente
-- email: Correo electrónico del cliente
-- name: Nombre del cliente
-- photo: Ruta de la foto de perfil del cliente
-- address: Dirección del cliente
-- phone: Teléfono del cliente
-- password: Contraseña del cliente
-- history: Historial de compras del cliente (incluye fechas y detalles de compras)
-
-5. Hero ("Promociones destacadas")
-
-- id: Identificador único del hero
-- title: Título de la promoción
-- description: Descripción de la promoción
-- buttonText: Texto del botón de acción
-- buttonLink: Enlace del botón
-- backgroundImage: Imagen de fondo del hero
-
-6. Testimonials ("Comentarios de clientes")
-
-- id: Identificador único del testimonio
-- nombrePersona: Nombre de la persona que da el testimonio
-- image: Ruta de la imagen de la persona
-- mensaje: Mensaje del testimonio
-
+## Cypress en frontend ⌨️
+Se usó Cypress para pruebas End-to-end, usando el comando
 ```
+npx cypress run
+```
+Se tiene esta imagen:
+![alt text](/screenshots/image-5.png)
+
 ## Contribuciones ⌨️
 Las contribuciones son bienvenidas. Por favor, abre un issue para discutir el cambio que deseas realizar. Siéntete libre de hacer un fork del proyecto y enviar un pull request.
 
