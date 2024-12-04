@@ -6,13 +6,12 @@ const SuccessPayment = () => {
           Pago exitoso, consulta el estado de tu orden
         </p>
 
-        <a
-          // Crear pagina de ordenes y modificar de ser necesario
-          href={'/orders'}
+        <Link
+          to={`/history`}
           className="text-sm sm:text-base mb-3 text-white bg-blue-500 py-2 px-4 sm:mb-0 sm:px-6  rounded-md hover:bg-blue-700 transition-all inline-block"
         >
           Ver órdenes
-        </a>
+        </Link>
       </section>
     </main>
   );
