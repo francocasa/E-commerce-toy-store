@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 const SuccessPayment = () => {
   return (
     <main className="container mx-auto p-8 flex justify-center items-center">
