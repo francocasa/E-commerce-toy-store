@@ -19,8 +19,8 @@ export default function CartSummary({ subtotal, discounts }) {
       console.log(responseData);
 
       Swal.fire({
-        title: 'Pagado!',
-        text: 'Pago exitoso',
+        title: 'Mercado Pago',
+        text: 'Redireccionando a Mercado Pago exitoso',
         icon: 'success',
         confirmButtonText: 'Aceptar',
       }).then(() => {
